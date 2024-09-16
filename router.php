@@ -5,17 +5,28 @@ $routes = [
         'method' => 'GET',
         'path' => '/',
         'callback' => function() {
-            require __DIR__.'/views/index.php';
+            require __DIR__.'/controllers/index.php';
         }
-    ]
+    ],
 ];
+
+$isInRoutes = false;
 
 foreach ($routes as $route) {
     if ($route['method'] === $_SERVER['REQUEST_METHOD'] && $route['path'] === $_SERVER['REQUEST_URI']) {
         call_user_func($route['callback']);
-        return;
+        $isInRoutes = true;
+        break;
     }
 }
-// If no route is matched
-http_response_code(404);
-echo "404 Not Found";
+
+if (!$isInRoutes) {
+    $filePath = __DIR__ . $_SERVER['REQUEST_URI'];
+    if (file_exists($filePath) && is_file($filePath)) {
+        header('Content-Type: ' . mime_content_type($filePath));
+        readfile($filePath);
+    } else {
+        http_response_code(404);
+        echo "404 Not Found";
+    }
+}
