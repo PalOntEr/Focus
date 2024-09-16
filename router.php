@@ -3,9 +3,9 @@
 $routes = [
     [
         'method' => 'GET',
-        'path' => '/',
+        'path' => '/test',
         'callback' => function() {
-            require __DIR__.'/controllers/index.php';
+            require __DIR__.'/controllers/test.php';
         }
     ],
 ];
