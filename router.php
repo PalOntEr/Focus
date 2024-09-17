@@ -10,6 +10,13 @@ $routes = [
     ],
     [
         'method' => 'GET',
+        'path' => '/user',
+        'callback' => function() {
+            require __DIR__.'/controllers/user.php';
+        }
+    ],
+    [
+        'method' => 'GET',
         'path' => '/home?',
         'callback' => function() {
             require __DIR__.'/controllers/home.php';
