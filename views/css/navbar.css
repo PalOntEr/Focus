@@ -1,16 +1,8 @@
-.title {
-    color: var(--comp-1-color);
-}
-
-.title:hover {
-    color: var(--comp-1-color);
-}
-
 a {
     color: var(--comp-1-color);
     font-weight: 600;
 }
 
 a:hover {
-    color: var(--comp-2-color);
+    color: var(--primary-color);
 }
