@@ -7,7 +7,7 @@
             <button type="submit" class="ml-2 px-2 py-1 bg-secondary text-white rounded">Search</button>
         </form>
         <div class="flex space-x-4 items-center">
-            <a href="#" class="">Home</a>
+            <a href="/home" class="">Home</a>
             <a href="#" class="">About</a>
             <a href="#" class="">Services</a>
             <a href="#" class="">Contact</a>

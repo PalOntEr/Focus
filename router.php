@@ -8,6 +8,13 @@ $routes = [
             require __DIR__.'/controllers/test.php';
         }
     ],
+    [
+        'method' => 'GET',
+        'path' => '/home',
+        'callback' => function() {
+            require __DIR__.'/controllers/home.php';
+        }
+    ]
 ];
 
 $isInRoutes = false;
