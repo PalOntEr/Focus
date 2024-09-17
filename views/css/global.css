@@ -1,0 +1,47 @@
+:root{
+    --background-color: #F8F7FF;
+    --primary-color: #9381FF;
+    --secondary-color: #B8B8FF;
+    --comp-1-color: #FFEEDD;
+    --comp-2-color: #FFD8BE;
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background-color: #414049;
+    }
+}
+
+html, body{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--background-color);
+    color: var(--comp-1-color);
+}
+
+.bg-color{
+    background-color: var(--background-color);
+}
+.bg-primary{
+    background-color: var(--primary-color);
+}
+.bg-secondary{
+    background-color: var(--secondary-color);
+}
+.bg-comp-1{
+    background-color: var(--comp-1-color);
+}
+.bg-comp-2{
+    background-color: var(--comp-2-color);
+}
+
+.text-color{
+    color: var(--comp-1-color);
+}
+.text-primary{
+    color: var(--primary-color);
+}
+.text-secondary{
+    color: var(--secondary-color);
+}
+.text-comp-2{
+    color: var(--comp-2-color);
+}
