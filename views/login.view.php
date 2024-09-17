@@ -20,7 +20,7 @@ require 'views/components/header.php';
                 </div>
                 <input type="submit" value="Ingresar" class="w-1/2 self-center bg-comp-1 text-secondary rounded-md p-1" />
             </form>
-            <div class="text-center text-xs w-full text-comp-1">¿No tienes cuenta? <a class=" underline text-color font-bold" href="/register">Registrarse</a></div>
+            <div class="text-center text-xs w-full text-comp-1">¿No tienes cuenta? <a class="text-primary visited:text-color font-bold" href="/register">Registrarse</a></div>
         </div>
 
         <div class="bg-primary w-0.5 my-12 hidden lg:flex"></div>
