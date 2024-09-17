@@ -1,5 +1,5 @@
 <div class="flex flex-col w-1/3">
-    <div class="bg-color rounded-md p-1 mb-px">
+    <div class="bg-secondary text-primary rounded-md px-3 py-1 mb-px">
         Hello, how are you?
     </div>
     <div class="flex justify-between mr-2">
