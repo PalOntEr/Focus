@@ -8,7 +8,7 @@
     <div class="w-full text-4xl text-secondary font-bold my-5">
         Best seller
     </div>
-    <div class="w-full h-[500px] flex flex-col sm:flex-row overflow-y-hidden overflow-x-scroll">
+    <div class="w-full h-[500px] flex flex-col items-center sm:flex-row overflow-y-hidden overflow-x-auto">
         <?php
             require 'views/components/courseCard.php';
             require 'views/components/courseCard.php';

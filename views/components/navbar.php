@@ -10,7 +10,7 @@
             <a href="#" class="block sm:hidden">Search</a>
             <a href="/chats" class="ease-in duration-150">Chats</a>
             <a href="#" class="ease-in duration-150">Cart</a>
-            <a href="/login" class=""><img class="h-6 w-6" src="https://www.iconpacks.net/icons/2/free-user-icon-3296-thumb.png" alt=""></a>
+            <a href="/user" class=""><img class="h-6 w-6" src="https://www.iconpacks.net/icons/2/free-user-icon-3296-thumb.png" alt=""></a>
         </div>
     </div>
 </nav>
