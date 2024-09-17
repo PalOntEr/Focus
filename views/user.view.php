@@ -14,7 +14,7 @@ require 'views/components/navbar.php';
         </div>
         <div id="User-Settings-Container" class="hidden lg:flex md:flex-row place-self-end w-auto  mb-2">
             <input type="button" class="mx-2 py-1 px-2 text-sm text-primary bg-secondary rounded-md" value="Editar Perfil"></input>
-            <input type="button" class="mx-2 py-1 px-2 text-sm text-primary bg-secondary rounded-md" value="Kardex"></input>
+            <input type="button" class="mx-2 py-1 px-2 text-sm text-primary bg-secondary rounded-md" onclick="location.href='/kardex';" value="Kardex"></input>
             <input type="button" class="mx-2 py-1 px-2 text-sm text-primary bg-secondary rounded-md" value="Ventas"></input>
             <input type="button" class="ml-2 py-1 px-2 text-sm text-primary bg-secondary rounded-md" value="Reporte"></input>
         </div>
