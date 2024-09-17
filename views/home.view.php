@@ -9,7 +9,7 @@
     <div class="w-full text-4xl font-semibold my-5">
         Best seller
     </div>
-    <div class="w-full h-[500px] flex overflow-y-hidden overflow-x-scroll">
+    <div class="w-full h-[500px] flex flex-col sm:flex-row overflow-y-hidden overflow-x-scroll">
         <?php
             require 'views/components/courseCard.php';
             require 'views/components/courseCard.php';
