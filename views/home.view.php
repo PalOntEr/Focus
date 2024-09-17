@@ -3,8 +3,7 @@
     require 'views/components/navbar.php';
 ?>
 <div class="container mx-auto">
-    <h1 class="text-5xl text-center font-bold">Focus</h1>
-    <h1 class="text-7xl text-center font-bold">Education</h1>
+    <h1 class="text-8xl text-secondary text-center font-bold">Focus</h1>
     <div class="w-full text-lg text-center mt-5">A better you, one course away</div>
     <div class="w-full text-4xl font-semibold my-5">
         Best seller
