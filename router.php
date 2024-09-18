@@ -24,6 +24,13 @@ $routes = [
     ],
     [
         'method' => 'GET',
+        'path' => '/sales',
+        'callback' => function() {
+            require __DIR__.'/controllers/sales.php';
+        }
+    ],
+    [
+        'method' => 'GET',
         'path' => '/user',
         'callback' => function() {
             require __DIR__.'/controllers/user.php';
@@ -70,7 +77,15 @@ $routes = [
         'callback' => function() {
             require __DIR__.'/controllers/chats.php';
         }
-    ]
+    ],
+    
+    [
+        'method' => 'GET',
+        'path' => '/reporte',
+        'callback' => function() {
+            require __DIR__.'/controllers/reports.php';
+        }
+    ],
 ];
 
 $isInRoutes = false;
