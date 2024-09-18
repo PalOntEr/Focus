@@ -9,7 +9,7 @@
             <div class="">Intro</div>
     </div>
     <div class="flex w-full h-1/6 p-1 items-center justify-between font-semibold">
-        <div class="text-primary">4.3/5⭐</div>
+        <div class="text-primary"><?= $stars ?>/5⭐</div>
         <button class="w-fit text-center bg-comp-1 text-secondary rounded p-px hover:opacity-80 font-bold">
             PLAY
         </button>
