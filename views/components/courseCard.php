@@ -7,7 +7,7 @@
     </div>
     <div class="flex justify-between w-full font-semibold">
         <div class="text-comp-2">Instructor</div>
-        <div class="text-primary">4.3/5⭐</div>
+        <div class="text-comp-2">4.3/5⭐</div>
     </div>
     <button class="w-1/2 text-center bg-comp-1 text-color rounded p-1 hover:opacity-80 font-bold">
         ADD TO CART
