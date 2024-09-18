@@ -16,7 +16,7 @@ require 'views/components/navbar.php';
     <div class="h-1 w-full bg-secondary"></div>
 
     <div id="Kardex-Container" class="my-4">
-        <div id="Kardex-Query-Container" class="bg-primary rounded-lg flex flex-row place-content-between my-12 p-2">
+        <div id="Kardex-Query-Container" class="bg-primary rounded-lg flex flex-row place-content-between mt-4 p-2">
             <div class="w-1/3 self-center">
                 <select class="w-1/2 bg-comp-1 text-color py-1 outline-none rounded-md border-0">
                     <option>Any</option>
@@ -29,53 +29,85 @@ require 'views/components/navbar.php';
             <div class="flex w-1/3 justify-between">
                 <input type="date" id="DateStart" class="w-1/3 bg-comp-1 text-color outline-none rounded-md border-0">
                 <div class="h-0.5 w-2 bg-primary self-center"></div>
-                <input type="date" id="DateFinish"  class="w-1/3 bg-comp-1 text-color outline-none rounded-md border-0">
+                <input type="date" id="DateFinish" class="w-1/3 bg-comp-1 text-color outline-none rounded-md border-0">
+            </div>
+
+            <div class="flex w-1/3 justify-end self-center">
+                <label for="Finished" class="">Course: </label>
+                <input id="Finished" type="text" class="border-0 border-b-2 outline-none bg-transparent checked:bg-secondary">
             </div>
 
             <div class="flex w-1/3 justify-end self-center">
                 <input id="Finished" type="checkbox" class="checked:bg-secondary">
                 <label for="Finished" class=""> Finished</label>
             </div>
+            
         </div>
-        <div id="Kardex-Table-Container">
-            <table class="table-auto w-full">
+        
+        <div class="my-4">
+                <input type="button" class="bg-primary p-1 rounded-lg" value="Limpiar" >
+        </div>
+        <div id="Sales-Table-Container">
+            <table id="Full-Sales" class="table-auto w-full">
                 <thead class="bg-primary text-color">
                     <tr>
                         <th class="rounded-tl-lg py-2">Curso</th>
-                        <th>Progreso</th>
-                        <th>Fecha de inscripción</th>
-                        <th>Fecha de finalización</th>
-                        <th>Ultima vez visitado</th>
-                        <th class=" rounded-tr-lg">Completado</th>
+                        <th>Alumnos Inscritos</th>
+                        <th>Nivel Promedio</th>
+                        <th class=" rounded-tr-lg">Ingresos</th>
                     </tr>
                 </thead>
                 <tbody class="text-center font-semibold">
                     <tr class="bg-comp-1 text-primary">
                         <td class="py-2">Curso 1</td>
-                        <td>97%</td>
-                        <td>24/05/2024</td>
-                        <td>24/05/2028</td>
-                        <td>26/07/2025</td>
-                        <td><input type="checkbox" checked></td>
+                        <td>540</td>
+                        <td>7</td>
+                        <td>$420.00 MXN.</td>
                     </tr>
                     <tr class="bg-comp-2 text-primary">
                         <td class="py-2">Curso 1</td>
-                        <td>97%</td>
-                        <td>24/05/2024</td>
-                        <td>24/05/2028</td>
-                        <td>26/07/2025</td>
-                        <td><input type="checkbox" checked></td>
+                        <td>540</td>
+                        <td>7</td>
+                        <td>$420.00 MXN.</td>
                     </tr>
-                    <tr class="bg-comp-1 text-comp-2">
+                    <tr class="bg-comp-1 text-primary">
                         <td class="py-2 rounded-bl-lg">Curso 1</td>
-                        <td>97%</td>
-                        <td>24/05/2024</td>
-                        <td>24/05/2028</td>
-                        <td>26/07/2025</td>
-                        <td class="rounded-br-lg"><input type="checkbox" checked></td>
+                        <td>540</td>
+                        <td>7</td>
+                        <td class="rounded-br-lg">$420.00 MXN.</td>
                     </tr>
                 </tbody>
             </table>
+            <div class="font-bolder text-2xl mt-3"><span>INGRESOS TOTALES: </span>$1240.00 MXN</div>
+
+            <table id="Sales-Course" class="table-auto w-full">
+                <thead class="bg-primary text-color">
+                    <tr>
+                        <th class="rounded-tl-lg py-2">Alumno</th>
+                        <th>Fecha de inscripción</th>
+                        <th>Nivel</th>
+                        <th>Precio Pagado</th>
+                        <th class=" rounded-tr-lg">Forma de Pago</th>
+                    </tr>
+                </thead>
+                <tbody class="text-center font-semibold">
+                    <tr class="bg-comp-1 text-primary">
+                        <td class="py-2">Roberto Carlos Dominguez Espinosa</td>
+                        <td>21/08/2024</td>
+                        <td>7</td>
+                        <td>740</td>
+                        <td>Unico</td>
+                    </tr>
+                    <tr class="bg-comp-2 text-primary">
+                    <td class="py-2">Max Andrés Zertuche Perez</td>
+                        <td class="rounded-bl-lg">21/08/2024</td>
+                        <td>7</td>
+                        <td>740</td>
+                        <td class="rounded-br-lg">Unico</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="font-bolder text-2xl mt-3"><span>INGRESOS DEL CURSO: </span>$1480.00 MXN</div>
         </div>
     </div>
 </div>
