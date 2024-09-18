@@ -2,9 +2,9 @@
     require 'views/components/header.php';
     require 'views/components/navbar.php';
 ?>
-<div class="container mx-auto flex h-full space-x-4">
+<div class="container mx-auto flex h-full space-y-2 sm:space-y-0 space-x-4 items-center flex-col sm:flex-row">
 
-    <div class="w-2/3 h-full font-bold">
+    <div class=" w-5/6 sm:w-2/3 h-full font-bold">
         <div class="text-secondary text-md">
             Course name
         </div>
@@ -28,7 +28,7 @@
         </div>
     </div>
 
-    <div class="bg-secondary w-1/3 rounded-md overflow-y-scroll h-full">
+    <div class="bg-secondary w-5/6 sm:w-1/3 rounded-md overflow-y-scroll h-screen sm:h-full">
         <div class="mt-4 text-center text-primary font-bold text-3xl">
             Content
         </div>
