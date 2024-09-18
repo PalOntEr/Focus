@@ -16,4 +16,8 @@
             require 'views/components/courseCard.php';
         ?>
     </div>
+    <div class="w-full text-4xl text-primary font-bold my-5">
+        Categories
+    </div>
+    
 </div>

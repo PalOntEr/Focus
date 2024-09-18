@@ -16,7 +16,7 @@ require 'views/components/navbar.php';
             <input type="button" class="mx-2 py-1 px-2 text-sm text-color bg-secondary rounded-md" value="Editar Perfil"></input>
             <input type="button" class="mx-2 py-1 px-2 text-sm text-color bg-secondary rounded-md" onclick="location.href='/kardex';" value="Kardex"></input>
             <input type="button" class="mx-2 py-1 px-2 text-sm text-color bg-secondary rounded-md" onclick="location.href='/sales';" value="Ventas"></input>
-            <input type="button" class="ml-2 py-1 px-2 text-sm text-color bg-secondary rounded-md" value="Reporte"></input>
+            <input type="button" class="ml-2 py-1 px-2 text-sm text-color bg-secondary rounded-md" onclick="location.href='/reporte';" value="Reporte"></input>
         </div>
     </div>
     <div class="w-full h-1 bg-comp-2"></div>
