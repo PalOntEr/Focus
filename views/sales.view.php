@@ -6,10 +6,10 @@ require 'views/components/navbar.php';
     <div id="Kardex-Title-Container" class="flex flex-row place-content-between">
         <div>
             <h2 class="text-4xl text-center md:text-left text-comp-1 font-semibold">Usuario</h2>
-            <h1 class="text-8xl text-primary font-extrabold">Kardex</h1>
+            <h1 class="text-8xl text-primary font-extrabold">Sales</h1>
         </div>
         <div class="self-end text-primary">
-            <p>Cursos Inscritos: 3</p>
+            <p>Cursos Creados: 3</p>
         </div>
     </div>
 

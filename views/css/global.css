@@ -1,10 +1,10 @@
-:root{
-    --background-color: #E0DDCF;
-    --primary-color: #FFFFFF;
-    --secondary-color: #2D232E;
-    --comp-1-color: #ADA4AC;
-    --comp-2-color: #474448;
-    --text-color: #534B52;
+:root{  
+    --background-color: #f5E1E0;
+    --primary-color:#0F1628;
+    --secondary-color: #7F6169;
+    --comp-1-color: #BB8E89;
+    --comp-2-color: #E4C5C2;
+    --text-color: #E3E1E6;
 }
 
 /* @media (prefers-color-scheme: dark) {

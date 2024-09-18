@@ -1,10 +1,10 @@
 <style><?php require 'views/css/navbar.css'; ?></style>
-<nav class="bg-secondary p-4 mb-2 sticky top-0">
+<nav class="bg-primary p-4 mb-2 sticky top-0">
     <div class="container mx-auto flex justify-between items-center">
         <a href="/home" class="text-3xl font-bold ease-in duration-150 prevent-select tracking-wider">FOCUS</a>
         <form action="#" method="GET" class="hidden sm:flex justify-center items-start">
             <input type="text" name="search" placeholder="Search..." class="px-2 py-1 rounded sm:w-auto md:w-96">
-            <button type="submit" class="ml-2 px-2 py-1 bg-color text-secondary rounded">Search</button>
+            <button type="submit" class="ml-2 px-2 py-1 bg-comp-2 text-color font-semibold rounded">Search</button>
         </form>
         <div class="flex space-x-4 items-center">
             <a href="#" class="block sm:hidden">Search</a>
