@@ -56,6 +56,13 @@ $routes = [
         'callback' => function() {
             require __DIR__.'/controllers/chats.php';
         }
+    ],
+    [
+        'method' => 'GET',
+        'path' => '/course',
+        'callback' => function() {
+            require __DIR__.'/controllers/course.php';
+        }
     ]
 ];
 

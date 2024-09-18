@@ -10,12 +10,16 @@
 /* @media (prefers-color-scheme: dark) {
     :root {
         --background-color: #414049;
+        --secondary-color: #E0DDCF;
     }
 } */
 
 html, body{
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: var(--background-color);
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
     color: var(--comp-1-color);
 }
 
