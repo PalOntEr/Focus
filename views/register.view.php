@@ -8,24 +8,24 @@ require 'views/components/header.php';
     </div>
     <div class="bg-secondary flex w-5/6 md:w-3/4 justify-center md:place-content-evenly rounded-xl">
         <div id="Form-Container" class="items-center flex flex-col mx-4 2xl:mx-6 my-12">
-            <h2 class="text-primary text-3xl text-center w-full mb-6 font-bold">Crear Cuenta</h2>
+            <h2 class="text-primary text-3xl text-center w-full mb-6 font-bold">Create Account</h2>
             <form class="container flex flex-col md:justify-between h-full font-semibold mb-4" action="/login" method="GET">
                 <div class="flex flex-col md:flex-row w-full items-center space-y-6 md:space-y-0 md:space-x-6 mb-6">
                     <div class="flex flex-col w-5/6 space-y-4 md:w-1/2">
                         <div>
-                            <label for="User" class="text-comp-1">Usuario:</label>
+                            <label for="User" class="text-comp-1">Username:</label>
                             <input id="User" type="text" class="w-full bg-transparent border-t-transparent border-b-2 outline-none text-primary" />
                         </div>
                         <div>
-                            <label for="Email" class="text-comp-1">Correo Electronico:</label>
+                            <label for="Email" class="text-comp-1">Email:</label>
                             <input id="Email" type="text" class="w-full bg-transparent border-t-transparent border-b-2 outline-none text-primary" />
                         </div>
                         <div>
-                            <label for="password" class="text-comp-1">Contraseña:</label>
+                            <label for="password" class="text-comp-1">Password:</label>
                             <input id="password" type="password" class="w-full bg-transparent border-t-transparent border-b-2 outline-none text-primary" />
                         </div>
                         <div>
-                            <label id="ConfirmPassword" class="text-comp-1">Confirmar Contraseña:</label>
+                            <label id="ConfirmPassword" class="text-comp-1">Confirm Password:</label>
                             <input id="ConfirmPassword" type="password" class="w-full bg-transparent border-t-transparent border-b-2 outline-none text-primary" />
                         </div>
                         <div>
@@ -52,23 +52,23 @@ require 'views/components/header.php';
                         </label>
                         <div>
                             <div class="">
-                                <label for="Gender" class="text-comp-1">Genero</label>
+                                <label for="Gender" class="text-comp-1">Gender</label>
                             </div>
                             <select id="Gender" class="rounded-md border-0 bg-comp-1 text-secondary font-semibold py-0 pl-2 pr-7 h-[26px] outline-none w-full sm:text-sm">
-                                <option>Hombre</option>
-                                <option>Mujer</option>
-                                <option>Prefiero no decir</option>
+                                <option>Male</option>
+                                <option>Female</option>
+                                <option>Prefer not to say</option>
                             </select>
                         </div>
                         <div>
-                            <label for="Birthdate" class="text-comp-1">Fecha de Nacimiento:</label>
+                            <label for="Birthdate" class="text-comp-1">Birthdate:</label>
                             <input id="Birthdate" type="date" class="w-full bg-transparent border-t-transparent border-b-2 outline-none text-primary" />
                         </div>
                     </div>
                 </div>
-                <input type="submit" value="Registrar" class="w-1/6 self-center bg-comp-1 text-secondary rounded-md p-1" />
+                <input type="submit" value="Register" class="w-1/6 self-center bg-comp-1 text-secondary rounded-md p-1" />
             </form>
-            <div class="text-center text-xs w-full text-comp-1">¿Ya tienes cuenta? <a class="text-primary visited:text-color font-bold" href="/login">Iniciar Sesión</a></div>
+            <div class="text-center text-xs w-full text-comp-1">Already have an account? <a class="text-primary visited:text-color font-bold" href="/login">Log In</a></div>
         </div>
 
         <div class="bg-primary w-0.5 my-12 hidden lg:flex"></div>
