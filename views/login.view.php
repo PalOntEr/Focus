@@ -18,7 +18,7 @@ require 'views/components/header.php';
                     <p class="text-secondary">Contraseña:</p>
                     <input type="password" class="w-full bg-transparent border-t-transparent border-b-2 outline-none text-primary" />
                 </div>
-                <input type="submit" value="Ingresar" class="w-1/2 self-center bg-comp-2 text-color rounded-md p-1" />
+                <input type="submit" value="Ingresar" class="w-1/2 self-center bg-comp-2 text-primary font-semibold rounded-md p-1" />
             </form>
             <div class="text-center text-xs w-full text-comp-1">¿No tienes cuenta? <a class="text-comp-2 visited:text-color font-bold" href="/register">Registrarse</a></div>
         </div>
