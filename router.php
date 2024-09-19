@@ -92,14 +92,34 @@ $routes = [
             require __DIR__.'/controllers/chats.php';
         }
     ],
-    
+    [
+        'method' => 'GET',
+        'path' => '/course',
+        'callback' => function() {
+            require __DIR__.'/controllers/course.php';
+        }
+    ],
+    [
+        'method' => 'GET',
+        'path' => '/level',
+        'callback' => function() {
+            require __DIR__.'/controllers/level.php';
+        }
+    ],
+    [
+        'method' => 'GET',
+        'path' => '/createCourse',
+        'callback' => function() {
+            require __DIR__.'/controllers/createCourse.php';
+        }
+    ],
     [
         'method' => 'GET',
         'path' => '/reporte',
         'callback' => function() {
             require __DIR__.'/controllers/reports.php';
         }
-    ],
+    ]
 ];
 
 $isInRoutes = false;
