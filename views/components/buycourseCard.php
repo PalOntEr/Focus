@@ -1,7 +1,7 @@
 <div class="flex flex-row w-full px-4 h-2/3 bg-primary mb-5 sm:mb-2 items-center rounded-2xl shadow-lg">
-    <div  class="w-2/3 h-5/6 my-2 bg-transparent rounded-2xl">
+    <div  class="w-2/3 h-full py-3 bg-transparent rounded-2xl">
         <img class="w-auto h-auto rounded-2xl" src="https://pbs.twimg.com/media/GVq8fLsaoAEnzsl?format=jpg&name=large" alt="Course">
-        <button class="text-center bg-comp-1 text-color w-full mt-2 rounded p-px hover:opacity-80 font-bold">
+        <button class="text-center bg-comp-1 mt-2 text-color w-full rounded p-px hover:opacity-80 font-bold">
         SEE COURSE
     </button>
     </div>
