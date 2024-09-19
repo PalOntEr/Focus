@@ -70,6 +70,13 @@ $routes = [
         'callback' => function() {
             require __DIR__.'/controllers/level.php';
         }
+    ],
+    [
+        'method' => 'GET',
+        'path' => '/createCourse',
+        'callback' => function() {
+            require __DIR__.'/controllers/createCourse.php';
+        }
     ]
 ];
 

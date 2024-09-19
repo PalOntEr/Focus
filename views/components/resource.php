@@ -1,4 +1,3 @@
-
 <div class="flex items-center justify-between border-b-2 p-1">
     <div class="flex items-center space-x-2">
         <img class="h-8" src="https://cdn-icons-png.flaticon.com/512/80/80942.png" alt="">
