@@ -9,7 +9,7 @@ require 'views/components/navbar.php';
             <div class="self-center">
                 <h2 id="User-Role" class="text-4xl text-center md:text-left text-secondary font-semibold">User Role</h2>
                 <h1 id="User" class="text-8xl text-primary font-extrabold">User</h1>
-                <p id="User-Info" class="text-secondary">Registered in November 2024 Age: 24 years/p>
+                <p id="User-Info" class="text-secondary">Registered in November 2024 Age: 24 years</p>
             </div>
         </div>
         <div id="User-Settings-Container" class="hidden lg:flex md:flex-row place-self-end w-auto  mb-2">
