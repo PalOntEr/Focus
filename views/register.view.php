@@ -121,7 +121,7 @@
             event.preventDefault();
             swal({
                 icon: 'error',
-                title: 'Oops...',
+                title: '☠️',
                 text: 'Please fill in all fields!'
             });
         }
