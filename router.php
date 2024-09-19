@@ -17,6 +17,13 @@ $routes = [
     ],
     [
         'method' => 'GET',
+        'path' => '/checkout',
+        'callback' => function() {
+            require __DIR__.'/controllers/checkout.php';
+        }
+    ],
+    [
+        'method' => 'GET',
         'path' => '/sales',
         'callback' => function() {
             require __DIR__.'/controllers/sales.php';
