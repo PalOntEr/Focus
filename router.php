@@ -10,6 +10,41 @@ $routes = [
     ],
     [
         'method' => 'GET',
+        'path' => '/cart',
+        'callback' => function() {
+            require __DIR__.'/controllers/cart.php';
+        }
+    ],
+    [
+        'method' => 'GET',
+        'path' => '/checkout',
+        'callback' => function() {
+            require __DIR__.'/controllers/checkout.php';
+        }
+    ],
+    [
+        'method' => 'GET',
+        'path' => '/sales',
+        'callback' => function() {
+            require __DIR__.'/controllers/sales.php';
+        }
+    ],
+    [
+        'method' => 'GET',
+        'path' => '/kardex',
+        'callback' => function() {
+            require __DIR__.'/controllers/kardex.php';
+        }
+    ],
+    [
+        'method' => 'GET',
+        'path' => '/sales',
+        'callback' => function() {
+            require __DIR__.'/controllers/sales.php';
+        }
+    ],
+    [
+        'method' => 'GET',
         'path' => '/user',
         'callback' => function() {
             require __DIR__.'/controllers/user.php';
@@ -76,6 +111,13 @@ $routes = [
         'path' => '/createCourse',
         'callback' => function() {
             require __DIR__.'/controllers/createCourse.php';
+        }
+    ],
+    [
+        'method' => 'GET',
+        'path' => '/reporte',
+        'callback' => function() {
+            require __DIR__.'/controllers/reports.php';
         }
     ]
 ];

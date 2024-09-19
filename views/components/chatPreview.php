@@ -3,8 +3,8 @@
     <div class="w-full">
         <h2 class="text-lg text-color font-bold">Dobeto</h2>
         <div class="flex justify-between w-full">
-            <p class="text-sm hidden md:block">Hello, how are you?</p>
-            <p class="text-sm">8:30pm</p>
+            <p class="text-sm hidden text-color md:block">Hello, how are you?</p>
+            <p class="text-sm text-color">8:30pm</p>
         </div>
     </div>
 </div>
