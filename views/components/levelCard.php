@@ -1,16 +1,16 @@
-<div class="flex flex-col w-full sm:w-48 h-fit sm:h-48 max-h-[367px] bg-secondary mb-2 sm:m-2 p-2 justify-center items-center rounded-2xl" style="width=500px;">
+<div class="flex flex-col w-full sm:w-48 h-fit sm:h-48 max-h-[367px] bg-primary mb-2 sm:m-2 p-2 justify-center items-center rounded-2xl" style="width=500px;">
     <div class="flex justify-center w-full h-2/3 mb-1 bg-color rounded-2xl">
         <img class="w-auto h-auto rounded-2xl" src="https://static.wikia.nocookie.net/ultra-custom-night/images/f/f6/Purple_Freddy.png" alt="Level <?= $level ?>">
     </div>
     <div class="flex w-full h-1/6 p-1 items-center justify-between font-semibold">
-            <div class="w-full text-primary font-semibold">
+            <div class="w-full text-color font-semibold">
                 Level <?= $level ?>
             </div>
-            <div class="">Intro</div>
+            <div class="text-comp-2">Intro</div>
     </div>
     <div class="flex w-full h-1/6 p-1 items-center justify-between font-semibold">
-        <div class="text-primary"><?= $stars ?>/5⭐</div>
-        <button class="w-fit text-center bg-comp-1 text-secondary rounded p-px hover:opacity-80 font-bold">
+        <div class="text-comp-1"><?= $stars ?>/5⭐</div>
+        <button onclick="location.href='/level'" class="w-fit text-center bg-comp-1 text-color rounded p-px hover:opacity-80 font-bold">
             PLAY
         </button>
     </div>
