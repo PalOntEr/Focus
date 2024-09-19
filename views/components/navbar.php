@@ -2,7 +2,7 @@
 <nav class="bg-primary p-4 mb-2 sticky top-0">
     <div class="container mx-auto flex justify-between items-center">
         <a href="/home" class="text-3xl font-bold ease-in duration-150 prevent-select tracking-wider">FOCUS</a>
-        <form action="#" method="GET" class="hidden sm:flex justify-center items-start">
+        <form action="/advSearch" method="GET" class="hidden sm:flex justify-center items-start">
             <input type="text" name="search" placeholder="Search..." class="px-2 py-1 rounded sm:w-auto md:w-96">
             <button type="submit" class="ml-2 px-2 py-1 bg-comp-2 text-secondary font-semibold rounded">Search</button>
         </form>
