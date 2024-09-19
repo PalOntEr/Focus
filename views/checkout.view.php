@@ -10,7 +10,7 @@ require 'views/components/header.php';
             <h1 class="text-center text-8xl text-primary font-extrabold tracking-wide">FOC<span class="text-secondary">US</span></h1>
             <h2 class="text-center text-4xl font-bold text-primary">Check<span class="text-secondary">out</span></h2>
             <div class="w-full bg-primary h-0.5 my-6"></div>
-            <form class="flex flex-col space-y-8 text-md">
+            <form class="flex flex-col space-y-8 text-md h-full justify-evenly ">
                 <div>
                     <label for="Email">Email</label>
                     <input type="text" id="Email" placeholder="Email" class="w-full" />
@@ -30,6 +30,10 @@ require 'views/components/header.php';
                         <label for="Expiration-Date">CVC</label>
                         <input class="w-full" type="text" id="CVC" placeholder="CVC" />
                     </div>
+                </div>
+                
+                <div class="h-1/12 justify-center flex flex-col">
+                    <button class=" w-full bg-comp-1 text-color py-1 rounded-md">Checkout</button>
                 </div>
             </form>
         </div>
@@ -59,9 +63,6 @@ require 'views/components/header.php';
                     <div class="font-bold text-comp-1 text-sm">Total Courses: <span class="font-normal text-color">4</span></div>
                     <div class="font-bold text-comp-1 text-sm my-3">SUBTOTAL: <span class="font-normal text-color">$524.00 MXN</span></div>
                     <div class="font-bold text-comp-1 text-sm my-3">TOTAL: <span class="font-normal text-color">$480.00 MXN</span></div>
-                </div>
-                <div class="h-1/12 justify-center flex flex-col">
-                    <button class=" w-full bg-comp-1 text-color py-1 rounded-md">Checkout</button>
                 </div>
             </div>
         </div>
