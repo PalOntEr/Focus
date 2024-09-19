@@ -1,0 +1,8 @@
+a {
+    color: var(--text-color);
+    font-weight: 600;
+}
+
+a:hover {
+    color: var(--comp-1-color);
+}

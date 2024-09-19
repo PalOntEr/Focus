@@ -8,6 +8,98 @@ $routes = [
             require __DIR__.'/controllers/test.php';
         }
     ],
+    [
+        'method' => 'GET',
+        'path' => '/cart',
+        'callback' => function() {
+            require __DIR__.'/controllers/cart.php';
+        }
+    ],
+    [
+        'method' => 'GET',
+        'path' => '/checkout',
+        'callback' => function() {
+            require __DIR__.'/controllers/checkout.php';
+        }
+    ],
+    [
+        'method' => 'GET',
+        'path' => '/sales',
+        'callback' => function() {
+            require __DIR__.'/controllers/sales.php';
+        }
+    ],
+    [
+        'method' => 'GET',
+        'path' => '/kardex',
+        'callback' => function() {
+            require __DIR__.'/controllers/kardex.php';
+        }
+    ],
+    [
+        'method' => 'GET',
+        'path' => '/sales',
+        'callback' => function() {
+            require __DIR__.'/controllers/sales.php';
+        }
+    ],
+    [
+        'method' => 'GET',
+        'path' => '/user',
+        'callback' => function() {
+            require __DIR__.'/controllers/user.php';
+        }
+    ],
+    [
+        'method' => 'GET',
+        'path' => '/home?',
+        'callback' => function() {
+            require __DIR__.'/controllers/home.php';
+        }
+    ],
+    [
+        'method' => 'GET',
+        'path' => '/register',
+        'callback' => function() {
+            require __DIR__.'/controllers/register.php';
+        }
+    ],
+    [
+        'method' => 'GET',
+        'path' => '/login?',
+        'callback' => function() {
+            require __DIR__.'/controllers/login.php';
+        }
+    ],
+    [
+        'method' => 'GET',
+        'path' => '/login',
+        'callback' => function() {
+            require __DIR__.'/controllers/login.php';
+        }
+    ],
+    [
+        'method' => 'GET',
+        'path' => '/home',
+        'callback' => function() {
+            require __DIR__.'/controllers/home.php';
+        }
+    ],
+    [
+        'method' => 'GET',
+        'path' => '/chats',
+        'callback' => function() {
+            require __DIR__.'/controllers/chats.php';
+        }
+    ],
+    
+    [
+        'method' => 'GET',
+        'path' => '/reporte',
+        'callback' => function() {
+            require __DIR__.'/controllers/reports.php';
+        }
+    ],
 ];
 
 $isInRoutes = false;
