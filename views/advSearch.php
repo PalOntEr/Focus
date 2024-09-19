@@ -6,7 +6,7 @@ require 'views/components/navbar.php';
 <div class="container mx-auto flex flex-col h-full">
     <div class="flex w-full h-full mb-4 overflow-y-hidden">
         <div class="w-1/6 bg-primary rounded-md">
-            <form id="filters" action="search_results.php" method="GET" class="p-4">
+            <form id="filters" action="/advSearch" method="GET" class="p-4">
                 <div class="mb-4">
                     <label for="category" class="block text-sm font-medium text-color">Category</label>
                     <select id="category" name="category" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md">
@@ -51,13 +51,15 @@ require 'views/components/navbar.php';
 <script>
     document.querySelector('#filters').addEventListener('submit', function(event) {
         event.preventDefault();
-        var startDate = document.getElementById('start_date').value;
-        var endDate = document.getElementById('end_date').value;
-        var category = document.getElementById('category').value;
-        var title = document.getElementById('title').value;
-        var user = document.getElementById('user').value;
+        
+        var inputs = {
+            startDate: document.getElementById('start_date').value,
+            endDate: document.getElementById('end_date').value,
+            category: document.getElementById('category').value,
+            title: document.getElementById('title').value,
+        };
 
-        if (startDate && endDate && new Date(startDate) > new Date(endDate)) {
+        if (inputs.startDate && inputs.endDate && new Date(inputs.startDate) > new Date(inputs.endDate)) {
             swal({
                 icon: 'error',
                 title: 'Invalid Date Range',
@@ -66,7 +68,7 @@ require 'views/components/navbar.php';
             return;
         }
 
-        if (!category && !title && !user && !startDate && !endDate) {
+        if (!inputs.category && !inputs.title && !inputs.user && !inputs.startDate && !inputs.endDate) {
             swal({
                 icon: 'error',
                 title: 'No Filters Selected',

@@ -124,7 +124,45 @@
                 title: '☠️',
                 text: 'Please fill in all fields!'
             });
+            return;
         }
+
+        const password = inputs.find(input => input.id === 'password').value;
+        const confirmPassword = inputs.find(input => input.id === 'ConfirmPassword').value;
+        const specialChars = /[¡”#$%&/=’?¡¿:;,.\-_+*{[\]}]/;
+
+        if (password.length < 8 || !specialChars.test(password)) {
+            event.preventDefault();
+            swal({
+                icon: 'error',
+                title: '☠️',
+                text: 'Password must be at least 8 characters long and contain at least one special character\n (¡”#$%&/=’?¡¿:;,.-_+*{][})'
+            });
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            event.preventDefault();
+            swal({
+                icon: 'error',
+                title: '☠️',
+                text: 'Passwords do not match!'
+            });
+            return;
+        }
+
+        swal({
+            icon: 'success',
+            title: '🎉',
+            text: 'Account <?php 
+            if($_GET['update']){
+                echo 'updated';
+            }else{
+                echo 'created';
+            }
+            ?> successfully!'
+        });
+
     });
 
     document.querySelector('#Photo').addEventListener('change', function(event) {
