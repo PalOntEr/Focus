@@ -4,7 +4,6 @@
 ?>
 <div class="container mx-auto">
     <h1 class="text-8xl text-primary text-center font-extrabold tracking-wide">FOC<span class="text-secondary">US</span></h1>
-                    <h1 class="text-4xl xl:text-6xl 2xl:text-8xl font-extrabold tracking-wider text-color"><span class="text-secondary">FOC</span>US</h1>
     <div class="w-full text-4xl text-primary font-bold my-5">
         Best seller
     </div>
