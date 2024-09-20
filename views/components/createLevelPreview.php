@@ -4,10 +4,10 @@
             <?= $levelNum ?>
         </div>
         <div class="w-5/12">
-            <input class="w-full rounded-md p-1 bg-comp-2 text-comp-1" placeholder="Level Name" type="text">
+            <input name="levelName" class="w-full rounded-md p-1 bg-comp-2 text-comp-1" placeholder="Level Name" type="text">
         </div>
         <div class="w-1/2">
-            <input class="w-full rounded-md p-1 bg-comp-2 text-comp-1" placeholder="Level Description" type="text">
+            <input name="levelDescription" class="w-full rounded-md p-1 bg-comp-2 text-comp-1" placeholder="Level Description" type="text">
         </div>
     </div>
     <div class="flex items-center justify-end space-x-2 w-1/2">
@@ -25,7 +25,9 @@
         </div>
         <div>
             <label class="flex items-center space-x-1">
-                <a class="text-secondary font-bold" href="#">REMOVE</a>
+                <a href="#">
+                    <img class="h-5" src="https://cdn-icons-png.flaticon.com/512/1017/1017530.png" alt="Remove">
+                </a>
             </label>
         </div>
     </div>
