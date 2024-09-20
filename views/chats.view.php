@@ -8,7 +8,7 @@
 <div class="container mx-auto flex flex-col sm:flex-row h-full w-screen mt-4">
     <div class="hidden sm:flex flex-col h-5/6 w-1/3 bg-primary rounded-xl mx-5 p-5">
         <div class="flex justify-between items-center mb-5">
-            <h1 class="text-2xl text-primary font-bold">Chats</h1>
+            <h1 class="text-2xl text-color font-extrabold">Chats</h1>
             <button class="hidden md:block px-2 py-1 bg-primary text-white rounded">New Chat</button>
             <button class="block md:hidden px-2 py-1 bg-primary text-white rounded">➕</button>
         </div>
