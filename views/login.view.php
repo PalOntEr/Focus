@@ -54,6 +54,38 @@ require 'views/components/header.php';
                 title: '☠️',
                 text: 'Please fill in all fields!'
             });
+            return;
         }
+
+        const username = document.querySelector('#user').value;
+        
+        let usertype = 'student';
+        if (username === 'Roberto') {
+            usertype = 'instructor';
+        } else if (username === 'Max') {
+            usertype = 'admin';
+        }
+
+        sessionStorage.setItem('usertype', usertype);
+
+        fetch('setUser', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ usertype: usertype })
+        }).then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.href = '/home';
+            } else {
+                swal({
+                    icon: 'error',
+                    title: '☠️',
+                    text: 'Failed to store user type in php session!'
+                });
+            }
+        });
+
     });
 </script>
