@@ -119,13 +119,20 @@ $routes = [
         'callback' => function() {
             require __DIR__.'/controllers/reports.php';
         }
+    ],
+    [
+        'method' => 'GET',
+        'path' => '/advSearch',
+        'callback' => function() {
+            require __DIR__.'/controllers/advSearch.php';
+        }
     ]
 ];
 
 $isInRoutes = false;
 
 foreach ($routes as $route) {
-    if ($route['method'] === $_SERVER['REQUEST_METHOD'] && $route['path'] === $_SERVER['REQUEST_URI']) {
+    if ($route['method'] === $_SERVER['REQUEST_METHOD'] && $route['path'] === strtok($_SERVER['REQUEST_URI'], '?')) {
         call_user_func($route['callback']);
         $isInRoutes = true;
         break;
