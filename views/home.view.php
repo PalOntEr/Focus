@@ -18,5 +18,5 @@
     <div class="w-full text-4xl text-primary font-bold my-5">
         Categories
     </div>
-    
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.js"></script>
 </div>
