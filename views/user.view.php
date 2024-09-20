@@ -1,6 +1,9 @@
 <?php
 require 'views/components/header.php';
 require 'views/components/navbar.php';
+
+$usertype = $_SESSION['usertype'] ?? 'guest';
+
 ?>
 <div id="User-container" class="container mx-auto">
     <div class="flex flex-row place-content-center lg:place-content-between">
@@ -14,9 +17,15 @@ require 'views/components/navbar.php';
         </div>
         <div id="User-Settings-Container" class="hidden lg:flex md:flex-row place-self-end w-auto  mb-2">
             <input type="button" class="mx-2 py-1 px-2 text-sm text-color bg-secondary rounded-md" onclick="location.href='/register?update=true';" value="Edit Profile"></input>
+            <?php if ($usertype === 'student'): ?>
             <input type="button" class="mx-2 py-1 px-2 text-sm text-color bg-secondary rounded-md" onclick="location.href='/kardex';" value="Kardex"></input>
-            <input type="button" class="mx-2 py-1 px-2 text-sm text-color bg-secondary rounded-md" onclick="location.href='/sales';" value="Sales"></input>
-            <input type="button" class="ml-2 py-1 px-2 text-sm text-color bg-secondary rounded-md" onclick="location.href='/reporte';" value="Report"></input>
+            <?php endif; ?>
+            <?php if ($usertype === 'instructor'): ?>
+                <input type="button" class="mx-2 py-1 px-2 text-sm text-color bg-secondary rounded-md" onclick="location.href='/sales';" value="Sales"></input>
+            <?php endif; ?>
+            <?php if ($usertype === 'admin'): ?>
+                <input type="button" class="ml-2 py-1 px-2 text-sm text-color bg-secondary rounded-md" onclick="location.href='/reporte';" value="Report"></input>
+            <?php endif; ?>
         </div>
     </div>
     <div class="w-full h-1 bg-comp-2"></div>

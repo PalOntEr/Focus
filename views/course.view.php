@@ -1,6 +1,7 @@
 <?php
 require 'views/components/header.php';
 require 'views/components/navbar.php';
+$usertype = $_SESSION['usertype'] ?? 'guest';
 ?>
 
 <div class="flex flex-col container sm:mx-auto overflow-x-hidden items-center">
@@ -41,7 +42,12 @@ require 'views/components/navbar.php';
         </div>
     </div>
     <div class="h-1/3 flex flex-col items-center sm:items-start mx-4 sm:mx-0">
-        <h1 class="text-4xl font-bold text-primary">REVIEWS</h1>
+        <div class="flex w-full justify-between items-center">
+            <h1 class="text-4xl font-bold text-primary">REVIEWS</h1>
+            <button class="comment-button" onclick="showCommentModal()">
+                <img class="h-5" src="https://cdn-icons-png.flaticon.com/512/1042/1042474.png" alt="">
+        </button>
+        </div>
         <div class="h-0.5 bg-comp-1 w-full"></div>
         <div class="container mx-auto flex flex-row items-center justify-center h-96 overflow-y-scroll sm:overflow-y-auto w-5/6 sm:w-full my-2 flex-wrap">
             <?php
@@ -56,3 +62,51 @@ require 'views/components/navbar.php';
             ?>
         </div>
     </div>
+</div>
+
+<div id="commentModal" class="modal hidden fixed inset-0 bg-gray-600 bg-opacity-50 items-center justify-center">
+    <div class="bg-white p-5 rounded-lg sm:w-1/3">
+        <h2 class="text-lg font-semibold mb-4">Make review</h2>
+        <p class="mb-4">Comment</p>
+        <textarea id="comment" class="w-full p-2 rounded border border-gray-300" rows="4"></textarea>
+        <div class="flex justify-end">
+            <button class="bg-gray-300 px-4 py-2 rounded mr-2" onclick="hideCommentModal()">Cancel</button>
+            <button class="bg-green-500 text-white px-4 py-2 rounded" onclick="confirmComment()">Comment</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    
+function showCommentModal() {
+    document.getElementById('commentModal').classList.remove('hidden');
+    document.getElementById('commentModal').classList.add('flex');
+}
+
+function hideCommentModal() {
+    document.getElementById('commentModal').classList.add('hidden');
+    document.getElementById('commentModal').classList.remove('flex');
+}
+
+function confirmComment() {
+    const reason = document.querySelector('#comment').value.trim();
+    if (reason === '') {
+        swal({
+            title: 'Error!',
+            text: 'Type a comment.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+        return;
+    }
+
+    // Add your deletion logic here
+    swal({
+        title: '🌟',
+        text: 'Comment has been created.',
+        icon: 'success',
+        confirmButtonText: 'OK'
+    });
+    hideCommentModal();
+}
+</script>

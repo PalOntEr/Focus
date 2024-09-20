@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 $routes = [
     [
         'method' => 'GET',
@@ -126,7 +128,14 @@ $routes = [
         'callback' => function() {
             require __DIR__.'/controllers/advSearch.php';
         }
-    ]
+    ],
+    [
+        'method' => 'POST',
+        'path' => '/setUser',
+        'callback' => function() {
+            require __DIR__.'/api/setUser.php';
+        }
+    ],
 ];
 
 $isInRoutes = false;

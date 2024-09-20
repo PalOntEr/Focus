@@ -15,7 +15,7 @@
                 <div class="font-bold text-comp-1 text-sm my-3">SUBTOTAL: <span class="font-normal text-color">$524.00 MXN</span></div>
                 <div class="font-bold text-comp-1 text-sm my-3">TOTAL: <span class="font-normal text-color">$480.00 MXN</span></div>
                 <div class="h-px w-full bg-comp-2 my-4"></div>   
-                <button onclick="location.href='/checkout'"class="w-full bg-comp-1 text-sm p-2 text-color rounded-md">Pagar.</button>
+                <button onclick="location.href='/checkout'"class="w-full bg-comp-1 text-sm p-2 text-color rounded-md font-bold">PROCEED TO CHECKOUT</button>
             </div>
         </div>
     </div>
