@@ -1,7 +1,10 @@
 <?php
 
     require 'views/components/header.php';
-    if (isset($_GET['update']) && $_GET['update'] === 'true') {
+
+    $isUpdating = isset($_GET['update']) && $_GET['update'] === 'true';
+
+    if ($isUpdating) {
         require 'views/components/navbar.php';
     }
 
@@ -14,13 +17,13 @@
     <div class="bg-primary flex w-5/6 md:w-3/4 justify-center md:place-content-evenly rounded-xl">
         <div id="Form-Container" class="items-center flex flex-col mx-4 2xl:mx-6 my-12">
             <?php
-                if (isset($_GET['update']) && $_GET['update'] === 'true') {
+                if ($isUpdating) {
                     echo '<h2 class="text-color text-3xl text-center w-full mb-6 font-bold">Update Account Info</h2>';
-                }else{
+                } else {
                     echo '<h2 class="text-color text-3xl text-center w-full mb-6 font-bold">Create Account</h2>';
                 }
             ?>
-            <form id="register" class="container flex flex-col md:justify-between h-full font-semibold mb-4" action="<?php if($_GET['update'])echo '/user'; else echo '/login'; ?>" method="GET">
+            <form id="register" class="container flex flex-col md:justify-between h-full font-semibold mb-4" action="<?= $isUpdating ? '/user' : '/login'; ?>" method="GET">
                 <div class="flex flex-col md:flex-row w-full items-center space-y-6 md:space-y-0 md:space-x-6 mb-6">
                     <div class="flex flex-col w-5/6 space-y-4 md:w-1/2">
                         <div>
@@ -77,10 +80,10 @@
                         </div>
                     </div>
                 </div>
-                <input type="submit" value="<?php if($_GET['update'])echo 'Update'; else echo 'Register'; ?>" class="w-1/6 self-center bg-comp-2 text-primary font-semibold rounded-md p-1" />
+                <input type="submit" value="<?= $isUpdating ? 'Update' : 'Register'; ?>" class="w-1/6 self-center bg-comp-2 text-primary font-semibold rounded-md p-1" />
             </form>
             <?php
-                if (!$_GET['update']) {
+                if (!$isUpdating) {
                     echo '<div class="text-center text-xs w-full text-comp-1">Already have an account? <a class="text-comp-2 visited:text-color font-bold" href="/login">Log In</a></div>';
                 }
             ?>
@@ -155,7 +158,7 @@
             icon: 'success',
             title: '🎉',
             text: 'Account <?php 
-            if($_GET['update']){
+            if($isUpdating){
                 echo 'updated';
             }else{
                 echo 'created';
