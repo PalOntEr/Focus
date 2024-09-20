@@ -6,11 +6,11 @@ require 'views/components/header.php';
     require 'views/components/navbar.php';
     ?>
     <div class="container mx-auto flex h-auto">
-        <div class="w-full mx-4">
+        <div class="w-full mx-4 flex flex-col">
             <h1 class="text-center text-8xl text-primary font-extrabold tracking-wide">FOC<span class="text-secondary">US</span></h1>
             <h2 class="text-center text-4xl font-bold text-primary">Check<span class="text-secondary">out</span></h2>
             <div class="w-full bg-primary h-0.5 my-6"></div>
-            <form class="flex flex-col space-y-8 text-md h-full justify-evenly ">
+            <form class="flex flex-col space-y-8 text-md h-full justify-between ">
                 <div>
                     <label for="Email">Email</label>
                     <input type="text" id="Email" placeholder="Email" class="w-full" />
