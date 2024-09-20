@@ -12,11 +12,11 @@ require 'views/components/header.php';
             <form id="login" class="flex flex-col justify-between h-52 font-semibold mb-4" action="/home" method="GET">
                 <div>
                     <p class="text-secondary">Username:</p>
-                    <input id="user" type="text" class="w-full bg-transparent border-t-transparent border-b-2 outline-none text-primary" />
+                    <input id="user" type="text" class="w-full bg-transparent border-t-transparent border-b-2 outline-none text-color" />
                 </div>
                 <div>
                     <p class="text-secondary">Password:</p>
-                    <input id="password" type="password" class="w-full bg-transparent border-t-transparent border-b-2 outline-none text-primary" />
+                    <input id="password" type="password" class="w-full bg-transparent border-t-transparent border-b-2 outline-none text-color" />
                 </div>
                 <input type="submit" value="Log In" class="w-1/2 self-center bg-comp-2 text-primary font-semibold rounded-md p-1" />
             </form>
