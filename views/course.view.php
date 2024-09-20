@@ -34,7 +34,6 @@ require 'views/components/navbar.php';
             for ($i = 1; $i <= 28; $i++) {
                 $comment = "lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi.";
                 $level = $i;
-                $stars = rand(1, 5);
                 $commentUser = "Dobeto";
                 require 'views/components/levelCard.php';
             }
