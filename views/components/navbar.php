@@ -6,11 +6,11 @@
         <a href="/home" class="text-3xl font-bold ease-in duration-150 prevent-select tracking-wider">FOCUS</a>
 
         <div class="flex space-x-4">
-            <button id="dropdownNavbarLink" data-dropdown-toggle="dropdownNavbar" class="hidden md:flex items-center font-bold w-full py-2 px-3 md:border-0 md:p-0 md:w-auto">
+            <button id="dropdownNavbarLink" data-dropdown-toggle="dropdownNavbar" class="hidden lg:flex items-center font-bold w-full py-2 px-3 md:border-0 md:p-0 md:w-auto">
                 Categories <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" />
                 </svg></button>
-            <div id="dropdownNavbar" class="z-10 hidden font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+            <div id="dropdownNavbar" class="z-10 hidden font-normal bg-white divide-y rounded-lg">
                 <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownLargeButton">
                     <li>
                         <a href="/advSearch" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Computer Science</a>
@@ -19,11 +19,11 @@
                         <a href="/advSearch" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Languages</a>
                     </li>
                     <li>
-                        <a href="/advSearch" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Earnings</a>
+                        <a href="/advSearch" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Engineering</a>
                     </li>
                 </ul>
             </div>
-            <form action="/advSearch" method="GET" class="hidden sm:flex justify-center items-start">
+            <form action="/advSearch" method="GET" class="hidden md:flex justify-center items-start">
                 <input type="text" name="search" placeholder="Search..." class="px-2 py-1 rounded sm:w-auto md:w-96">
                 <button type="submit" class="ml-2 px-2 py-1 bg-comp-2 text-secondary font-semibold rounded">Search</button>
             </form>
