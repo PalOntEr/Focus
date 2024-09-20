@@ -1,6 +1,6 @@
 <div class="flex items-center justify-between border-b-2 p-1">
     <div class="flex w-1/2 items-center space-x-2 text-sm">
-        <div class="w-1/12 font-bold">
+        <div class="w-1/12 font-bold text-color">
             <?= $levelNum ?>
         </div>
         <div class="w-5/12">

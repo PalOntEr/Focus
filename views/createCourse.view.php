@@ -6,10 +6,10 @@
 ?>
 <div class="container mx-auto space-y-5">
     <div class="text-center">
-        <h2 class="text-color text-4xl font-bold"><?= $isUpdating ? 'Update' : 'Create'; ?></h2>
+        <h2 class="text-primary text-4xl font-bold"><?= $isUpdating ? 'Update' : 'Create'; ?></h2>
         <h1 class="text-secondary text-5xl font-bold">Course</h1>
     </div>
-    <div class="flex flex-col sm:flex-row mx-10 items-center sm:items-stretch space-y-4 sm:space-y-0 sm:space-x-4 text-color font-semibold">
+    <div class="flex flex-col sm:flex-row mx-10 items-center sm:items-stretch space-y-4 sm:space-y-0 sm:space-x-4 text-secondary font-semibold">
         <div class="w-5/6 sm:w-1/2 space-y-2">
             <div>
                 <div>
@@ -58,7 +58,7 @@
             <h3 class="text-3xl font-bold">Levels</h3>
             <a class="text-secondary" href="#">Add level</a>
         </div>
-        <div class="bg-comp-1 text-secondary space-y-2 rounded-md p-2">
+        <div class="bg-primary text-secondary space-y-2 rounded-md p-2">
             <?php                
                 for( $i = 1; $i <= 5; $i++ ) {
                     $levelNum = $i;
