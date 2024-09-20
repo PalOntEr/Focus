@@ -6,9 +6,11 @@
         </div>
         <div class="flex items-center justify-end w-1/2">
             <div class="text-comp-2 mr-2"><?= $stars ?>/5⭐</div>
-            <button class="delete-button" onclick="showModal()">
-                <img class="h-5 w-5 bg-color rounded-full" src="https://cdn-icons-png.flaticon.com/512/1017/1017530.png" alt="delete">
-            </button>
+            <?php if ($usertype === 'instructor'): ?>
+                <button class="delete-button" onclick="showModal()">
+                    <img class="h-5 w-5 bg-color p-1 rounded-full" src="https://cdn-icons-png.flaticon.com/512/1017/1017530.png" alt="delete">
+                </button>
+            <?php endif; ?>
         </div>
     </div>
     <div class="flex w-full h-3/4 px-3 items-center justify-between font-semibold overflow-y-scroll">
@@ -16,9 +18,8 @@
     </div>
 </div>
 
-<!-- Modal Structure -->
 <div id="deleteModal" class="modal hidden fixed inset-0 bg-gray-600 bg-opacity-50 items-center justify-center">
-    <div class="bg-white p-5 rounded-lg">
+    <div class="bg-white p-5 rounded-lg sm:w-1/3">
         <h2 class="text-lg font-semibold mb-4">Confirm Deletion</h2>
         <p class="mb-4">Reason for deletion</p>
         <textarea id="deleteReason" class="w-full p-2 rounded border border-gray-300" rows="4"></textarea>
