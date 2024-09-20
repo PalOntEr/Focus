@@ -6,7 +6,7 @@
         PHP Course
     </div>
     <div class="flex justify-between w-full font-semibold">
-        <div class="text-comp-2">Instructor</div>
+        <div class="text-comp-2"><a href="/chats">Instructor</a></div>
         <div class="text-comp-2">4.3/5⭐</div>
     </div>
     <div class="flex flex-row justify-evenly w-full">
