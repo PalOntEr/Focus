@@ -5,6 +5,13 @@ session_start();
 $routes = [
     [
         'method' => 'GET',
+        'path' => '/',
+        'callback' => function() {
+            require __DIR__.'/controllers/login.php';
+        }
+    ],
+    [
+        'method' => 'GET',
         'path' => '/test',
         'callback' => function() {
             require __DIR__.'/controllers/test.php';
@@ -54,23 +61,9 @@ $routes = [
     ],
     [
         'method' => 'GET',
-        'path' => '/home?',
-        'callback' => function() {
-            require __DIR__.'/controllers/home.php';
-        }
-    ],
-    [
-        'method' => 'GET',
         'path' => '/register',
         'callback' => function() {
             require __DIR__.'/controllers/register.php';
-        }
-    ],
-    [
-        'method' => 'GET',
-        'path' => '/login?',
-        'callback' => function() {
-            require __DIR__.'/controllers/login.php';
         }
     ],
     [
