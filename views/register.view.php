@@ -146,13 +146,15 @@
         const password = inputs.find(input => input.id === 'password').value;
         const confirmPassword = inputs.find(input => input.id === 'ConfirmPassword').value;
         const specialChars = /[¡”#$%&/=’?¡¿:;,.\-_+*{[\]}]/;
+        const uppercasePattern = /[A-Z]/;
+        const numberPattern = /[0-9]/;
 
-        if (password.length < 8 || !specialChars.test(password)) {
+        if (password.length < 8 || !specialChars.test(password) || !uppercasePattern.test(password) || !numberPattern.test(password)) {
             event.preventDefault();
             swal({
                 icon: 'error',
                 title: '☠️',
-                text: 'Password must be at least 8 characters long and contain at least one special character\n (¡”#$%&/=’?¡¿:;,.-_+*{][})'
+                text: 'Password must be at least 8 characters long and contain at least one special character (¡”#$%&/=’?¡¿:;,.-_+*{][}), one uppercase letter, and one number.'
             });
             return;
         }

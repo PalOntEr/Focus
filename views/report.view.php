@@ -41,7 +41,7 @@ require 'views/components/navbar.php';
                     <td class="py-2">Roberto Carlos</td>
                     <td>25/04/2022</td>
                     <td>7</td>
-                    <td>5</td>
+                    <td>50%</td>
                     <td><input type="checkbox" checked class="status-checkbox"></td>
                 </tr>
                 <tr class="bg-comp-2 text-primary">
@@ -49,7 +49,7 @@ require 'views/components/navbar.php';
                     <td class="py-2">Max Andrés</td>
                     <td>25/04/2022</td>
                     <td>7</td>
-                    <td>5</td>
+                    <td>50%</td>
                     <td><input type="checkbox" class="status-checkbox"></td>
                 </tr>
                 <tr class="bg-comp-1 text-primary">
@@ -57,7 +57,7 @@ require 'views/components/navbar.php';
                     <td>Roberto Carlos</td>
                     <td>25/04/2022</td>
                     <td>7</td>
-                    <td>5</td>
+                    <td>50%</td>
                     <td class="rounded-br-lg"><input type="checkbox" checked class="status-checkbox"></td>
                 </tr>
             </tbody>
@@ -72,7 +72,9 @@ require 'views/components/navbar.php';
                     <th>Name</th>
                     <th>Registration Date</th>
                     <th>Created Courses</th>
-                    <th class=" rounded-tr-lg">Earnings</th>
+                    <th>Earnings</th>
+                    <th class=" rounded-tr-lg">Status</th>
+                </tr>
                 </tr>
             </thead>
             <tbody class="text-center font-semibold">
@@ -82,13 +84,15 @@ require 'views/components/navbar.php';
                     <td>25/04/2022</td>
                     <td>7</td>
                     <td>500$</td>
+                    <td><input type="checkbox" checked class="status-checkbox"></td>
                 </tr>
                 <tr class="bg-comp-2 text-primary">
                     <td class="py-2 rounded-bl-lg">max@mail.com</td>
                     <td>Max Andrés</td>
                     <td>25/04/2022</td>
                     <td>7</td>
-                    <td class="rounded-br-lg">500$</td>
+                    <td class=>500$</td>
+                    <td class="rounded-br-lg"><input type="checkbox" checked class="status-checkbox"></td>
                 </tr>
             </tbody>
         </table>

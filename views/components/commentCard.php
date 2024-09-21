@@ -6,7 +6,7 @@
         </div>
         <div class="flex items-center justify-end w-1/2">
             <div class="text-comp-2 mr-2"><?= $stars ?>/5⭐</div>
-            <?php if ($usertype === 'instructor'): ?>
+            <?php if ($usertype === 'admin'): ?>
                 <button class="delete-button" onclick="showModal()">
                     <img class="h-5 w-5 bg-color p-1 rounded-md" src="https://cdn-icons-png.flaticon.com/512/1017/1017530.png" alt="delete">
                 </button>

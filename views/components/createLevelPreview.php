@@ -24,9 +24,9 @@
 
         </a>
         <div>
-            <label class="flex items-center space-x-1">
-                <input type="checkbox" class="">
-                <span>Cost $500</span>
+            <label name="individualCost" class="hidden flex items-center space-x-1">
+                <label>Cost:</label>
+                <input type="number" name="individualCost" class="w-20 rounded-md p-1 bg-transparent outline-none text-color" value="">
             </label>
         </div>
         <div>
