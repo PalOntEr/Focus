@@ -15,7 +15,7 @@
                 <div class="text-xl my-1">
                     Title
                 </div>
-                <input id="title" class="rounded-md p-1 bg-primary text-color w-full p-2 font-bold text-lg" type="text">
+                <input id="title" class="rounded-md p-1 bg-primary text-color w-full font-bold text-lg" type="text">
             </div>
             <div>
                 <div class="text-xl my-1">
