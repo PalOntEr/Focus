@@ -60,7 +60,7 @@ $usertype = $_SESSION['usertype'] ?? 'guest';
                     $comment = "lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi.";
                     $stars = rand(1, 5);
                     $commentUser = "Dobeto";
-                    $commentDate = date('Y-m-d');
+                    $commentDate = date('Y-m-d H:i');
                     require 'views/components/commentCard.php';
                 }
             }
