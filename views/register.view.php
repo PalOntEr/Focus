@@ -130,6 +130,19 @@
             return;
         }
 
+        const email = inputs.find(input => input.id === 'Email').value;
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!emailPattern.test(email)) {
+            event.preventDefault();
+            swal({
+                icon: 'error',
+                title: '☠️',
+                text: 'Please enter a valid email address!'
+            });
+            return;
+        }
+
         const password = inputs.find(input => input.id === 'password').value;
         const confirmPassword = inputs.find(input => input.id === 'ConfirmPassword').value;
         const specialChars = /[¡”#$%&/=’?¡¿:;,.\-_+*{[\]}]/;
