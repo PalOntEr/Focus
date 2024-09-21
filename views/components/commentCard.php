@@ -16,6 +16,9 @@
     <div class="flex w-full h-3/4 px-3 items-center justify-between font-semibold overflow-y-scroll">
         <div class="text-color"><?= $comment ?></div>
     </div>
+    <div class="flex w-full h-1/4 p-1 items-center justify-end text-color text-sm">
+        <?= $commentDate ?>
+    </div>
 </div>
 
 <div id="deleteModal" class="modal hidden fixed inset-0 bg-gray-600 bg-opacity-50 items-center justify-center">
@@ -53,7 +56,6 @@ function confirmDelete() {
         return;
     }
 
-    // Add your deletion logic here
     swal({
         title: 'Deleted!',
         text: 'Comment has been deleted.',
