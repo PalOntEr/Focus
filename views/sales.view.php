@@ -16,8 +16,9 @@ require 'views/components/navbar.php';
     <div class="h-1 w-full bg-secondary"></div>
 
     <div id="Kardex-Container" class="my-4">
-        <div id="Kardex-Query-Container" class="bg-primary rounded-lg flex flex-row place-content-between mt-4 p-2">
-            <div class="w-1/3 self-center">
+        <div id="Kardex-Query-Container" class="bg-primary rounded-lg flex flex-row place-content-between my-2 p-2">
+            <div class="w-1/3 self-center flex space-x-3">
+                <input type="button" class="bg-comp-1 text-color p-1 rounded-lg" value="Clean">
                 <select class="w-1/2 bg-comp-1 text-color py-1 outline-none rounded-md border-0">
                     <option>Any</option>
                     <option>Computer Science</option>
@@ -33,19 +34,10 @@ require 'views/components/navbar.php';
             </div>
 
             <div class="flex w-1/3 justify-end self-center">
-                <label for="Finished" class="">Course: </label>
-                <input id="Finished" type="text" class="border-0 border-b-2 outline-none bg-transparent checked:bg-secondary">
+                <input id="Active" type="checkbox" class="checked:bg-secondary">
+                <label for="Active" class="">Active</label>
             </div>
 
-            <div class="flex w-1/3 justify-end self-center">
-                <input id="Finished" type="checkbox" class="checked:bg-secondary">
-                <label for="Finished" class=""> Finished</label>
-            </div>
-            
-        </div>
-        
-        <div class="my-4">
-                <input type="button" class="bg-primary p-1 rounded-lg" value="Limpiar" >
         </div>
         <div id="Sales-Table-Container">
             <table id="Full-Sales" class="table-auto w-full">
@@ -78,8 +70,25 @@ require 'views/components/navbar.php';
                     </tr>
                 </tbody>
             </table>
-            <div class="font-bolder text-2xl mt-3"><span>INGRESOS TOTALES: </span>$1240.00 MXN</div>
+            <div class="font-bolder text-2xl mt-3 mb-5"><span>INGRESOS TOTALES: </span>$1240.00 MXN</div>
 
+            <div id="Kardex-Query-Container" class="bg-primary rounded-lg flex flex-row  my-2 p-2">
+            <div class="w-1/3 self-center flex space-x-3">
+                <input type="button" class="bg-comp-1 text-color p-1 rounded-lg" value="Clean">
+                <select class="w-1/2 bg-comp-1 text-color py-1 outline-none rounded-md border-0">
+                    <option>Course 1</option>
+                    <option>Course 2</option>
+                    <option>Course 3</option>
+                    <option>Course 4</option>
+                </select>
+            </div>
+
+            <div class="flex w-1/3 justify-between">
+                <input type="date" id="DateStart" class="w-1/3 bg-comp-1 text-color outline-none rounded-md border-0">
+                <div class="h-0.5 w-2 bg-primary self-center"></div>
+                <input type="date" id="DateFinish" class="w-1/3 bg-comp-1 text-color outline-none rounded-md border-0">
+            </div>
+        </div>
             <table id="Sales-Course" class="table-auto w-full">
                 <thead class="bg-primary text-color">
                     <tr>
@@ -99,7 +108,7 @@ require 'views/components/navbar.php';
                         <td>Unico</td>
                     </tr>
                     <tr class="bg-comp-2 text-primary">
-                    <td class="py-2">Max Andrés Zertuche Perez</td>
+                        <td class="py-2">Max Andrés Zertuche Perez</td>
                         <td class="rounded-bl-lg">21/08/2024</td>
                         <td>7</td>
                         <td>740</td>
