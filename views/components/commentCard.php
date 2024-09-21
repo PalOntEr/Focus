@@ -8,13 +8,16 @@
             <div class="text-comp-2 mr-2"><?= $stars ?>/5⭐</div>
             <?php if ($usertype === 'instructor'): ?>
                 <button class="delete-button" onclick="showModal()">
-                    <img class="h-5 w-5 bg-color p-1 rounded-full" src="https://cdn-icons-png.flaticon.com/512/1017/1017530.png" alt="delete">
+                    <img class="h-5 w-5 bg-color p-1 rounded-md" src="https://cdn-icons-png.flaticon.com/512/1017/1017530.png" alt="delete">
                 </button>
             <?php endif; ?>
         </div>
     </div>
     <div class="flex w-full h-3/4 px-3 items-center justify-between font-semibold overflow-y-scroll">
         <div class="text-color"><?= $comment ?></div>
+    </div>
+    <div class="flex w-full h-1/4 p-1 items-center justify-end text-color text-sm">
+        <?= $commentDate ?>
     </div>
 </div>
 
@@ -53,7 +56,6 @@ function confirmDelete() {
         return;
     }
 
-    // Add your deletion logic here
     swal({
         title: 'Deleted!',
         text: 'Comment has been deleted.',

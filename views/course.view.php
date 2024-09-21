@@ -40,7 +40,6 @@ $usertype = $_SESSION['usertype'] ?? 'guest';
             for ($i = 1; $i <= 28; $i++) {
                 $comment = "lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi.";
                 $level = $i;
-                $commentUser = "Dobeto";
                 require 'views/components/levelCard.php';
             }
             ?>
@@ -61,6 +60,7 @@ $usertype = $_SESSION['usertype'] ?? 'guest';
                     $comment = "lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi.";
                     $stars = rand(1, 5);
                     $commentUser = "Dobeto";
+                    $commentDate = date('Y-m-d');
                     require 'views/components/commentCard.php';
                 }
             }
@@ -72,8 +72,14 @@ $usertype = $_SESSION['usertype'] ?? 'guest';
 <div id="commentModal" class="modal hidden fixed inset-0 bg-gray-600 bg-opacity-50 items-center justify-center">
     <div class="bg-white p-5 rounded-lg sm:w-1/3">
         <h2 class="text-lg font-semibold mb-4">Make review</h2>
-        <p class="mb-4">Comment</p>
+        <p class="mb-2">Comment</p>
         <textarea id="comment" class="w-full p-2 rounded border border-gray-300" rows="4"></textarea>
+        <p class="">Rating</p>
+        <div class="flex mb-4">
+            <?php for ($i = 1; $i <= 5; $i++): ?>
+                <span class="star" data-value="<?php echo $i; ?>" onclick="rateStar(<?php echo $i; ?>)">&#9733;</span>
+            <?php endfor; ?>
+        </div>
         <div class="flex justify-end">
             <button class="bg-gray-300 px-4 py-2 rounded mr-2" onclick="hideCommentModal()">Cancel</button>
             <button class="bg-green-500 text-white px-4 py-2 rounded" onclick="confirmComment()">Comment</button>
@@ -93,22 +99,45 @@ function hideCommentModal() {
     document.getElementById('commentModal').classList.remove('flex');
 }
 
+let selectedRating = 0;
+
+function rateStar(rating) {
+    selectedRating = rating;
+    const stars = document.querySelectorAll('.star');
+    stars.forEach((star, index) => {
+        if (index < rating) {
+            star.classList.add('text-yellow-300');
+        } else {
+            star.classList.remove('text-yellow-300');
+        }
+    });
+}
+
 function confirmComment() {
-    const reason = document.querySelector('#comment').value.trim();
-    if (reason === '') {
+    const comment = document.querySelector('#comment').value.trim();
+    if (comment === '') {
         swal({
-            title: 'Error!',
-            text: 'Type a comment.',
             icon: 'error',
+            text: 'Type a comment.',
+            title: '☠️',
             confirmButtonText: 'OK'
         });
         return;
     }
 
-    // Add your deletion logic here
+    if (selectedRating === 0) {
+        swal({
+            icon: 'error',
+            text: 'Select a rating.',
+            title: '☠️',
+            confirmButtonText: 'OK'
+        });
+        return;
+    }
+
     swal({
         title: '🌟',
-        text: 'Comment has been created.',
+        text: 'Comment has been created with a rating of ' + selectedRating + ' 🌟',
         icon: 'success',
         confirmButtonText: 'OK'
     });
