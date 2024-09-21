@@ -136,6 +136,15 @@ $routes = [
             require __DIR__.'/api/setUser.php';
         }
     ],
+    [
+        'method' => 'GET',
+        'path' => '/diploma',
+        'callback' => function() {
+            header('Content-Type: image/png');
+            readfile(__DIR__.'/public/images/diploma.png');
+            exit();
+        }
+    ],
 ];
 
 $isInRoutes = false;

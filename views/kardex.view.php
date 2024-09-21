@@ -65,7 +65,7 @@ require 'views/components/navbar.php';
                         <td>26/07/2025</td>
                         <td><input type="checkbox" checked disabled></td>
                         <td>
-                            <a class="justify-center flex" onclick="downloadDiploma()" href="<?= $docRef ?>" download>
+                            <a class="justify-center flex" onclick="downloadDiploma()" href="/diploma" download>
                                 <img class="h-5 bg-color p-1 rounded-md" src="https://cdn-icons-png.flaticon.com/512/3580/3580085.png" alt="">
                             </a>
                         </td>
@@ -78,7 +78,7 @@ require 'views/components/navbar.php';
                         <td>26/07/2025</td>
                         <td><input type="checkbox" checked disabled></td>
                         <td>
-                            <a class="justify-center flex" onclick="downloadDiploma()" href="<?= $docRef ?>" download>
+                            <a class="justify-center flex" onclick="downloadDiploma()" href="/diploma" download>
                                 <img class="h-5 bg-color p-1 rounded-md" src="https://cdn-icons-png.flaticon.com/512/3580/3580085.png" alt="">
                             </a>
                         </td>
@@ -91,7 +91,7 @@ require 'views/components/navbar.php';
                         <td>26/07/2025</td>
                         <td><input type="checkbox" checked disabled></td>
                         <td class="rounded-br-lg">
-                            <a class="justify-center flex" onclick="downloadDiploma()" href="<?= $docRef ?>" download>
+                            <a class="justify-center flex" onclick="downloadDiploma()" href="/diploma" download>
                                 <img class="h-5 bg-color p-1 rounded-md" src="https://cdn-icons-png.flaticon.com/512/3580/3580085.png" alt="">
                             </a>
                         </td>
