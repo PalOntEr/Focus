@@ -72,7 +72,7 @@
         <h3 class="mx-10 text-3xl font-bold text-secondary mb-2">Payment Method</h3>
         <div class="flex justify-evenly mx-10 text-primary">
             <label class="flex items-center">
-                <input type="radio" name="payment_method" value="one_time" class="mr-2">
+                <input type="radio" name="payment_method" value="one_time" class="mr-2" checked>
                 One time
                 <input type="number" name="one_time_amount" placeholder="Enter amount" class="outline-none ml-2 p-1 rounded-md bg-comp-1 text-color">
             </label>
@@ -87,6 +87,18 @@
     </div>
 </div>
 <script>
+
+    document.querySelectorAll('input[name="payment_method"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const individualCostElements = document.querySelectorAll('[name="individualCost"]');
+            if (this.value === 'one_time') {
+                individualCostElements.forEach(element => element.classList.add('hidden'));
+            } else {
+                individualCostElements.forEach(element => element.classList.remove('hidden'));
+            }
+        });
+    });
+
     document.querySelector('#createCourse').addEventListener('click', function(event) {
         let title = document.querySelector('#title').value;
         let description = document.querySelector('#desc').value;
