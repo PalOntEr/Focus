@@ -19,6 +19,7 @@ require 'views/components/navbar.php';
             <select id="userTypeFilter" class="w-full md:w-1/3 bg-comp-1 text-color py-1 outline-none rounded-md border-0">
                 <option value="student">Student</option>
                 <option value="instructor">Instructor</option>
+                <option value="categories">Categories</option>
             </select>
         </div>
     </div>
@@ -92,6 +93,72 @@ require 'views/components/navbar.php';
             </tbody>
         </table>
     </div>
+
+    <div id="Categories-Table-Container" class="mt-6 hidden">
+        <table id="Full-Teachers-Reports" class="table-auto w-full my-2">
+            <thead class="bg-primary text-color">
+                <tr>
+                    <th class="rounded-tl-lg py-2">Name</th>
+                    <th>Description</th>
+                    <th>Created</th>
+                    <th>User</th>
+                    <th class=" rounded-tr-lg">REMOVE</th>
+                </tr>
+            </thead>
+            <tbody class="text-center font-semibold">
+                <tr class="bg-comp-1 text-primary">
+                    <td>Computer Science</td>
+                    <td class="py-2">Computer related stuff</td>
+                    <td>Max</td>
+                    <td>25/04/2022</td>
+                    <td>
+                        <button class="flex items-center h-full w-full justify-center" onclick="deleteCategory()">
+                            <img class="h-5 w-5 bg-color p-1 rounded-md" src="https://cdn-icons-png.flaticon.com/512/1017/1017530.png" alt="delete">
+                        </button>
+                    </td>
+                </tr>
+                <tr class="bg-comp-2 text-primary">
+                    <td class="py-2">Languages</td>
+                    <td>Language related stuff</td>
+                    <td>Max</td>
+                    <td>25/04/2022</td>
+                    <td>
+                    <button class="flex items-center h-full w-full justify-center" onclick="deleteCategory()">
+                            <img class="h-5 w-5 bg-color p-1 rounded-md" src="https://cdn-icons-png.flaticon.com/512/1017/1017530.png" alt="delete">
+                        </button>
+                    </td>
+                </tr>
+                <tr class="bg-comp-1 text-primary">
+                    <td class="py-2 rounded-bl-lg">Engineering</td>
+                    <td>Engineering related stuff</td>
+                    <td>Max</td>
+                    <td>25/04/2022</td>
+                    <td class="rounded-br-lg">
+                        <button class="flex items-center h-full w-full justify-center" onclick="deleteCategory()">
+                            <img class="h-5 w-5 bg-color p-1 rounded-md" src="https://cdn-icons-png.flaticon.com/512/1017/1017530.png" alt="delete">
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="flex justify-end mb-4">
+            <button id="addCategoryBtn" class="bg-primary text-color py-2 px-4 rounded-md">Add Category</button>
+        </div>
+    </div>
+</div>
+
+<div id="categoryModal" class="modal hidden fixed inset-0 bg-gray-600 bg-opacity-50 items-center justify-center">
+    <div class="bg-white p-5 rounded-lg sm:w-1/3">
+        <h2 class="text-lg font-semibold mb-4">Make review</h2>
+        <p class="mb-2">Name</p>
+        <input id="name" type="text" class="w-full p-2 rounded border border-gray-300">
+        <p class="mb-2">Description</p>
+        <textarea id="desc" class="w-full p-2 rounded border border-gray-300" rows="4"></textarea>
+        <div class="flex justify-end">
+            <button class="bg-gray-300 px-4 py-2 rounded mr-2" onclick="hideCategoryModal()">Cancel</button>
+            <button class="bg-green-500 text-white px-4 py-2 rounded" onclick="confirmCategory()">Create</button>
+        </div>
+    </div>
 </div>
 
 <!-- Include SweetAlert library -->
@@ -123,13 +190,86 @@ require 'views/components/navbar.php';
     document.getElementById('userTypeFilter').addEventListener('change', function() {
         const studentTable = document.getElementById('UserReports-Table-Container');
         const teacherTable = document.getElementById('TeacherReports-Table-Container');
+        const categoriesTable = document.getElementById('Categories-Table-Container');
         
         if (this.value === 'student') {
             studentTable.classList.remove('hidden');
             teacherTable.classList.add('hidden');
-        } else {
+            categoriesTable.classList.add('hidden');
+        }
+        else if (this.value === 'instructor') {
             studentTable.classList.add('hidden');
+            categoriesTable.classList.add('hidden');
             teacherTable.classList.remove('hidden');
+        } 
+        else {
+            studentTable.classList.add('hidden');
+            teacherTable.classList.add('hidden');
+            categoriesTable.classList.remove('hidden');
         }
     });
+
+    document.getElementById('addCategoryBtn').addEventListener('click', function() {
+        document.getElementById('categoryModal').classList.remove('hidden');
+        document.getElementById('categoryModal').classList.add('flex');
+    });
+    
+    function hideCategoryModal() {
+        document.getElementById('categoryModal').classList.add('hidden');
+        document.getElementById('categoryModal').classList.remove('flex');
+    }
+
+    function confirmCategory(){
+        const name = document.querySelector('#name').value.trim();
+        const desc = document.querySelector('#desc').value.trim();
+        
+        if (name === '') {
+            new swal({
+                icon: 'error',
+                text: 'Type a name.',
+                title: '☠️',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
+
+        if (desc === '') {
+            new swal({
+                icon: 'error',
+                text: 'Type a description.',
+                title: '☠️',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
+
+        new swal({
+            title: '🎉',
+            text: 'Category has been created',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        });
+        hideCategoryModal();
+    }
+
+    function deleteCategory(){
+        new swal({
+            title: '😐',
+            text: 'Do you really want to delete this category? This process cannot be undone.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                new swal({
+                    title: '🛸',
+                    text: 'Category has been deleted',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+            }
+        });
+    }
+
 </script>
