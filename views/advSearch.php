@@ -38,7 +38,7 @@ require 'views/components/navbar.php';
                 </div>
             </form>
         </div>
-        <div class="flex h-full flex-wrap justify-center overflow-y-scroll">
+        <div class="flex h-full w-5/6 flex-wrap justify-center overflow-y-scroll">
                 <?php
                     for ($i = 0; $i < 10; $i++) {
                         require 'views/components/courseCard.php';

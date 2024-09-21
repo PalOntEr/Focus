@@ -26,6 +26,11 @@ $usertype = $_SESSION['usertype'] ?? 'guest';
 
             Whether you are a beginner looking to start your programming journey or an experienced developer wanting to enhance your skills, this course will provide you with the knowledge and tools needed to succeed in PHP development.
         </div>
+        <?php if ($usertype === 'instructor'): ?>
+                <button class="delete-button" onclick="location.href='/createCourse?update=true'">
+                    <img class="h-5 w-5 bg-color p-1 rounded-full" src="https://cdn-icons-png.flaticon.com/512/1042/1042474.png" alt="delete">
+                </button>
+            <?php endif; ?>
     </div>
     <div class="h-1/3 flex flex-col items-center sm:items-start mx-4 sm:mx-0">
         <h1 class="text-4xl font-bold text-primary">LEVELS</h1>
@@ -35,7 +40,6 @@ $usertype = $_SESSION['usertype'] ?? 'guest';
             for ($i = 1; $i <= 28; $i++) {
                 $comment = "lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi.";
                 $level = $i;
-                $stars = rand(1, 5);
                 $commentUser = "Dobeto";
                 require 'views/components/levelCard.php';
             }
