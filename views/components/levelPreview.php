@@ -1,4 +1,4 @@
-<div class="flex items-center space-x-2 w-full bg-comp-1 m-2 p-1 rounded-md">
+<div class="flex items-center space-x-2 w-full bg-secondary m-2 p-1 rounded-md">
     <div class="w-full">
         <h2 class="text-lg text-color font-bold">Level <?= $level ?></h2>
         <div class="w-full">

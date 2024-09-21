@@ -1,6 +1,15 @@
 <?php
 
+session_start();
+
 $routes = [
+    [
+        'method' => 'GET',
+        'path' => '/',
+        'callback' => function() {
+            require __DIR__.'/controllers/login.php';
+        }
+    ],
     [
         'method' => 'GET',
         'path' => '/test',
@@ -52,23 +61,9 @@ $routes = [
     ],
     [
         'method' => 'GET',
-        'path' => '/home?',
-        'callback' => function() {
-            require __DIR__.'/controllers/home.php';
-        }
-    ],
-    [
-        'method' => 'GET',
         'path' => '/register',
         'callback' => function() {
             require __DIR__.'/controllers/register.php';
-        }
-    ],
-    [
-        'method' => 'GET',
-        'path' => '/login?',
-        'callback' => function() {
-            require __DIR__.'/controllers/login.php';
         }
     ],
     [
@@ -126,7 +121,23 @@ $routes = [
         'callback' => function() {
             require __DIR__.'/controllers/advSearch.php';
         }
-    ]
+    ],
+    [
+        'method' => 'POST',
+        'path' => '/setUser',
+        'callback' => function() {
+            require __DIR__.'/api/setUser.php';
+        }
+    ],
+    [
+        'method' => 'GET',
+        'path' => '/diploma',
+        'callback' => function() {
+            header('Content-Type: image/png');
+            readfile(__DIR__.'/public/images/diploma.png');
+            exit();
+        }
+    ],
 ];
 
 $isInRoutes = false;

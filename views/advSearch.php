@@ -14,7 +14,6 @@ require 'views/components/navbar.php';
                         <option value="CS">Computer Science</option>
                         <option value="EN">Engineering</option>
                         <option value="LA">Languages</option>
-                        <!-- Add more categories as needed -->
                     </select>
                 </div>
                 <div class="mb-4">
@@ -38,7 +37,7 @@ require 'views/components/navbar.php';
                 </div>
             </form>
         </div>
-        <div class="flex h-full flex-wrap justify-center overflow-y-scroll">
+        <div class="flex h-full w-5/6 flex-wrap justify-center overflow-y-scroll">
                 <?php
                     for ($i = 0; $i < 10; $i++) {
                         require 'views/components/courseCard.php';
@@ -57,6 +56,7 @@ require 'views/components/navbar.php';
             endDate: document.getElementById('end_date').value,
             category: document.getElementById('category').value,
             title: document.getElementById('title').value,
+            user: document.getElementById('user').value,
         };
 
         if (inputs.startDate && inputs.endDate && new Date(inputs.startDate) > new Date(inputs.endDate)) {
