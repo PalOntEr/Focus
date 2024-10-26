@@ -120,10 +120,9 @@
     
     document.addEventListener("DOMContentLoaded", function ()
     {   
-        let imgUser = "<?= base64_decode($_SESSION["user"]["profilePicture"]) ?>";
-        console.log(imgUser);
+        let imgUser = "<?= $_SESSION["user"]["profilePicture"] ?>";
         const img = document.createElement('img');
-        imgUser.src = imgUser;
+        img.src = `data:image/*;base64,${imgUser}`;
         img.classList.add('w-full', 'h-full', 'object-cover', 'rounded-lg');
         const photoDiv = document.querySelector('label[for="Photo"] .flex');
         photoDiv.innerHTML = '';
@@ -131,120 +130,122 @@
     });
 
     document.querySelector('#register, #update').addEventListener('submit', function(event) {
-        event.preventDefault();
-        let allFilled = true;
+    event.preventDefault();
+    let allFilled = true;
 
-        inputs.forEach(input => {
-            if (!input.value) {
-                allFilled = false;
-            }
-        });
-
-        if(inputs[2].value !== inputs[3].value)
-        {
-            swal({
-                icon: 'error',
-                title: '☠️',
-                text: 'Passwords dont match!'
-            });
-            return;
+    inputs.forEach(input => {
+        if (!input.value) {
+            allFilled = false;
         }
-
-        if (!allFilled) {
-            swal({
-                icon: 'error',
-                title: '☠️',
-                text: 'Please fill in all fields!'
-            });
-            return;
-        }
-
-        const email = inputs.find(input => input.id === 'Email').value;
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-        if (!emailPattern.test(email)) {
-            event.preventDefault();
-            swal({
-                icon: 'error',
-                title: '☠️',
-                text: 'Please enter a valid email address!'
-            });
-            return;
-        }
-
-        let letra = inputs[6].value.charAt(0);
-        inputs[6].value = letra;
-        let letra2 = inputs[4].value.charAt(0);
-        inputs[4].value = letra2;
-        
-        event.preventDefault();
-        const password = inputs.find(input => input.id === 'password').value;
-        const confirmPassword = inputs.find(input => input.id === 'ConfirmPassword').value;
-        const specialChars = /[¡”#$%&/=’?¡¿:;,.\-_+*{[\]}]/;
-        const uppercasePattern = /[A-Z]/;
-        const numberPattern = /[0-9]/;
-
-        if (password.length < 8 || !specialChars.test(password) || !uppercasePattern.test(password) || !numberPattern.test(password)) {
-            event.preventDefault();
-            swal({
-                icon: 'error',
-                title: '☠️',
-                text: 'Password must be at least 8 characters long and contain at least one special character (¡”#$%&/=’?¡¿:;,.-_+*{][}), one uppercase letter, and one number.'
-            });
-            return;
-        }
-
-        if (password !== confirmPassword) {
-            event.preventDefault();
-            swal({
-                icon: 'error',
-                title: '☠️',
-                text: 'Passwords do not match!'
-            });
-            return;
-        }
-
-        const formData = new FormData();
-        formData.append("profilePicture", document.getElementById("Photo").files[0]);
-        formData.append("user", inputs[0].value);
-        formData.append("fullName",inputs[8].value);
-        formData.append("email",inputs[1].value);
-        formData.append("password",inputs[2].value);
-        formData.append("role",letra2);
-        formData.append("birthdate",inputs[7].value);
-        formData.append("gender",letra);
-
-        fetch('users', {
-            method: 'POST',
-            body: formData,
-        }).then(response => response.json())
-        .then(data => {
-            if (data.status) {
-                console.log(data.payload.user);
-                swal({
-            icon: 'success',
-            title: '🎉',
-            text: 'Account <?php 
-            if($isUpdating){
-                echo 'updated';
-            }else{
-                echo 'created';
-            }
-            ?> successfully!'
-        }).then(() => {
-            window.location.href = "/home"
-        });
-
-            } else {
-                swal({
-                    icon: 'error',
-                    title: '☠️',
-                    text: data.payload.error
-                });
-            }
-        });
-        
     });
+
+    if(inputs[2].value !== inputs[3].value)
+    {
+        swal({
+            icon: 'error',
+            title: '☠️',
+            text: 'Passwords dont match!'
+        });
+        return;
+    }
+
+    if (!allFilled) {
+        swal({
+            icon: 'error',
+            title: '☠️',
+            text: 'Please fill in all fields!'
+        });
+        return;
+    }
+
+    const email = inputs.find(input => input.id === 'Email').value;
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailPattern.test(email)) {
+        event.preventDefault();
+        swal({
+            icon: 'error',
+            title: '☠️',
+            text: 'Please enter a valid email address!'
+        });
+        return;
+    }
+
+    let letra = inputs[6].value.charAt(0);
+    inputs[6].value = letra;
+    let letra2 = inputs[4].value.charAt(0);
+    inputs[4].value = letra2;
+    
+    event.preventDefault();
+    const password = inputs.find(input => input.id === 'password').value;
+    const confirmPassword = inputs.find(input => input.id === 'ConfirmPassword').value;
+    const specialChars = /[¡”#$%&/=’?¡¿:;,.\-_+*{[\]}]/;
+    const uppercasePattern = /[A-Z]/;
+    const numberPattern = /[0-9]/;
+
+    if (password.length < 8 || !specialChars.test(password) || !uppercasePattern.test(password) || !numberPattern.test(password)) {
+        event.preventDefault();
+        swal({
+            icon: 'error',
+            title: '☠️',
+            text: 'Password must be at least 8 characters long and contain at least one special character (¡”#$%&/=’?¡¿:;,.-_+*{][}), one uppercase letter, and one number.'
+        });
+        return;
+    }
+
+    if (password !== confirmPassword) {
+        event.preventDefault();
+        swal({
+            icon: 'error',
+            title: '☠️',
+            text: 'Passwords do not match!'
+        });
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("profilePicture", document.getElementById("Photo").files[0]);
+    console.log( document.getElementById("Photo").files[0]);
+    formData.append("user", inputs[0].value);
+    formData.append("fullName",inputs[8].value);
+    formData.append("email",inputs[1].value);
+    formData.append("password",inputs[2].value);
+    formData.append("role",letra2);
+    formData.append("birthdate",inputs[7].value);
+    formData.append("gender",letra);
+    formData.append("isUpdating",<?= $isUpdating ? "true" : "false"  ?>);
+
+    fetch('users', {
+        method: "POST",
+        body: formData,
+    }).then(response => response.json())
+    .then(data => {
+        if (data.status) {
+            console.log(data.payload.user);
+            swal({
+                icon: 'success',
+                title: '🎉',
+                text: 'Account <?php 
+                if($isUpdating){
+                    echo 'updated';
+                }else{
+                    echo 'created';
+                }
+                ?> successfully!'
+            }).then(() => {
+                window.location.href = <?= $isUpdating ? '"/profile"' : '"/home"' ?>;
+            });
+
+        } else {
+            swal({
+                icon: 'error',
+                title: '☠️',
+                text: data.payload.error
+            });
+        }
+    });
+});
+
 
 
     document.querySelector('#Photo').addEventListener('change', function(event) {
