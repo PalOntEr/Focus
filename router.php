@@ -11,6 +11,13 @@ $routes = [
         }
     ],
     [
+        'method' => 'POST',
+        'path' => '/',
+        'callback' => function() {
+            require __DIR__.'/controllers/login.php';
+        }
+    ],
+    [
         'method' => 'GET',
         'path' => '/test',
         'callback' => function() {
@@ -74,6 +81,13 @@ $routes = [
         }
     ],
     [
+        'method' => 'POST',
+        'path' => '/login',
+        'callback' => function() {
+            require __DIR__.'/controllers/login.php';
+        }
+    ],
+    [
         'method' => 'GET',
         'path' => '/home',
         'callback' => function() {
@@ -120,13 +134,6 @@ $routes = [
         'path' => '/advSearch',
         'callback' => function() {
             require __DIR__.'/controllers/advSearch.php';
-        }
-    ],
-    [
-        'method' => 'POST',
-        'path' => '/setUser',
-        'callback' => function() {
-            require __DIR__.'/api/setUser.php';
         }
     ],
     [
