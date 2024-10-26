@@ -126,8 +126,7 @@ else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $user = $db->queryFetch("CALL sp_Users (4, NULL, NULL, NULL, NULL, ?, NULL, NULL, NULL, NULL, NULL, NULL, NULL)", [
                     $email
             ]);
-            
-            
+            $user['profilePicture'] = base64_encode($user['profilePicture']);
         }
         else
         {
@@ -151,6 +150,11 @@ else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                    $profilePicture,
                    $gender
                ]);
+
+               $user = $db->queryFetch("CALL sp_Users (4, NULL, NULL, NULL, NULL, ?, NULL, NULL, NULL, NULL, NULL, NULL, NULL)", [
+                $email
+                ]);
+               $user['profilePicture'] = base64_encode($user['profilePicture']);
            }
        
         }
