@@ -4,7 +4,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     header('Content-Type: application/json');
     try {
-        if(!isset($_POST['user']) || !isset($_POST['password'])) {
+        if(!isset($_POST['email']) || !isset($_POST['password'])) {
             throw new Exception('All fields are required');
         }
     }
@@ -19,7 +19,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
         return;
     }
 
-    $user = $_POST['user'];
+    $email = $_POST['email'];
     $password = $_POST['password'];
 
     require __DIR__.'/../config/db.php';
@@ -30,10 +30,18 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = true;
 
     try {
-        $user = $db->queryFetch("CALL sp_Users (4, NULL, NULL, ?, NULL, NULL, ?, NULL, NULL, NULL, NULL, NULL, NULL)", [
-            $user,
-            $password
+        $user = $db->queryFetch("CALL sp_Users (5, NULL, NULL, NULL, NULL, ?, NULL, NULL, NULL, NULL, NULL, NULL, NULL)", [
+            $email
         ]);
+
+        if ($user && password_verify($password, $user['password'])){
+            $db->queryFetch("CALL sp_Users (4, NULL, NULL, NULL, NULL, ?, NULL, NULL, NULL, NULL, NULL, NULL, NULL)", [
+                $email
+            ]);
+
+            $user['profilePicture'] = base64_encode($user['profilePicture']);
+        }
+
     }
     catch (PDOException $e) {
         $result = false;
@@ -41,6 +49,19 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if($result) {
+
+        if(!$user) {
+            http_response_code(404);
+            echo json_encode([
+                'status' => false,
+                'payload' => [
+                    'error' => 'There was an error with your credentials'
+                ]
+            ]);
+            return;
+        }
+        
+        http_response_code(200);
         
         $_SESSION['user'] = $user;
         
@@ -53,7 +74,8 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
         return;
 
     } else {
-        echo json_encode([
+            http_response_code(400);
+            echo json_encode([
             'status' => false,
             'payload' => [
                 'error' => $exception->getMessage()

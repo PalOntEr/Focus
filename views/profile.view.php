@@ -3,6 +3,7 @@ require 'views/components/header.php';
 require 'views/components/navbar.php';
 
 $usertype = $_SESSION['user']['role'] ?? 'G';
+$MyProfile = $_GET['myProfile'] ?? 'false';
 ?>
 <div id="User-container" class="container mx-auto">
     <div class="flex flex-row place-content-center lg:place-content-between">
