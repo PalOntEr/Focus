@@ -1,6 +1,6 @@
-CREATE DATABASE IF NOT EXISTS db_pcwi_no_de_Gus;
+CREATE DATABASE IF NOT EXISTS db_pcwi;
 
-USE db_pcwi_no_de_Gus;
+USE db_pcwi;
 
 DROP TABLE IF EXISTS Kardex;
 
