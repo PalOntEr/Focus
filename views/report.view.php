@@ -37,28 +37,12 @@ require 'views/components/navbar.php';
             </thead>
             <tbody id="userReportsBody" class="text-center font-semibold">
                 <tr class="bg-comp-1 text-primary">
-                    <td>roberto@mail.com</td>
-                    <td class="py-2">Roberto Carlos</td>
-                    <td>25/04/2022</td>
-                    <td>7</td>
-                    <td>50%</td>
-                    <td><input type="checkbox" checked class="status-checkbox"></td>
-                </tr>
-                <tr class="bg-comp-2 text-primary">
-                    <td>max@mail.com</td>
-                    <td class="py-2">Max Andrés</td>
-                    <td>25/04/2022</td>
-                    <td>7</td>
-                    <td>50%</td>
-                    <td><input type="checkbox" class="status-checkbox"></td>
-                </tr>
-                <tr class="bg-comp-1 text-primary">
-                    <td class="py-2 rounded-bl-lg">roberto@mail.com</td>
-                    <td>Roberto Carlos</td>
-                    <td>25/04/2022</td>
-                    <td>7</td>
-                    <td>50%</td>
-                    <td class="rounded-br-lg"><input type="checkbox" checked class="status-checkbox"></td>
+                    <td>LOADING</td>
+                    <td class="py-2">LOADING</td>
+                    <td>LOADING</td>
+                    <td>LOADING</td>
+                    <td>LOADING</td>
+                    <td><input type="checkbox" disabled class="status-checkbox"></td>
                 </tr>
             </tbody>
         </table>
@@ -191,7 +175,7 @@ require 'views/components/navbar.php';
                     <td>${user.creationDate}</td>
                     <td>${user.enrolledCourses ? user.enrolledCourses : '0%'}</td>
                     <td>${user.completedCourses ? user.completedCourses : '0%'}</td>
-                    <td><input type="checkbox" class="status-checkbox" ${Math.random() % 2 == 1 ? 'checked' : ''}></td>
+                    <td><input type="checkbox" class="status-checkbox" ${Math.random() > 0.5 ? 'checked' : ''}></td>
                 `;
 
                 userReportsBody.appendChild(row);
