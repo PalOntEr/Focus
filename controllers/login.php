@@ -41,9 +41,8 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if($result) {
-        if(!session_status() === PHP_SESSION_ACTIVE) {
-            $_SESSION['user'] = $user;
-        }
+        
+        $_SESSION['user'] = $user;
         
         echo json_encode([
             'status' => true,
@@ -64,6 +63,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 else if($_SERVER['REQUEST_METHOD'] === 'GET') {
+    session_destroy();
     require 'views/login.view.php';
 }
 
