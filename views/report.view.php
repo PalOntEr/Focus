@@ -35,7 +35,7 @@ require 'views/components/navbar.php';
                     <th class=" rounded-tr-lg">Status</th>
                 </tr>
             </thead>
-            <tbody id="userReportsBody" class="text-center font-semibold">
+            <tbody id="studentsReportsBody" class="text-center font-semibold">
                 <tr class="bg-comp-1 text-primary">
                     <td>LOADING</td>
                     <td class="py-2">LOADING</td>
@@ -61,7 +61,7 @@ require 'views/components/navbar.php';
                 </tr>
                 </tr>
             </thead>
-            <tbody class="text-center font-semibold">
+            <tbody id="instructorsReportsBody" class="text-center font-semibold">
                 <tr class="bg-comp-1 text-primary">
                     <td>roberto@mail.com</td>
                     <td class="py-2">Roberto Carlos</td>
@@ -83,7 +83,7 @@ require 'views/components/navbar.php';
     </div>
 
     <div id="Categories-Table-Container" class="mt-6 hidden">
-        <table id="Full-Teachers-Reports" class="table-auto w-full my-2">
+        <table id="Full-Categories-Reports" class="table-auto w-full my-2">
             <thead class="bg-primary text-color">
                 <tr>
                     <th class="rounded-tl-lg py-2">Name</th>
@@ -158,29 +158,67 @@ require 'views/components/navbar.php';
         .then(response => response.json())
         .then(data => {
             console.log(data);
-            const userReportsBody = document.getElementById('userReportsBody');
+            const studentsReportsBody = document.getElementById('studentsReportsBody');
+            const instructorsReportsBody = document.getElementById('instructorsReportsBody');
 
-            userReportsBody.innerHTML = ''; // Clear existing rows
+            studentsReportsBody.innerHTML = ''; // Clear existing rows
+            instructorsReportsBody.innerHTML = ''; // Clear existing rows
 
             let i = 0;
+            let j = 0;
             
             data.payload.users.forEach(user => {
-                if (user.role !== 'S') return;
-                const row = document.createElement('tr');
-                row.classList.add(i % 2 === 0 ? 'bg-comp-1' : 'bg-comp-2', 'text-primary');
-
-                row.innerHTML = `
-                    <td>${user.email}</td>
-                    <td class="py-2">${user.email}</td>
-                    <td>${user.creationDate}</td>
-                    <td>${user.enrolledCourses ? user.enrolledCourses : '0%'}</td>
-                    <td>${user.completedCourses ? user.completedCourses : '0%'}</td>
-                    <td><input type="checkbox" class="status-checkbox" ${Math.random() > 0.5 ? 'checked' : ''}></td>
-                `;
-
-                userReportsBody.appendChild(row);
-                i++;
+                if (user.role === 'S') {
+                    const row = document.createElement('tr');
+                    row.classList.add(i % 2 === 0 ? 'bg-comp-1' : 'bg-comp-2', 'text-primary');
+    
+                    row.innerHTML = `
+                        <td>${user.email}</td>
+                        <td class="py-2">${user.email}</td>
+                        <td>${user.creationDate}</td>
+                        <td>${user.enrolledCourses ? user.enrolledCourses : '0%'}</td>
+                        <td>${user.completedCourses ? user.completedCourses : '0%'}</td>
+                        <td><input type="checkbox" class="status-checkbox" ${Math.random() > 0.5 ? 'checked' : ''}></td>
+                    `;
+    
+                    studentsReportsBody.appendChild(row);
+                    i++;
+                }
+                else if (user.role === 'I') {
+                    const row = document.createElement('tr');
+                    row.classList.add(j % 2 === 0 ? 'bg-comp-1' : 'bg-comp-2', 'text-primary');
+    
+                    row.innerHTML = `
+                        <td>${user.email}</td>
+                        <td class="py-2">${user.email}</td>
+                        <td>${user.creationDate}</td>
+                        <td>${user.createdCourses ? user.createdCourses : '0'}</td>
+                        <td>${user.earnings ? user.earnings : '$0'}</td>
+                        <td><input type="checkbox" class="status-checkbox" ${Math.random() > 0.5 ? 'checked' : ''}></td>
+                    `;
+    
+                    instructorsReportsBody.appendChild(row);
+                    j++;                    
+                }
             });
+
+            if(i === 0) {
+                const row = document.createElement('tr');
+                row.classList.add('bg-comp-1', 'text-primary');
+                row.innerHTML = `
+                    <td colspan="6">No students found</td>
+                `;
+                studentsReportsBody.appendChild(row);
+            }
+
+            if(j === 0) {
+                const row = document.createElement('tr');
+                row.classList.add('bg-comp-1', 'text-primary');
+                row.innerHTML = `
+                    <td colspan="6">No instructors found</td>
+                `;
+                instructorsReportsBody.appendChild(row);
+            }
 
             document.querySelectorAll('.status-checkbox').forEach(checkbox => {
                 checkbox.addEventListener('change', function() {
