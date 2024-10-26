@@ -3,7 +3,6 @@
 if($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     header('Content-Type: application/json');
-
     try {
         if(!isset($_POST['user']) || !isset($_POST['password'])) {
             throw new Exception('All fields are required');

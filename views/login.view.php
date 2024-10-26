@@ -61,13 +61,13 @@ require 'views/components/header.php';
         const password = document.querySelector('#password').value;
 
         fetch('login', {
-            method: 'post',
+            method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/x-www-form-urlencoded'
             },
-            body: JSON.stringify({
-                user: username,
-                password: password
+            body: new URLSearchParams({
+                user: inputs[0].value,
+                password: inputs[1].value
             }),
         }).then(response => response.json())
         .then(data => {

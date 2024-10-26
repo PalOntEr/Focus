@@ -153,7 +153,7 @@ require 'views/components/navbar.php';
 
 <div id="categoryModal" class="modal hidden fixed inset-0 bg-gray-600 bg-opacity-50 items-center justify-center">
     <div class="bg-white p-5 rounded-lg sm:w-1/3">
-        <h2 class="text-lg font-semibold mb-4">Make review</h2>
+        <h2 class="text-lg font-semibold mb-4">Create Category</h2>
         <p class="mb-2">Name</p>
         <input id="name" type="text" class="w-full p-2 rounded border border-gray-300">
         <p class="mb-2">Description</p>
