@@ -1,3 +1,4 @@
+-- Active: 1727819343950@@127.0.0.1@3306@db_pcwi_no_de_gus
 -- Muestra la cantidad de niveles que tiene un curso
 
 DROP VIEW IF EXISTS levelsPerCourse;

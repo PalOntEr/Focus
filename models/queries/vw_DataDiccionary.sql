@@ -1,5 +1,3 @@
-USE db_bdm;
-
 -- Data Dictionary View for Tables
 
 CREATE OR REPLACE VIEW DataDictionary AS

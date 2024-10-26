@@ -1,5 +1,3 @@
-USE db_bdm;
-
 DELIMITER $$
 
 CREATE PROCEDURE sp_Contents(

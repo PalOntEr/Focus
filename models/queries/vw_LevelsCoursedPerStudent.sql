@@ -9,10 +9,10 @@ SELECT
     u.fullName AS fullName,
     c.courseId AS courseId,
     c.courseTitle AS courseTitle,
-    COUNT(nc.idNivel) AS totalCoursedLevels,
-    CAST((COUNT(nc.idNivel) / (SELECT totalLevels FROM levelsPerCourse n WHERE n.courseId = c.courseId)) * 100 AS DECIMAL(27,2)) AS percentageCompleted
+    COUNT(nc.levelId) AS totalCoursedLevels,
+    CAST((COUNT(nc.levelId) / (SELECT totalLevels FROM levelsPerCourse n WHERE n.courseId = c.courseId)) * 100 AS DECIMAL(27,2)) AS percentageCompleted
 FROM
-    nivelesCursados nc
+    CompletedLevels nc
 JOIN
     Levels n ON nc.levelId = n.levelId
 JOIN
@@ -20,6 +20,6 @@ JOIN
 JOIN
     Users u ON nc.userId = u.userId
 WHERE 
-    u.rol = 'S'
+    u.role = 'S'
 GROUP BY
     c.courseId, u.userId;
