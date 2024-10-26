@@ -2,8 +2,7 @@
 require 'views/components/header.php';
 require 'views/components/navbar.php';
 
-$usertype = $_SESSION['usertype'] ?? 'guest';
-$MyProfile = $_GET['myProfile'] ?? 'false';
+$usertype = $_SESSION['user']['role'] ?? 'G';
 ?>
 <div id="User-container" class="container mx-auto">
     <div class="flex flex-row place-content-center lg:place-content-between">
@@ -17,18 +16,22 @@ $MyProfile = $_GET['myProfile'] ?? 'false';
         </div>
         <div id="User-Settings-Container" class="hidden lg:flex md:flex-row place-self-end w-auto  mb-2">
             <?php if ($MyProfile === 'true'): ?>
-                <?php if ($usertype === 'student'): ?>
+                <?php if ($usertype === 'S'): ?>
                     <input type="button" class="mx-2 py-1 px-2 text-sm text-color bg-secondary rounded-md" onclick="location.href='/kardex';" value="Kardex"></input>
                 <?php endif; ?>
-                <?php if ($usertype === 'instructor'): ?>
+                <?php if ($usertype === 'I'): ?>
                     <input type="button" class="mx-2 py-1 px-2 text-sm text-color bg-secondary rounded-md" onclick="location.href='/sales';" value="Sales"></input>
                 <?php endif; ?>
-                <?php if ($usertype === 'admin'): ?>
+                <?php if ($usertype === 'A'): ?>
                     <input type="button" class="ml-2 py-1 px-2 text-sm text-color bg-secondary rounded-md" onclick="location.href='/reporte';" value="Report"></input>
                 <?php endif; ?>
                 <input type="button" class="mx-2 py-1 px-2 text-sm text-color bg-secondary rounded-md" onclick="location.href='/register?update=true';" value="Edit Profile"></input>
             <?php else: ?>
+                <?php if($usertype === 'G'): ?>
+                <input type="button" class="mx-2 py-1 px-2 text-sm text-color bg-secondary rounded-md" onclick="location.href='/login';" value="Chat"></input>
+                <?php else: ?>
                 <input type="button" class="mx-2 py-1 px-2 text-sm text-color bg-secondary rounded-md" onclick="location.href='/chats';" value="Chat"></input>
+                <?php endif; ?>  
             <?php endif; ?>
         </div>
     </div>
