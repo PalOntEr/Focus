@@ -76,9 +76,9 @@ BEGIN
             END;
         
         WHEN 5 THEN
-            SELECT username, fullName, email, password, role, birthdate, profilePicture, gender
+            SELECT username, fullName, email, role, birthdate, profilePicture, gender
             FROM Users
-            WHERE userId = sp_userId;
+            WHERE userId = IFNULL(sp_userId, userId);
     END CASE;
 END$$
 

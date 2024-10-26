@@ -61,9 +61,16 @@ $routes = [
     ],
     [
         'method' => 'GET',
-        'path' => '/user',
+        'path' => '/users',
         'callback' => function() {
-            require __DIR__.'/controllers/user.php';
+            require __DIR__.'/controllers/users.php';
+        }
+    ],
+    [
+        'method' => 'POST',
+        'path' => '/users',
+        'callback' => function() {
+            require __DIR__.'/controllers/users.php';
         }
     ],
     [
@@ -150,27 +157,28 @@ $routes = [
         'path' => '/profile',
         'callback' => function() {
             require __DIR__.'/controllers/profile.php';
+        },
+        'middleware' => function() {
+            if (!isset($_SESSION['user'])) {
+                header('Location: /login');
+                exit();
+            }
         }
     ]
 ];
 
-$isInRoutes = false;
-
 foreach ($routes as $route) {
     if ($route['method'] === $_SERVER['REQUEST_METHOD'] && $route['path'] === strtok($_SERVER['REQUEST_URI'], '?')) {
         call_user_func($route['callback']);
-        $isInRoutes = true;
-        break;
+        return;
     }
 }
 
-if (!$isInRoutes) {
-    $filePath = __DIR__ . $_SERVER['REQUEST_URI'];
-    if (file_exists($filePath) && is_file($filePath)) {
-        header('Content-Type: ' . mime_content_type($filePath));
-        readfile($filePath);
-    } else {
-        http_response_code(404);
-        echo "404 Not Found";
-    }
+$filePath = __DIR__ . $_SERVER['REQUEST_URI'];
+if (file_exists($filePath) && is_file($filePath)) {
+    header('Content-Type: ' . mime_content_type($filePath));
+    readfile($filePath);
+} else {
+    http_response_code(404);
+    echo "404 Not Found";
 }

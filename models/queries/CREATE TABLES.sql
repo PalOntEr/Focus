@@ -25,12 +25,12 @@ DROP TABLE IF EXISTS Users;
 CREATE TABLE Users (
     userId INT NOT NULL AUTO_INCREMENT COMMENT 'Primary key of the user',
     creationDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'User creation date',
-    modificationDate DATETIME DEFAULT NULL COMMENT 'User modification date',
+    modificationDate DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT 'User modification date',
     status CHAR DEFAULT 'A' COMMENT 'User status',
     failedAttempts INT NOT NULL DEFAULT 0 COMMENT 'Failed attempts',
     username VARCHAR(20) NOT NULL COMMENT 'Username',
     fullName VARCHAR(75) NOT NULL COMMENT 'Full name of the user',
-    email VARCHAR(50) NOT NULL COMMENT 'User email',
+    email VARCHAR(50) UNIQUE NOT NULL COMMENT 'User email',
     password VARCHAR(95) NOT NULL COMMENT 'User password',
     role CHAR NOT NULL COMMENT 'User role',
     birthDate DATE NOT NULL COMMENT 'User birth date',
@@ -45,7 +45,7 @@ CREATE TABLE Users (
 CREATE TABLE Categories (
     categoryId INT NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary key of the category',
     creationDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Category creation date',
-    modificationDate DATETIME DEFAULT NULL COMMENT 'Category modification date',
+    modificationDate DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT 'Category modification date',
     deactivationDate DATETIME DEFAULT NULL COMMENT 'Category deactivation date',
     categoryName VARCHAR(50) NOT NULL COMMENT 'Category name',
     categoryDescription TEXT NOT NULL COMMENT 'Category description',
@@ -56,7 +56,7 @@ CREATE TABLE Categories (
 CREATE TABLE Courses (
     courseId INT NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary key of the course',
     creationDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Course creation date',
-    modificationDate DATETIME DEFAULT NULL COMMENT 'Course modification date',
+    modificationDate DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT 'Course modification date',
     deactivationDate DATETIME DEFAULT NULL COMMENT 'Course deactivation date',
     courseDescription TEXT NOT NULL COMMENT 'Course description',
     courseTitle VARCHAR(50) NOT NULL COMMENT 'Course title',
@@ -72,7 +72,7 @@ CREATE TABLE Courses (
 CREATE TABLE Levels (
     levelId INT NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary key of the level',
     creationDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Level creation date',
-    modificationDate DATETIME DEFAULT NULL COMMENT 'Level modification date',
+    modificationDate DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT 'Level modification date',
     levelName VARCHAR(50) NOT NULL COMMENT 'Level name',
     levelNumber INT NOT NULL COMMENT 'Level number',
     levelDescription TEXT NOT NULL COMMENT 'Level description',
