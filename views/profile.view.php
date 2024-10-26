@@ -8,7 +8,7 @@ $MyProfile = $_GET['myProfile'] ?? 'false';
 <div id="User-container" class="container mx-auto">
     <div class="flex flex-row place-content-center lg:place-content-between">
         <div class="flex">
-            <a href="/user" class="self-center"><img class="md:flex md:h-48 md:w-48 hidden" src="https://www.iconpacks.net/icons/2/free-user-icon-3296-thumb.png" alt=""></a>
+            <a href="/profile" class="self-center"><img class="md:flex md:h-48 md:w-48 hidden" src="https://www.iconpacks.net/icons/2/free-user-icon-3296-thumb.png" alt=""></a>
             <div class="self-center">
                 <h2 id="User-Role" class="text-4xl text-center md:text-left text-secondary font-semibold">User Role</h2>
                 <h1 id="User" class="text-8xl text-primary font-extrabold">User</h1>

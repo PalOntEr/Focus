@@ -1,19 +1,18 @@
-DROP PROCEDURE IF EXISTS sp_User;
+DROP PROCEDURE IF EXISTS sp_Users;
 
 DELIMITER $$
 
-CREATE PROCEDURE sp_User
+CREATE PROCEDURE sp_Users
 (
     IN Op INT,
     IN sp_userId INT,
     IN sp_status CHAR,
-    IN sp_creationDate DATETIME,
-    IN sp_modificationDate DATETIME,
-    IN sp_failedAttempts INT,
     IN sp_username VARCHAR(30),
     IN sp_fullName VARCHAR(100),
     IN sp_email VARCHAR(100),
     IN sp_password VARCHAR(100),
+    IN sp_creationDate DATETIME,
+    IN sp_modificationDate DATETIME,
     IN sp_role CHAR,
     IN sp_birthdate DATE,
     IN sp_profilePicture LONGBLOB,
@@ -68,6 +67,11 @@ BEGIN
                     UPDATE Users
                     SET failedAttempts = 0
                     WHERE userId = usernameFound;
+
+                    SELECT userId, username, `fullName`, role, email
+                    FROM Users
+                    WHERE username = sp_username
+                    AND password = sp_password;
                 END IF;
             END;
         

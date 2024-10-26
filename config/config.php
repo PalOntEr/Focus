@@ -5,7 +5,7 @@ return [
     "database" => [
         "host" => "localhost",
         "user" => "root",
-        "password" => "admin",
+        "password" => "",
         "dbname" => "db_pcwi",
         "port" => "3306",
     ],

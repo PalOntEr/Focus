@@ -11,6 +11,13 @@ $routes = [
         }
     ],
     [
+        'method' => 'POST',
+        'path' => '/',
+        'callback' => function() {
+            require __DIR__.'/controllers/login.php';
+        }
+    ],
+    [
         'method' => 'GET',
         'path' => '/test',
         'callback' => function() {
@@ -74,6 +81,13 @@ $routes = [
         }
     ],
     [
+        'method' => 'POST',
+        'path' => '/login',
+        'callback' => function() {
+            require __DIR__.'/controllers/login.php';
+        }
+    ],
+    [
         'method' => 'GET',
         'path' => '/home',
         'callback' => function() {
@@ -123,13 +137,6 @@ $routes = [
         }
     ],
     [
-        'method' => 'POST',
-        'path' => '/setUser',
-        'callback' => function() {
-            require __DIR__.'/api/setUser.php';
-        }
-    ],
-    [
         'method' => 'GET',
         'path' => '/diploma',
         'callback' => function() {
@@ -138,6 +145,13 @@ $routes = [
             exit();
         }
     ],
+    [
+        'method' => 'GET',
+        'path' => '/profile',
+        'callback' => function() {
+            require __DIR__.'/controllers/profile.php';
+        }
+    ]
 ];
 
 $isInRoutes = false;
