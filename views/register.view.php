@@ -6,8 +6,9 @@
 
     if ($isUpdating) {
         require 'views/components/navbar.php';
+        $birthdate = new DateTime($_SESSION["user"]["birthDate"]);
+        $formattedDate = $birthdate->format('Y-m-d');
     }
-
 ?>
 
 <div class="h-screen w-screen container mx-auto flex flex-col lg:flex-row items-center justify-center">
@@ -23,20 +24,20 @@
                     echo '<h2 class="text-color text-3xl text-center w-full mb-6 font-bold">Create Account</h2>';
                 }
             ?>
-            <form id="register" class="container flex flex-col md:justify-between h-full font-semibold mb-4" action="<?= $isUpdating ? '/user' : '/login'; ?>" method="GET" enctype ="multipart/form-data">
+            <form id="<?= $isUpdating ? 'update' : 'register' ?>" class="container flex flex-col md:justify-between h-full font-semibold mb-4" action="<?= $isUpdating ? '/user' : '/login'; ?>" method="GET" enctype ="multipart/form-data">
                 <div class="flex flex-col md:flex-row w-full items-center space-y-6 md:space-y-0 md:space-x-6 mb-6">
                     <div class="flex flex-col w-5/6 space-y-4 md:w-1/2">
                         <div>
                             <label for="User" class="text-secondary">Username:</label>
-                            <input id="User" type="text" class="w-full bg-transparent border-t-transparent border-b-2 outline-none text-color" />
+                            <input id="User" type="text" class="w-full bg-transparent border-t-transparent border-b-2 outline-none text-color" value = "<?= $isUpdating ? $_SESSION["user"]["username"] : "" ?>"/>
                         </div>
                         <div>
                             <label for="FullName" class="text-secondary">Full Name:</label>
-                            <input id="FullName" type="text" class="w-full bg-transparent border-t-transparent border-b-2 outline-none text-color" />
+                            <input id="FullName" type="text" class="w-full bg-transparent border-t-transparent border-b-2 outline-none text-color"  value = "<?= $isUpdating ? $_SESSION["user"]["fullName"] : "" ?>"/> 
                         </div>
                         <div>
                             <label for="Email" class="text-secondary">Email:</label>
-                            <input id="Email" type="text" class="w-full bg-transparent border-t-transparent border-b-2 outline-none text-color" />
+                            <input id="Email" type="text" class="w-full bg-transparent border-t-transparent border-b-2 outline-none text-color"  value = "<?= $isUpdating ? $_SESSION["user"]["email"] : "" ?>"/>
                         </div>
                         <div>
                             <label for="password" class="text-secondary">Password:</label>
@@ -51,8 +52,8 @@
                                 <label for="Role" class="text-secondary">Role</label>
                             </div>
                             <select id="Role" class="rounded-md border-0 bg-comp-2 text-primary font-semibold py-0 pl-2 pr-7 h-[26px] outline-none w-full sm:text-sm">
-                                <option value="Student">Student</option>
-                                <option value="Instructor">Instructor</option>
+                                <option value="Student" <?= $_SESSION["user"]["role"] == "S" ? 'selected' : "" ?> >Student</option>
+                                <option value="Instructor" <?= $_SESSION["user"]["role"] == "I" ? 'selected' : 0 ?> >Instructor</option>
                             </select>
                         </div>
                     </div>
@@ -73,14 +74,14 @@
                                 <label for="Gender" class="text-comp-2">Gender</label>
                             </div>
                             <select id="Gender" class="rounded-md border-0 bg-comp-2 text-primary font-semibold py-0 pl-2 pr-7 h-[26px] outline-none w-full sm:text-sm">
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
-                                <option value="Prefer not to say">Prefer not to say</option>
+                                <option value="Male" <?= $_SESSION["user"]["gender"] == "M" ? 'selected' : 0 ?>>Male</option>
+                                <option value="Female" <?= $_SESSION["user"]["gender"] == "F" ? 'selected' : 0 ?>>Female</option>
+                                <option value="Prefer not to say" <?= $_SESSION["user"]["gender"] == "P" ? 'selected' : 0 ?>>Prefer not to say</option>
                             </select>
                         </div>
                         <div>
                             <label for="Birthdate" class="text-comp-2">Birthdate:</label>
-                            <input id="Birthdate" type="date" class="w-full bg-transparent border-t-transparent border-b-2 outline-none text-color" />
+                            <input id="Birthdate" type="date" class="w-full bg-transparent border-t-transparent border-b-2 outline-none text-color" value = "<?= htmlspecialchars($formattedDate) ?>" />
                         </div>
                     </div>
                 </div>
@@ -104,6 +105,7 @@
 </div>
 
 <script>
+
     const inputs = [
         document.querySelector('#User'),
         document.querySelector('#Email'),
@@ -115,8 +117,20 @@
         document.querySelector('#Birthdate'),
         document.querySelector('#FullName')
     ];
+    
+    document.addEventListener("DOMContentLoaded", function ()
+    {   
+        let imgUser = "<?= base64_decode($_SESSION["user"]["profilePicture"]) ?>";
+        console.log(imgUser);
+        const img = document.createElement('img');
+        imgUser.src = imgUser;
+        img.classList.add('w-full', 'h-full', 'object-cover', 'rounded-lg');
+        const photoDiv = document.querySelector('label[for="Photo"] .flex');
+        photoDiv.innerHTML = '';
+        photoDiv.appendChild(img);
+    });
 
-    document.querySelector('#register').addEventListener('submit', function(event) {
+    document.querySelector('#register, #update').addEventListener('submit', function(event) {
         event.preventDefault();
         let allFilled = true;
 
@@ -125,6 +139,16 @@
                 allFilled = false;
             }
         });
+
+        if(inputs[2].value !== inputs[3].value)
+        {
+            swal({
+                icon: 'error',
+                title: '☠️',
+                text: 'Passwords dont match!'
+            });
+            return;
+        }
 
         if (!allFilled) {
             swal({
@@ -221,6 +245,7 @@
         });
         
     });
+
 
     document.querySelector('#Photo').addEventListener('change', function(event) {
         const file = event.target.files[0];
