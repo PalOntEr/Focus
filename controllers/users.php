@@ -59,17 +59,24 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
     }
 }
 else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    try {
-        if(!isset($_POST['user']) || !isset($_POST['fullName']) || !isset($_POST['email']) || !isset($_POST['password']) || !isset($_POST['role']) || !isset($_POST['birthdate']) || !isset($_FILES['profilePicture']) || !isset($_POST['gender'])) {
-            throw new Exception('All fields are required');
-        }
-    }
-    catch (Exception $e) {
+    $missingFields = [];
+
+    if (!isset($_POST['user'])) $missingFields[] = 'user';
+    if (!isset($_POST['fullName'])) $missingFields[] = 'fullName';
+    if (!isset($_POST['email'])) $missingFields[] = 'email';
+    if (!isset($_POST['password'])) $missingFields[] = 'password';
+    if (!isset($_POST['role'])) $missingFields[] = 'role';
+    if (!isset($_POST['birthdate'])) $missingFields[] = 'birthdate';
+    if (!isset($_FILES['profilePicture'])) $missingFields[] = 'profilePicture';
+    if (!isset($_POST['gender'])) $missingFields[] = 'gender';
+
+    if (!empty($missingFields)) {
         http_response_code(400);
         echo json_encode([
             'status' => false,
             'payload' => [
-                'error' => $e->getMessage()
+                'error' => 'All fields are required',
+                'missingFields' => $missingFields
             ]
         ]);
         return;
@@ -87,9 +94,8 @@ else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $password = password_hash($password, PASSWORD_DEFAULT);
     }
     
-    $profilePicture = $_FILES['profilePicture']; //SWAP THIS FOR A FILE UPLOAD
+    $profilePicture = file_get_contents($_FILES['profilePicture']["tmp_name"]); //SWAP THIS FOR A FILE UPLOAD
 
-    $pictureRoute = __DIR__.'/../public/images/'.$profilePicture['name'];
 
     require __DIR__.'/../config/db.php';
     $config = require __DIR__.'/../config/config.php';
@@ -99,16 +105,17 @@ else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $result = true;
 
     try {
-        $db->queryFetch("CALL sp_Users (1, NULL, 'A', ?, ?, ?, ?, NULL, NULL, ?, ?, ?, ?)", [
+        $db->queryInsert("CALL sp_Users (1, NULL, 'A', ?, ?, ?, ?, NULL, NULL, ?, ?, ?, ?)", [
             $user,
             $fullName,
             $email,
             $password,
             $role,
             $birthdate,
-            $pictureRoute,
+            $profilePicture,
             $gender
         ]);
+        
     }
     catch (PDOException $e) {
         $result = false;
@@ -116,6 +123,16 @@ else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     if($result) {
+        $_SESSION["user"] = [
+            "user" => $user,
+            "fullName" => $fullName,
+            "email" => $email,
+            "role" => $role,
+            "birthdate" => $birthdate,
+            "profilePicture" => base64_encode($profilePicture),
+            "gender" => $gender
+        ];
+
         echo json_encode([
             'status' => true,
             'payload' => [
@@ -164,6 +181,8 @@ else if ($_SERVER['REQUEST_METHOD'] == 'PATCH') {
         $password = password_hash($password, PASSWORD_DEFAULT);
     }
 
+    $profilePicture = file_get_contents($_FILES['profilePicture']["tmp_name"]); //SWAP THIS FOR A FILE UPLOAD
+
     require __DIR__.'/../config/db.php';
     $config = require __DIR__.'/../config/config.php';
 
@@ -188,6 +207,16 @@ else if ($_SERVER['REQUEST_METHOD'] == 'PATCH') {
     }
 
     if($result) {
+        $_SESSION["user"] = [
+            "user" => $user,
+            "fullName" => $fullName,
+            "email" => $email,
+            "role" => $role,
+            "birthdate" => $birthdate,
+            "profilePicture" => base64_encode($profilePicture),
+            "gender" => $gender
+        ];
+        
         echo json_encode([
             'status' => true,
             'payload' => [
