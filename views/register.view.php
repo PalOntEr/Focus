@@ -23,12 +23,16 @@
                     echo '<h2 class="text-color text-3xl text-center w-full mb-6 font-bold">Create Account</h2>';
                 }
             ?>
-            <form id="register" class="container flex flex-col md:justify-between h-full font-semibold mb-4" action="<?= $isUpdating ? '/user' : '/login'; ?>" method="GET">
+            <form id="register" class="container flex flex-col md:justify-between h-full font-semibold mb-4" action="<?= $isUpdating ? '/user' : '/login'; ?>" method="GET" enctype ="multipart/form-data">
                 <div class="flex flex-col md:flex-row w-full items-center space-y-6 md:space-y-0 md:space-x-6 mb-6">
                     <div class="flex flex-col w-5/6 space-y-4 md:w-1/2">
                         <div>
                             <label for="User" class="text-secondary">Username:</label>
                             <input id="User" type="text" class="w-full bg-transparent border-t-transparent border-b-2 outline-none text-color" />
+                        </div>
+                        <div>
+                            <label for="FullName" class="text-secondary">Full Name:</label>
+                            <input id="FullName" type="text" class="w-full bg-transparent border-t-transparent border-b-2 outline-none text-color" />
                         </div>
                         <div>
                             <label for="Email" class="text-secondary">Email:</label>
@@ -47,8 +51,8 @@
                                 <label for="Role" class="text-secondary">Role</label>
                             </div>
                             <select id="Role" class="rounded-md border-0 bg-comp-2 text-primary font-semibold py-0 pl-2 pr-7 h-[26px] outline-none w-full sm:text-sm">
-                                <option>Student</option>
-                                <option>Instructor</option>
+                                <option value="Student">Student</option>
+                                <option value="Instructor">Instructor</option>
                             </select>
                         </div>
                     </div>
@@ -62,16 +66,16 @@
                                 <p class="mb-2 text-center text-sm text-secondary dark:text-gray-400"><span class="font-semibold">Click to upload</span> or drag and drop</p>
                                 <p class="text-xs text-center text-secondary dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
                             </div>
-                            <input id="Photo" type="file" class="hidden" />
+                            <input id="Photo" name="profilePicture" type="file" class="hidden" />
                         </label>
                         <div>
                             <div class="">
                                 <label for="Gender" class="text-comp-2">Gender</label>
                             </div>
                             <select id="Gender" class="rounded-md border-0 bg-comp-2 text-primary font-semibold py-0 pl-2 pr-7 h-[26px] outline-none w-full sm:text-sm">
-                                <option>Male</option>
-                                <option>Female</option>
-                                <option>Prefer not to say</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Prefer not to say">Prefer not to say</option>
                             </select>
                         </div>
                         <div>
@@ -108,10 +112,12 @@
         document.querySelector('#Role'),
         document.querySelector('#Photo'),
         document.querySelector('#Gender'),
-        document.querySelector('#Birthdate')
+        document.querySelector('#Birthdate'),
+        document.querySelector('#FullName')
     ];
 
     document.querySelector('#register').addEventListener('submit', function(event) {
+        event.preventDefault();
         let allFilled = true;
 
         inputs.forEach(input => {
@@ -121,7 +127,6 @@
         });
 
         if (!allFilled) {
-            event.preventDefault();
             swal({
                 icon: 'error',
                 title: '☠️',
@@ -143,6 +148,12 @@
             return;
         }
 
+        let letra = inputs[6].value.charAt(0);
+        inputs[6].value = letra;
+        let letra2 = inputs[4].value.charAt(0);
+        inputs[4].value = letra2;
+        
+        event.preventDefault();
         const password = inputs.find(input => input.id === 'password').value;
         const confirmPassword = inputs.find(input => input.id === 'ConfirmPassword').value;
         const specialChars = /[¡”#$%&/=’?¡¿:;,.\-_+*{[\]}]/;
@@ -169,7 +180,24 @@
             return;
         }
 
-        swal({
+        const formData = new FormData();
+        formData.append("profilePicture", document.getElementById("Photo").files[0]);
+        formData.append("user", inputs[0].value);
+        formData.append("fullName",inputs[8].value);
+        formData.append("email",inputs[1].value);
+        formData.append("password",inputs[2].value);
+        formData.append("role",letra2);
+        formData.append("birthdate",inputs[7].value);
+        formData.append("gender",letra);
+
+        fetch('users', {
+            method: 'POST',
+            body: formData,
+        }).then(response => response.json())
+        .then(data => {
+            if (data.status) {
+                console.log(data.payload.user);
+                swal({
             icon: 'success',
             title: '🎉',
             text: 'Account <?php 
@@ -179,8 +207,19 @@
                 echo 'created';
             }
             ?> successfully!'
+        }).then(() => {
+            window.location.href = "/home"
         });
 
+            } else {
+                swal({
+                    icon: 'error',
+                    title: '☠️',
+                    text: data.payload.error
+                });
+            }
+        });
+        
     });
 
     document.querySelector('#Photo').addEventListener('change', function(event) {
