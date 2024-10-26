@@ -56,7 +56,7 @@
             <a href="/cart" class="ease-in duration-150">Cart</a>
             <?php if($usertype !== "G"){ ?>
             <button id="UserOptionsLink" data-dropdown-toggle="UserOptions" class="flex items-center justify-between w-full py-2 px-3 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:w-auto dark:text-gray-400 dark:hover:text-white dark:focus:text-white dark:border-gray-700 dark:hover:bg-gray-700 md:dark:hover:bg-transparent">
-            <img class="md:flex md:h-8 md:w-8 hidden rounded-full" src="data:image/*;base64,<?=$_SESSION["user"]["profilePicture"] ?> alt="" />
+            <img class="md:flex md:h-8 md:w-8 hidden rounded-full" src="data:image/*;base64,<?= $_SESSION["user"]["profilePicture"] ?>" alt="" />
             </button>
             <div id="UserOptions" class="z-10 hidden font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
                 <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownLargeButton">
