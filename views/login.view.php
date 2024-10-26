@@ -11,7 +11,7 @@ require 'views/components/header.php';
             <h2 class="text-color text-3xl text-center w-full mb-6 font-bold">Log In</h2>
             <form id="login" class="flex flex-col justify-between h-52 font-semibold mb-4">
                 <div>
-                    <p class="text-secondary">Username:</p>
+                    <p class="text-secondary">Email:</p>
                     <input id="user" type="text" class="w-full bg-transparent border-t-transparent border-b-2 outline-none text-color" />
                 </div>
                 <div>
@@ -66,15 +66,21 @@ require 'views/components/header.php';
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
             body: new URLSearchParams({
-                user: inputs[0].value,
+                email: inputs[0].value,
                 password: inputs[1].value
             }),
         }).then(response => response.json())
         .then(data => {
             if (data.status) {
                 console.log(data.payload.user);
-                sessionStorage.setItem('user', data.payload.user);
-                window.location.href = '/home';
+                swal({
+                    icon: 'success',
+                    title: '🎉',
+                    text: 'Welcome back!'
+                }).then(() => {
+                    sessionStorage.setItem('user', data.payload.user);
+                    window.location.href = '/home';
+                });
             } else {
                 swal({
                     icon: 'error',

@@ -5,7 +5,7 @@ header('Content-Type: application/json');
 // Get all users as a JSON object
 if($_SERVER['REQUEST_METHOD'] == 'GET') {
 
-    $user = $_POST['user'] ?? null;
+    $email = $_POST['email'] ?? null;
     $password = $_POST['password'] ?? null;
 
     if ($password) {
@@ -20,9 +20,9 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
     $result = true;
 
     try {
-        if($user && $password) {
-            $users = $db->queryFetch("CALL sp_Users (4, NULL, NULL, ?, NULL, NULL, ?, NULL, NULL, NULL, NULL, NULL, NULL)", [
-                $user,
+        if($email && $password) {
+            $users = $db->queryFetch("CALL sp_Users (4, NULL, NULL, NULL, NULL, ?, ?, NULL, NULL, NULL, NULL, NULL, NULL)", [
+                $email,
                 $password
             ]);
             $_SESSION['user'] = $user;
@@ -31,7 +31,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
         //     $users = $db->queryFetchAll("CALL sp_Users (5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL)", []);
         // } 
         else {
-            $users = $db->queryFetch("CALL sp_Users (5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL)", []);
+            $users = $db->queryFetchAll("CALL sp_Users (5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL)", []);
         }
     }
     catch (PDOException $e) {
@@ -94,7 +94,7 @@ else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $password = password_hash($password, PASSWORD_DEFAULT);
     }
     
-    $profilePicture = file_get_contents($_FILES['profilePicture']["tmp_name"]); //SWAP THIS FOR A FILE UPLOAD
+    $profilePicture = file_get_contents($_FILES['profilePicture']["tmp_name"]);
 
 
     require __DIR__.'/../config/db.php';

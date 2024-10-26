@@ -60,25 +60,31 @@ BEGIN
                 
                 SELECT userId INTO usernameFound
                 FROM Users
-                WHERE username = sp_username
-                AND password = sp_password;
+                WHERE email = sp_email;
                 
                 IF usernameFound > 0 THEN
                     UPDATE Users
                     SET failedAttempts = 0
                     WHERE userId = usernameFound;
 
-                    SELECT userId, username, `fullName`, role, email
+                    SELECT userId, username, fullName, role, email, birthdate, profilePicture, gender, creationDate
                     FROM Users
-                    WHERE username = sp_username
-                    AND password = sp_password;
+                    WHERE email = sp_email;
+                ELSE
+                    SELECT sp_email AS email;
                 END IF;
             END;
         
         WHEN 5 THEN
-            SELECT username, fullName, email, role, birthdate, profilePicture, gender
+            SELECT username, fullName, email, role, birthdate, password, gender, creationDate
             FROM Users
-            WHERE userId = IFNULL(sp_userId, userId);
+            WHERE userId = IFNULL(sp_userId, userId)
+            AND status = IFNULL(sp_status, status)
+            AND username = IFNULL(sp_username, username)
+            AND fullName = IFNULL(sp_fullName, fullName)
+            AND email = IFNULL(sp_email, email)
+            AND role = IFNULL(sp_role, role)
+            AND birthdate = IFNULL(sp_birthdate, birthdate);
     END CASE;
 END$$
 

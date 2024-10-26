@@ -3,15 +3,25 @@ require 'views/components/header.php';
 require 'views/components/navbar.php';
 
 $usertype = $_SESSION['user']['role'] ?? 'G';
+$MyProfile = $_GET['myProfile'] ?? 'false';
 ?>
 <div id="User-container" class="container mx-auto">
     <div class="flex flex-row place-content-center lg:place-content-between">
         <div class="flex">
             <a href="/profile" class="self-center"><img class="md:flex md:h-48 md:w-48 hidden" src="https://www.iconpacks.net/icons/2/free-user-icon-3296-thumb.png" alt=""></a>
             <div class="self-center">
-                <h2 id="User-Role" class="text-4xl text-center md:text-left text-secondary font-semibold">User Role</h2>
-                <h1 id="User" class="text-8xl text-primary font-extrabold">User</h1>
-                <p id="User-Info" class="text-secondary">Registered in November 2024 Age: 24 years</p>
+                <h2 id="User-Role" class="text-4xl text-center md:text-left text-secondary font-semibold"><?php if(!$MyProfile) echo 'Private Role'; else if ($usertype === 'S') echo 'Student'; else if ($usertype === 'I') echo 'Instructor'; else if ($usertype === 'A') echo 'Administrator'; else echo 'Private'; ?></h2>
+                <h1 id="User" class="text-8xl text-primary font-extrabold"><?php if(!$MyProfile) echo 'Private Name'; else echo $_SESSION['user']['username']?></h1>
+                <?php
+                    $creationDate = new DateTime($_SESSION['user']['creationDate'] ?? '2000-01-01');
+                    $monthYear = $creationDate->format('F Y');
+                ?>
+                <?php
+                    $birthdate = new DateTime($_SESSION['user']['birthdate']);
+                    $today = new DateTime();
+                    $age = $today->diff($birthdate)->y;
+                ?>
+                <p id="User-Info" class="text-secondary">Registered in <?php echo $monthYear; ?> Age: <?php echo $age; ?> years</p>
             </div>
         </div>
         <div id="User-Settings-Container" class="hidden lg:flex md:flex-row place-self-end w-auto  mb-2">
