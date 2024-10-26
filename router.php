@@ -138,6 +138,13 @@ $routes = [
             exit();
         }
     ],
+    [
+        'method' => 'GET',
+        'path' => '/profile',
+        'callback' => function() {
+            require __DIR__.'/controllers/profile.php';
+        }
+    ]
 ];
 
 $isInRoutes = false;
