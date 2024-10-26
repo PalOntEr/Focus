@@ -31,7 +31,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
         //     $users = $db->queryFetchAll("CALL sp_Users (5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL)", []);
         // } 
         else {
-            $users = $db->queryFetch("CALL sp_Users (5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL)", []);
+            $users = $db->queryFetchAll("CALL sp_Users (5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL)", []);
         }
     }
     catch (PDOException $e) {

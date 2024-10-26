@@ -67,7 +67,7 @@ BEGIN
                     SET failedAttempts = 0
                     WHERE userId = usernameFound;
 
-                    SELECT userId, username, `fullName`, role, email, birthdate, profilePicture
+                    SELECT userId, username, fullName, role, email, birthdate, profilePicture, gender, creationDate
                     FROM Users
                     WHERE email = sp_email;
                 ELSE
@@ -76,7 +76,7 @@ BEGIN
             END;
         
         WHEN 5 THEN
-            SELECT username, fullName, email, role, birthdate, password, profilePicture, gender
+            SELECT username, fullName, email, role, birthdate, password, gender, creationDate
             FROM Users
             WHERE userId = IFNULL(sp_userId, userId)
             AND status = IFNULL(sp_status, status)

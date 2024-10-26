@@ -35,7 +35,7 @@ require 'views/components/navbar.php';
                     <th class=" rounded-tr-lg">Status</th>
                 </tr>
             </thead>
-            <tbody class="text-center font-semibold">
+            <tbody id="userReportsBody" class="text-center font-semibold">
                 <tr class="bg-comp-1 text-primary">
                     <td>roberto@mail.com</td>
                     <td class="py-2">Roberto Carlos</td>
@@ -169,27 +169,59 @@ require 'views/components/navbar.php';
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-    document.querySelectorAll('.status-checkbox').forEach(checkbox => {
-        checkbox.addEventListener('change', function() {
-            if (this.checked) {
-                new swal({
-                    icon: 'success',
-                    text: 'User Activated',
-                    title: '☝️🤓',
-                    confirmButtonText: 'OK'
+
+    fetch('/users')
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            const userReportsBody = document.getElementById('userReportsBody');
+
+            userReportsBody.innerHTML = ''; // Clear existing rows
+
+            let i = 0;
+            
+            data.payload.users.forEach(user => {
+                if (user.role !== 'S') return;
+                const row = document.createElement('tr');
+                row.classList.add(i % 2 === 0 ? 'bg-comp-1' : 'bg-comp-2', 'text-primary');
+
+                row.innerHTML = `
+                    <td>${user.email}</td>
+                    <td class="py-2">${user.email}</td>
+                    <td>${user.creationDate}</td>
+                    <td>${user.enrolledCourses ? user.enrolledCourses : '0%'}</td>
+                    <td>${user.completedCourses ? user.completedCourses : '0%'}</td>
+                    <td><input type="checkbox" class="status-checkbox" ${Math.random() % 2 == 1 ? 'checked' : ''}></td>
+                `;
+
+                userReportsBody.appendChild(row);
+                i++;
+            });
+
+            document.querySelectorAll('.status-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        new swal({
+                            icon: 'success',
+                            text: 'User Activated',
+                            title: '☝️🤓',
+                            confirmButtonText: 'OK'
+                        });
+                        return;
+                    } else {
+                        new swal({
+                            icon: 'success',
+                            text: 'User Deactivated',
+                            title: '☠️',
+                            confirmButtonText: 'OK'
+                        });
+                        return;
+                    }
                 });
-                return;
-            } else {
-                new swal({
-                    icon: 'success',
-                    text: 'User Deactivated',
-                    title: '☠️',
-                    confirmButtonText: 'OK'
-                });
-                return;
-            }
-        });
-    });
+            });
+
+        })
+        .catch(error => console.error('Error fetching users:', error));
 
     document.getElementById('userTypeFilter').addEventListener('change', function() {
         const studentTable = document.getElementById('UserReports-Table-Container');

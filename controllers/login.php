@@ -35,7 +35,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
         ]);
 
         if ($user && password_verify($password, $user['password'])){
-            $db->queryFetch("CALL sp_Users (4, NULL, NULL, NULL, NULL, ?, NULL, NULL, NULL, NULL, NULL, NULL, NULL)", [
+            $user = $db->queryFetch("CALL sp_Users (4, NULL, NULL, NULL, NULL, ?, NULL, NULL, NULL, NULL, NULL, NULL, NULL)", [
                 $email
             ]);
 
