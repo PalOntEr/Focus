@@ -41,6 +41,10 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $user['profilePicture'] = base64_encode($user['profilePicture']);            
         }
+        else
+        {
+        $user = null;    
+        }
 
     }
     catch (PDOException $e) {

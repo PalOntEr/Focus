@@ -173,7 +173,7 @@ else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 "email" => $email,
                 "role" => $role,
                 "birthdate" => $birthdate,
-                "profilePicture" => base64_encode($profilePicture),
+                "profilePicture" => $user['profilePicture'],
                 "gender" => $gender
             ];
 
