@@ -30,16 +30,16 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = true;
 
     try {
-        $user = $db->queryFetch("CALL sp_Users (5, NULL, NULL, NULL, NULL, ?, NULL, NULL, NULL, NULL, NULL, NULL, NULL)", [
+        $tempUser = $db->queryFetch("CALL sp_Users (5, NULL, NULL, NULL, NULL, ?, NULL, NULL, NULL, NULL, NULL, NULL, NULL)", [
             $email
         ]);
 
-        if ($user && password_verify($password, $user['password'])){
+        if ($tempUser && password_verify($password, $tempUser['password'])){
             $user = $db->queryFetch("CALL sp_Users (4, NULL, NULL, NULL, NULL, ?, NULL, NULL, NULL, NULL, NULL, NULL, NULL)", [
                 $email
             ]);
 
-            $user['profilePicture'] = base64_encode($user['profilePicture']);
+            $user['profilePicture'] = base64_encode($user['profilePicture']);            
         }
 
     }
@@ -50,7 +50,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if($result) {
 
-        if(!$user) {
+        if(empty($user)) {
             http_response_code(404);
             echo json_encode([
                 'status' => false,
