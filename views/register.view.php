@@ -52,8 +52,8 @@
                                 <label for="Role" class="text-secondary">Role</label>
                             </div>
                             <select id="Role" class="rounded-md border-0 bg-comp-2 text-primary font-semibold py-0 pl-2 pr-7 h-[26px] outline-none w-full sm:text-sm">
-                                <option value="Student" <?= $_SESSION["user"]["role"] == "S" ? 'selected' : "" ?> >Student</option>
-                                <option value="Instructor" <?= $_SESSION["user"]["role"] == "I" ? 'selected' : 0 ?> >Instructor</option>
+                            <option value="Student" <?= isset($_SESSION["user"]) ? ($_SESSION["user"]["role"] == "S" ? 'selected' : "") : "" ?> >Student</option>
+                            <option value="Instructor" <?= isset($_SESSION["user"]) ? ($_SESSION["user"]["role"] == "I" ? 'selected' : "") : "" ?> >Instructor</option>
                             </select>
                         </div>
                     </div>
@@ -74,9 +74,9 @@
                                 <label for="Gender" class="text-comp-2">Gender</label>
                             </div>
                             <select id="Gender" class="rounded-md border-0 bg-comp-2 text-primary font-semibold py-0 pl-2 pr-7 h-[26px] outline-none w-full sm:text-sm">
-                                <option value="Male" <?= $_SESSION["user"]["gender"] == "M" ? 'selected' : 0 ?>>Male</option>
-                                <option value="Female" <?= $_SESSION["user"]["gender"] == "F" ? 'selected' : 0 ?>>Female</option>
-                                <option value="Prefer not to say" <?= $_SESSION["user"]["gender"] == "P" ? 'selected' : 0 ?>>Prefer not to say</option>
+                            <option value="Male" <?= isset($_SESSION["user"]) ? ($_SESSION["user"]["gender"] == "M" ? 'selected' :  "") : "" ?>>Male</option>
+                                <option value="Female" <?= isset($_SESSION["user"]) ? ($_SESSION["user"]["gender"] == "F" ? 'selected' :  "") : "" ?>>Female</option>
+                                <option value="Prefer not to say" <?= isset($_SESSION["user"]) ? ($_SESSION["user"]["gender"] == "P" ? 'selected' :  "") : "" ?>>Prefer not to say</option>
                             </select>
                         </div>
                         <div>
@@ -121,6 +121,7 @@
     document.addEventListener("DOMContentLoaded", function ()
     {   
         let imgUser = "<?= $_SESSION["user"]["profilePicture"] ?>";
+        if(imgUser=== "") return;
         const img = document.createElement('img');
         img.src = `data:image/*;base64,${imgUser}`;
         img.classList.add('w-full', 'h-full', 'object-cover', 'rounded-lg');
@@ -233,7 +234,7 @@
                 }
                 ?> successfully!'
             }).then(() => {
-                window.location.href = <?= $isUpdating ? '"/profile"' : '"/home"' ?>;
+                window.location.href = <?= $isUpdating ? '"/profile?myProfile=true"' : '"/home"' ?>;
             });
 
         } else {
