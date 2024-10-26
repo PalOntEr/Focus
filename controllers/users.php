@@ -69,6 +69,8 @@ else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (!isset($_POST['birthdate'])) $missingFields[] = 'birthdate';
     if (!isset($_FILES['profilePicture'])) $missingFields[] = 'profilePicture';
     if (!isset($_POST['gender'])) $missingFields[] = 'gender';
+    if (!isset($_POST['isUpdating'])) $missingFields[] = 'isUpdating';
+
 
     if (!empty($missingFields)) {
         http_response_code(400);
@@ -82,17 +84,15 @@ else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         return;
     }
 
-    $user = $_POST['user'];
+    $username = $_POST['user'];
     $fullName = $_POST['fullName'];
     $email = $_POST['email'];
     $password = $_POST['password'];
     $role = $_POST['role'];
     $birthdate = $_POST['birthdate'];
     $gender = $_POST['gender'];
+    $isUpdating = $_POST['isUpdating'];
 
-    if ($password) {
-        $password = password_hash($password, PASSWORD_DEFAULT);
-    }
     
     $profilePicture = file_get_contents($_FILES['profilePicture']["tmp_name"]);
 
@@ -104,17 +104,56 @@ else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $result = true;
 
+    
     try {
-        $db->queryInsert("CALL sp_Users (1, NULL, 'A', ?, ?, ?, ?, NULL, NULL, ?, ?, ?, ?)", [
-            $user,
-            $fullName,
-            $email,
-            $password,
-            $role,
-            $birthdate,
-            $profilePicture,
-            $gender
-        ]);
+        
+        if($isUpdating == "false")
+        {
+            if ($password) {
+            $password = password_hash($password, PASSWORD_DEFAULT);
+            }
+            $db->queryInsert("CALL sp_Users (1, NULL, 'A', ?, ?, ?, ?, NULL, NULL, ?, ?, ?, ?)", [
+                $username,
+                $fullName,
+                $email,
+                $password,
+                $role,
+                $birthdate,
+                $profilePicture,
+                $gender
+            ]);
+            
+            $user = $db->queryFetch("CALL sp_Users (4, NULL, NULL, NULL, NULL, ?, NULL, NULL, NULL, NULL, NULL, NULL, NULL)", [
+                    $email
+            ]);
+            
+            
+        }
+        else
+        {
+            
+           $user = $db->queryFetch("CALL sp_Users (5, NULL, NULL, NULL, NULL, ?, NULL, NULL, NULL, NULL, NULL, NULL, NULL)", [
+               $email
+           ]);
+
+           if ($user && password_verify($password, $user['password'])){
+               if ($password) {
+                   $password = password_hash($password, PASSWORD_DEFAULT);
+               }
+               $db->queryFetch("CALL sp_Users (2, ?, 'A', ?, ?, ?, ?, NULL, NULL, ?, ?, ?, ?)", [
+                   $user["userId"],
+                   $username,
+                   $fullName,
+                   $email,
+                   $password,
+                   $role,
+                   $birthdate,
+                   $profilePicture,
+                   $gender
+               ]);
+           }
+       
+        }
         
     }
     catch (PDOException $e) {
@@ -123,15 +162,16 @@ else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     if($result) {
-        $_SESSION["user"] = [
-            "user" => $user,
-            "fullName" => $fullName,
-            "email" => $email,
-            "role" => $role,
-            "birthdate" => $birthdate,
-            "profilePicture" => base64_encode($profilePicture),
-            "gender" => $gender
-        ];
+            $_SESSION["user"] = [
+                "userId" => $user["userId"],
+                "username" => $username,
+                "fullName" => $fullName,
+                "email" => $email,
+                "role" => $role,
+                "birthdate" => $birthdate,
+                "profilePicture" => base64_encode($profilePicture),
+                "gender" => $gender
+            ];
 
         echo json_encode([
             'status' => true,
@@ -150,7 +190,7 @@ else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         ]);
     }
 }
-else if ($_SERVER['REQUEST_METHOD'] == 'PATCH') {
+else if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     parse_str(file_get_contents("php://input"), $_PATCH);
 
     try {
@@ -177,10 +217,6 @@ else if ($_SERVER['REQUEST_METHOD'] == 'PATCH') {
     $birthdate = $_PATCH['birthdate'] ?? null;
     $gender = $_PATCH['gender'] ?? null;
 
-    if ($password) {
-        $password = password_hash($password, PASSWORD_DEFAULT);
-    }
-
     $profilePicture = file_get_contents($_FILES['profilePicture']["tmp_name"]); //SWAP THIS FOR A FILE UPLOAD
 
     require __DIR__.'/../config/db.php';
@@ -189,17 +225,26 @@ else if ($_SERVER['REQUEST_METHOD'] == 'PATCH') {
     $db = new Database($config['database']);
 
     $result = true;
-
     try {
-        $db->queryFetch("CALL sp_Users (2, NULL, 'A', ?, ?, ?, ?, NULL, NULL, NULL, ?, ?, ?)", [
-            $user,
-            $fullName,
-            $email,
-            $password,
-            $role,
-            $birthdate,
-            $gender
+        $user = $db->queryFetch("CALL sp_Users (5, NULL, NULL, NULL, NULL, ?, NULL, NULL, NULL, NULL, NULL, NULL, NULL)", [
+            $email
         ]);
+
+        if ($user && password_verify($password, $user['password'])){
+            if ($password) {
+                $password = password_hash($password, PASSWORD_DEFAULT);
+            }
+            $db->queryFetch("CALL sp_Users (2, NULL, 'A', ?, ?, ?, ?, NULL, NULL, NULL, ?, ?, ?)", [
+                $user,
+                $fullName,
+                $email,
+                $password,
+                $role,
+                $birthdate,
+                $profilePicture,
+                $gender
+            ]);
+        }
     }
     catch (PDOException $e) {
         $result = false;
@@ -216,7 +261,7 @@ else if ($_SERVER['REQUEST_METHOD'] == 'PATCH') {
             "profilePicture" => base64_encode($profilePicture),
             "gender" => $gender
         ];
-        
+
         echo json_encode([
             'status' => true,
             'payload' => [
