@@ -140,6 +140,18 @@
         }
     });
 
+    for (let i = 0; i < inputs.length; i++) {
+        if (!inputs[i].value) {
+            allFilled = false;
+            swal({
+                icon: 'error',
+                title: '☠️',
+                text: `Please fill in the ${inputs[i].id} field!`
+            });
+            return;
+        }
+    }
+
     if(inputs[2].value !== inputs[3].value)
     {
         swal({
