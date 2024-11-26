@@ -36,7 +36,7 @@ BEGIN
               AND (IFNULL(p_categoryDescription, categoryDescription) = categoryDescription)
               AND (IFNULL(p_creatorId, creatorId) = creatorId);
         WHEN 6 THEN -- SELECT WITH NAME OF CREATOR
-        SELECT `categoryName`, `categoryDescription`, `fullName` AS User, `creationDate` AS Created FROM CategoryInfo;
+        SELECT `categoryId`,`categoryName`, `categoryDescription`, `fullName` AS User, `creationDate` AS Created FROM CategoryInfo;
     END CASE;
 END;
 
