@@ -28,9 +28,6 @@
                     Category
                 </div>
                 <select id="category" class="w-full ml-4 rounded-md p-1 bg-primary text-color font-semibold">
-                    <option value="math">Computer Science</option>
-                    <option value="science">Languages</option>
-                    <option value="history">Engineering</option>
                 </select>
             </div>
         </div>        
@@ -57,15 +54,9 @@
     <div class="mx-10 overflow-y-scroll">
         <div class="flex justify-between items-center text-secondary">
             <h3 class="text-3xl font-bold">Levels</h3>
-            <a class="text-secondary" href="#">Add level</a>
+            <button class="text-secondary" id="AddLevel">Add level</a>
         </div>
-        <div class="bg-secondary text-color space-y-2 rounded-md p-2">
-            <?php                
-                for( $i = 1; $i <= 5; $i++ ) {
-                    $levelNum = $i;
-                    require 'views/components/createLevelPreview.php';
-                }
-            ?>
+        <div id="LevelPreviewContainer" class="bg-secondary text-color space-y-2 rounded-md p-2">
         </div>
     </div>
     <div class="w-full">        
@@ -86,7 +77,112 @@
         <button id="createCourse" class="w-1/2 m-2 bg-comp-1 text-color font-bold py-2 rounded-md"><?= $isUpdating ? 'Update' : 'Create'; ?> Course</button>
     </div>
 </div>
+
+
 <script>
+
+    fetch("/categories")
+    .then(response => response.json())
+    .then(data => {
+    const categorySelector = document.getElementById("category");
+
+
+    data.payload.categories.forEach((category) => {
+                const option = document.createElement("option");
+                option.value = category.categoryId;
+                option.textContent = category.categoryName;
+                categorySelector.appendChild(option);
+            });
+    });
+
+
+    let currentLevelNum = 0;
+    document.querySelector("#AddLevel").addEventListener("click", function () {
+        const levelPreviewContainer = document.getElementById("LevelPreviewContainer");
+        const levelPreview = document.createElement('div');
+        let levelhtml = `<?php require 'views/components/createLevelPreview.php'; ?>`;
+        
+        currentLevelNum++;        
+        levelhtml = levelhtml.replace(/LEVEL_NUM/g, currentLevelNum);
+
+        levelPreview.innerHTML = levelhtml;
+        levelPreviewContainer.appendChild(levelPreview);
+
+        const deleteButton = levelPreview.querySelector('.DeleteLevel');
+        const addVideo = levelPreview.querySelectorAll('.videoRef');
+        const addFile = levelPreview.querySelectorAll('.fileRef');
+        const videoinput = levelPreview.querySelectorAll('.video');
+        const fileinput = levelPreview.querySelectorAll('.file');
+
+        addVideo.forEach((link) => {
+            link.addEventListener("click", function(e) {
+                e.preventDefault();
+                const levelContainer = link.closest(".Level");
+                const fileInput = levelContainer.querySelector(".video");
+                fileInput.click();
+            });
+        });
+
+        addFile.forEach((link) => {
+            link.addEventListener("click", function(e) {
+                e.preventDefault();
+                const levelContainer = link.closest(".Level");
+                const fileInput = levelContainer.querySelector(".file");
+                fileInput.click();
+            });
+        });
+
+        videoinput.forEach((video) => {
+            video.addEventListener('change', function () {
+        const levelContainer = video.closest('.Level');
+        let fileNameDisplay = levelContainer.querySelector('.videoNameDisplay');
+
+        if (!fileNameDisplay) {
+            fileNameDisplay = document.createElement('div');
+            fileNameDisplay.classList.add('videoNameDisplay');
+            levelContainer.appendChild(fileNameDisplay);
+        }
+
+        const fileName = video.files.length > 0 ? video.files[0].name : 'No file selected';
+        fileNameDisplay.textContent = fileName;
+             });
+        });
+        
+        fileinput.forEach((file) => {
+        file.addEventListener('change', function () {
+        const levelContainer = file.closest('.Level');
+        let fileNameDisplay = levelContainer.querySelector('.fileNameDisplay');
+
+        if (!fileNameDisplay) {
+            fileNameDisplay = document.createElement('div');
+            fileNameDisplay.classList.add('fileNameDisplay');
+            levelContainer.appendChild(fileNameDisplay);
+        }
+
+        const fileName = file.files.length > 0 ? file.files[0].name : 'No file selected';
+        fileNameDisplay.textContent = fileName;
+             });
+        });
+        
+             
+        deleteButton.addEventListener('click', function (e) {
+        e.preventDefault();  
+        levelPreview.remove();
+        updateLevelNumbers();
+       });
+    });
+
+    function updateLevelNumbers() {
+        const levels = document.querySelectorAll(".Level");
+
+        levels.forEach((level,index) => {
+            const levelNum = index+1;
+            level.id = `level-${levelNum}`; 
+            level.querySelector('.font-bold').textContent = levelNum;  
+        });
+
+        currentLevelNum = levels.length; 
+    }
 
     document.querySelectorAll('input[name="payment_method"]').forEach(radio => {
         radio.addEventListener('change', function() {
@@ -136,7 +232,7 @@
                     text: 'Please fill out all level names and descriptions.',
                 });
                 event.preventDefault();
-                return;
+                return; 
             }
         }
         swal({
