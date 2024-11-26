@@ -131,9 +131,23 @@ $routes = [
     ],
     [
         'method' => 'GET',
+        'path' => '/categories',
+        'callback' => function() {
+            require __DIR__.'/controllers/categories.php';
+        }
+    ],
+    [
+        'method' => 'GET',
         'path' => '/reporte',
         'callback' => function() {
             require __DIR__.'/controllers/reports.php';
+        }
+    ],
+    [
+        'method' => 'POST',
+        'path' => '/categories',
+        'callback' => function() {
+            require __DIR__.'/controllers/categories.php';
         }
     ],
     [

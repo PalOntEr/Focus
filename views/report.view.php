@@ -88,12 +88,12 @@ require 'views/components/navbar.php';
                 <tr>
                     <th class="rounded-tl-lg py-2">Name</th>
                     <th>Description</th>
-                    <th>Created</th>
                     <th>User</th>
+                    <th>Created</th>
                     <th class=" rounded-tr-lg">REMOVE</th>
                 </tr>
             </thead>
-            <tbody class="text-center font-semibold">
+            <tbody id="categoriesReportsBody" class="text-center font-semibold">
                 <tr class="bg-comp-1 text-primary">
                     <td>Computer Science</td>
                     <td class="py-2">Computer related stuff</td>
@@ -153,6 +153,35 @@ require 'views/components/navbar.php';
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
+
+    fetch('/categories')
+    .then(response => response.json())
+    .then(data => {
+        const categoriesReportsBody = document.getElementById('categoriesReportsBody');
+
+        categoriesReportsBody.innerHTML = "";
+        
+        let i = 0;
+        data.payload.categories.forEach(category => {
+
+            const row = document.createElement('tr');
+                        row.classList.add(i % 2 === 0 ? 'bg-comp-1' : 'bg-comp-2', 'text-primary');
+        
+                        row.innerHTML = `
+                            <td>${category.categoryName}</td>
+                            <td class="py-2">${category.categoryDescription}</td>
+                            <td>${category.User}</td>
+                            <td>${category.Created}</td>
+                            <td>
+                            <button class="flex items-center h-full w-full justify-center" onclick="deleteCategory()">
+                            <img class="h-5 w-5 bg-color p-1 rounded-md" src="https://cdn-icons-png.flaticon.com/512/1017/1017530.png" alt="delete">
+                        </button></td>
+                        `;
+        
+                        categoriesReportsBody.appendChild(row);
+                        i++;
+        })
+    });
 
     fetch('/users')
         .then(response => response.json())
@@ -300,15 +329,41 @@ require 'views/components/navbar.php';
             });
             return;
         }
+        
+        const formData = new FormData();
 
-        new swal({
+        formData.append("categoryName", name);
+        formData.append("categoryDescription", desc);
+        formData.append("userId", <?= $_SESSION["user"]["userId"] ?>);
+
+        fetch("/categories", {
+            method: "POST",
+            body: formData
+        }).then(response => response.json()).
+        then(data => {
+            if (data.status) {
+            new swal({
             title: '🎉',
             text: 'Category has been created',
             icon: 'success',
             confirmButtonText: 'OK'
-        });
-        hideCategoryModal();
-    }
+            }).then((result) => {
+                if(result.isConfirmed){
+                    location.reload();
+                }
+            });
+            hideCategoryModal();
+        }
+        else{
+            new swal({
+            title: '☠️',
+            text: 'Error creating category',
+            icon: 'failure',
+            confirmButtonText: 'OK'
+            });
+            hideCategoryModal();
+        }})
+        }
 
     function deleteCategory(){
         new swal({
