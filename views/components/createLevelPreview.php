@@ -5,10 +5,10 @@
             LEVEL_NUM
         </div>
         <div class="w-5/12">
-            <input name="levelName" class="w-full rounded-md p-1 bg-transparent outline-none text-color" placeholder="Level Name" type="text">
+            <input name="levelName" class="levelName w-full rounded-md p-1 bg-transparent outline-none text-color" placeholder="Level Name" type="text">
         </div>
         <div class="w-1/2">
-            <input name="levelDescription" class="w-full rounded-md p-1 bg-transparent outline-none text-color" placeholder="Level Description" type="text">
+            <input name="levelDescription" class="levelDescription w-full rounded-md p-1 bg-transparent outline-none text-color" placeholder="Level Description" type="text">
         </div>
     </div>
     <div class="flex items-center justify-end space-x-2 w-1/2">
@@ -30,7 +30,7 @@
     <div>
             <label name="individualCost" class="hidden flex items-center space-x-1">
                 <label>Cost:</label>
-                <input type="number" name="individualCost" class="w-20 rounded-md p-1 bg-transparent outline-none text-color" value="">
+                <input type="number" name="individualCost" class="individualCost w-20 rounded-md p-1 bg-transparent outline-none text-color" value="">
             </label>
         </div>
         <div>

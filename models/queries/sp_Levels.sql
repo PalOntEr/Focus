@@ -15,10 +15,10 @@ CREATE PROCEDURE sp_Levels(
 BEGIN
     CASE p_Opc
         WHEN 1 THEN -- INSERT
-            INSERT INTO Niveles (creationDate, levelName, levelNumber, levelDescription, levelCost, courseId)
+            INSERT INTO levels (creationDate, levelName, levelNumber, levelDescription, levelCost, courseId)
             VALUES (CURRENT_TIMESTAMP, p_levelName, p_levelNumber, p_levelDescription, p_levelCost, p_courseId);
         WHEN 2 THEN -- UPDATE
-            UPDATE Niveles
+            UPDATE levels
             SET modificationDate = CURRENT_TIMESTAMP,
                 levelName = p_levelName,
                 levelNumber = p_levelNumber,
@@ -27,22 +27,22 @@ BEGIN
                 courseId = p_courseId
             WHERE levelId = p_levelId;
         WHEN 3 THEN -- DELETE
-            DELETE FROM Niveles
+            DELETE FROM levels
             WHERE levelId = p_levelId;
         WHEN 4 THEN -- SELECT ALL
             SELECT levelId, creationDate, modificationDate, levelName, levelNumber, levelDescription, levelCost, courseId
-            FROM Niveles;
+            FROM levels;
         WHEN 5 THEN -- SELECT WITH FILTER
             SELECT levelId, creationDate, modificationDate, levelName, levelNumber, levelDescription, levelCost, courseId
-            FROM Niveles
-            WHERE (IFNULL(p_levelId, levelId) = levelId)
-              AND (IFNULL(p_creationDate, creationDate) = creationDate)
-              AND (IFNULL(p_modificationDate, modificationDate) = modificationDate)
-              AND (IFNULL(p_levelName, levelName) = levelName)
-              AND (IFNULL(p_levelNumber, levelNumber) = levelNumber)
-              AND (IFNULL(p_levelDescription, levelDescription) = levelDescription)
-              AND (IFNULL(p_levelCost, levelCost) = levelCost)
-              AND (IFNULL(p_courseId, courseId) = courseId);
+            FROM Levels
+WHERE (p_levelId IS NULL OR p_levelId = levelId)
+  AND (p_creationDate IS NULL OR p_creationDate = creationDate)
+  AND (p_modificationDate IS NULL OR p_modificationDate = modificationDate)
+  AND (p_levelName IS NULL OR p_levelName = levelName)
+  AND (p_levelNumber IS NULL OR p_levelNumber = levelNumber)
+  AND (p_levelDescription IS NULL OR p_levelDescription = levelDescription)
+  AND (p_levelCost IS NULL OR p_levelCost = levelCost)
+  AND (p_courseId IS NULL OR p_courseId = courseId);
     END CASE;
 END;
 DELIMITER;

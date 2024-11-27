@@ -1,9 +1,11 @@
+DROP PROCEDURE IF EXISTS sp_Contents;
+
 DELIMITER $$
 
 CREATE PROCEDURE sp_Contents(
     IN p_Opc INT,
     IN p_contentId INT,
-    IN p_file VARCHAR(255),
+    IN p_file LONGBLOB,
     IN p_mimeType VARCHAR(128),
     IN p_levelId INT
 )
