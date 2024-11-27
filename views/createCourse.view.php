@@ -100,6 +100,7 @@
     document.querySelector("#AddLevel").addEventListener("click", function () {
         const levelPreviewContainer = document.getElementById("LevelPreviewContainer");
         const levelPreview = document.createElement('div');
+        
         let levelhtml = `<?php require 'views/components/createLevelPreview.php'; ?>`;
         
         currentLevelNum++;        
@@ -201,8 +202,8 @@
         let category = document.querySelector('#category').value;
         let paymentMethod = document.querySelector('input[name="payment_method"]:checked');
         let oneTimeAmount = document.querySelector('input[name="one_time_amount"]').value;
-        let levelNames = document.querySelectorAll('input[name="levelName"]');
-        let levelDescriptions = document.querySelectorAll('input[name="levelDescription"]');
+        let levelId = document.querySelectorAll('.Level');
+        let CoursePhoto = document.querySelector("#photo");
 
         if (!title || !description || !category || !paymentMethod) {
             swal({
@@ -224,17 +225,76 @@
             return;
         }
 
-        for (let i = 0; i < levelNames.length; i++) {
-            if (!levelNames[i].value || !levelDescriptions[i].value) {
-                swal({
-                    icon: 'error',
-                    title: '☠️',
-                    text: 'Please fill out all level names and descriptions.',
-                });
-                event.preventDefault();
-                return; 
-            }
+        // for (let i = 0; i < levelNames.length; i++) {
+        //     if (!levelNames[i].value || !levelDescriptions[i].value) {
+        //         swal({
+        //             icon: 'error',
+        //             title: '☠️',
+        //             text: 'Please fill out all level names and descriptions.',
+        //         });
+        //         event.preventDefault();
+        //         return; 
+        //     }
+        // }
+
+
+        const formData = new FormData();
+
+        formData.append("title",title);
+        formData.append("description",description);
+        formData.append("category",category);
+        formData.append("courseImage", document.getElementById("photo").files[0])
+
+        if(paymentMethod.value === 'one_time')
+        {
+            formData.append("oneTimeAmount",oneTimeAmount);
         }
+        else{
+            formData.append("oneTimeAmount", null);
+        }
+        
+        
+        fetch("/createCourse", {
+            method:"POST",
+            body: formData
+        }).then(response => response.json())
+        .then(data => {
+            const courseId = data.payload.courseId
+            const levelData = [];
+            levelId.forEach((level) => {
+                let LevelInfo = {};
+                LevelInfo.levelNumber = level.id;
+                LevelInfo.levelName = level.querySelector('.levelName').value;
+                LevelInfo.levelDescription = level.querySelector('.levelDescription').value;
+                LevelInfo.levelVideo = level.querySelector('.video').files[0];
+                LevelInfo.levelFile = level.querySelector('.file').files[0];
+                LevelInfo.levelCost = level.querySelector('.individualCost').value;
+                LevelInfo.CourseId = courseId;
+    let formData = new FormData();
+    
+    // Append text fields to FormData
+    formData.append("levelNumber", LevelInfo.levelNumber);
+    formData.append("levelName", LevelInfo.levelName);
+    formData.append("levelDescription", LevelInfo.levelDescription);
+    formData.append("levelCost", LevelInfo.levelCost ? LevelInfo.levelCost : null);
+    formData.append("CourseId", courseId);
+    
+    // Append files to FormData
+    formData.append("levelVideo", LevelInfo.levelVideo);  // Assuming only one file
+    formData.append("levelFile", LevelInfo.levelFile);    // Assuming only one file
+    
+    
+                fetch("/level",{
+                    method:"POST",
+                    body: formData
+                }).then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                });
+            });
+        });
+        
+
         swal({
             icon: 'success',
             title: '🎉',

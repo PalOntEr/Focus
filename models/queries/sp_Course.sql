@@ -10,7 +10,7 @@ CREATE PROCEDURE sp_Course
     IN p_deactivationDate DATETIME,
     IN p_courseDescription TEXT,
     IN p_courseTitle VARCHAR(50),
-    IN p_courseImage VARCHAR(255),
+    IN p_courseImage LONGBLOB,
     IN p_categoryId INT,
     IN p_instructorId INT,
     IN p_coursePrice DECIMAL (10,2)
@@ -40,13 +40,13 @@ BEGIN
         WHEN 5 THEN -- SELECT WITH FILTER
             SELECT courseId, creationDate, modificationDate, deactivationDate,courseTitle,courseImage, categoryId, instructorId, coursePrice
             FROM Courses
-            WHERE (IFNULL(p_courseId, courseId) = courseId)
-              AND (IFNULL(p_categoryId, categoryId) = categoryId)
-              AND (IFNULL(p_coursePrice, coursePrice) = coursePrice)
-              AND (IFNULL(p_courseTitle, courseTitle) = courseTitle)
-              AND (IFNULL(p_courseDescription, courseDescription) = courseDescription)
-              AND (IFNULL(p_instructorId, instructorId) = instructorId)
-              AND (IFNULL(p_fechaDesactivacion, fechaDesactivacion) = fechaDesactivacion);
+WHERE (p_courseId IS NULL OR p_courseId = courseId)
+  AND (p_categoryId IS NULL OR p_categoryId = categoryId)
+  AND (p_coursePrice IS NULL OR p_coursePrice = coursePrice)
+  AND (p_courseTitle IS NULL OR p_courseTitle = courseTitle)
+  AND (p_courseDescription IS NULL OR p_courseDescription = courseDescription)
+  AND (p_instructorId IS NULL OR p_instructorId = instructorId)
+  AND (p_deactivationDate IS NULL OR p_deactivationDate = deactivationDate);
     END CASE;
 END
 

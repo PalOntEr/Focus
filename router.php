@@ -127,7 +127,21 @@ $routes = [
         }
     ],
     [
+        'method' => 'POST',
+        'path' => '/level',
+        'callback' => function() {
+            require __DIR__.'/controllers/level.php';
+        }
+    ],
+    [
         'method' => 'GET',
+        'path' => '/createCourse',
+        'callback' => function() {
+            require __DIR__.'/controllers/createCourse.php';
+        }
+    ],
+    [
+        'method' => 'POST',
         'path' => '/createCourse',
         'callback' => function() {
             require __DIR__.'/controllers/createCourse.php';
