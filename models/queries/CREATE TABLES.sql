@@ -37,7 +37,6 @@ CREATE TABLE Users (
     profilePicture LONGBLOB NOT NULL COMMENT 'User profile picture',
     gender CHAR NOT NULL COMMENT 'User gender',
     PRIMARY KEY (userId),
-    UNIQUE KEY email (email),
     INDEX (role),
     INDEX (status)
 ) COMMENT = 'User table';
@@ -60,7 +59,7 @@ CREATE TABLE Courses (
     deactivationDate DATETIME DEFAULT NULL COMMENT 'Course deactivation date',
     courseDescription TEXT NOT NULL COMMENT 'Course description',
     courseTitle VARCHAR(50) NOT NULL COMMENT 'Course title',
-    courseImage VARCHAR(255) NOT NULL COMMENT 'Course image',
+    courseImage LONGBLOB NOT NULL COMMENT 'Course image',
     categoryId INT NOT NULL COMMENT 'Foreign key of the course category',
     instructorId INT NOT NULL COMMENT 'Foreign key of the instructor',
     coursePrice DECIMAL(10, 2) NOT NULL COMMENT 'Course price',
@@ -76,7 +75,7 @@ CREATE TABLE Levels (
     levelName VARCHAR(50) NOT NULL COMMENT 'Level name',
     levelNumber INT NOT NULL COMMENT 'Level number',
     levelDescription TEXT NOT NULL COMMENT 'Level description',
-    levelCost DECIMAL(10, 2) NOT NULL COMMENT 'Level cost',
+    levelCost DECIMAL(10, 2) NULL COMMENT 'Level cost',
     courseId INT NOT NULL COMMENT 'Foreign key of the course',
     FOREIGN KEY (courseId) REFERENCES Courses (courseId),
     INDEX (courseId)
