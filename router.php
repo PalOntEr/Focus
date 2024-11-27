@@ -1,6 +1,10 @@
 <?php
 
+require_once __DIR__.'/func.php';
+
 session_start();
+
+// dd($_SESSION);
 
 $routes = [
     [
@@ -178,11 +182,35 @@ $routes = [
                 exit();
             }
         }
+    ],
+    [
+        'method' => 'GET',
+        'path' => '/messages',
+        'callback' => function() {
+            require __DIR__.'/controllers/messages.php';
+        }
+    ],
+    [
+        'method' => 'POST',
+        'path' => '/messages',
+        'callback' => function() {
+            require __DIR__.'/controllers/messages.php';
+        }
+    ],
+    [
+        'method' => 'POST',
+        'path' => '/translate',
+        'callback' => function() {
+            require __DIR__.'/controllers/translate.php';
+        }
     ]
 ];
 
 foreach ($routes as $route) {
     if ($route['method'] === $_SERVER['REQUEST_METHOD'] && $route['path'] === strtok($_SERVER['REQUEST_URI'], '?')) {
+        if (isset($route['middleware'])) {
+            call_user_func($route['middleware']);
+        }
         call_user_func($route['callback']);
         return;
     }
@@ -194,5 +222,10 @@ if (file_exists($filePath) && is_file($filePath)) {
     readfile($filePath);
 } else {
     http_response_code(404);
-    echo "404 Not Found";
+    echo json_encode([
+        'status' => false,
+        'payload' => [
+            'error' => 'Not found'
+        ]
+    ]);
 }

@@ -120,7 +120,7 @@
     
     document.addEventListener("DOMContentLoaded", function ()
     {   
-        let imgUser = "<?= $_SESSION["user"]["profilePicture"] ?>";
+        let imgUser = "<?= $_SESSION["user"]["profilePicture"] ?? "" ?>";
         if(imgUser=== "") return;
         const img = document.createElement('img');
         img.src = `data:image/*;base64,${imgUser}`;
@@ -134,17 +134,11 @@
     event.preventDefault();
     let allFilled = true;
 
-    for (let i = 0; i < inputs.length; i++) {
-        if (!inputs[i].value) {
+    inputs.forEach(input => {
+        if (!input.value) {
             allFilled = false;
-            swal({
-                icon: 'error',
-                title: '☠️',
-                text: `Please fill in the ${inputs[i].id} field!`
-            });
-            return;
         }
-    }
+    });
 
     for (let i = 0; i < inputs.length; i++) {
         if (!inputs[i].value) {
@@ -168,6 +162,15 @@
         return;
     }
 
+    if (!allFilled) {
+        swal({
+            icon: 'error',
+            title: '☠️',
+            text: 'Please fill in all fields!'
+        });
+        return;
+    }
+
     const email = inputs.find(input => input.id === 'Email').value;
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -180,7 +183,7 @@
         });
         return;
     }
-    
+
     let letra = inputs[6].value.charAt(0);
     inputs[6].value = letra;
     let letra2 = inputs[4].value.charAt(0);
