@@ -120,7 +120,7 @@
     
     document.addEventListener("DOMContentLoaded", function ()
     {   
-        let imgUser = "<?= $_SESSION["user"]["profilePicture"] ?>";
+        let imgUser = "<?= $_SESSION["user"]["profilePicture"] ?? "" ?>";
         if(imgUser=== "") return;
         const img = document.createElement('img');
         img.src = `data:image/*;base64,${imgUser}`;

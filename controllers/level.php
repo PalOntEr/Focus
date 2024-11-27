@@ -65,7 +65,7 @@
 
     define('BASE_PATH', __DIR__);
 
-    $targetDir = "courses/videos/";
+    $targetDir = "videos/";
 
     if (!is_dir($targetDir)) {
         mkdir($targetDir, 0777, true);
@@ -79,7 +79,7 @@
     if (move_uploaded_file($_FILES['levelVideo']['tmp_name'], $targetFilePath)) {
         try{
             $db->queryInsert("CALL sp_Contents(1,NULL,?,?,?)",[
-                base_encode64($targetFilePath),
+                base64_encode($targetFilePath),
                 ".mp4",
                 $levelInfo["levelId"]
             ]);
@@ -92,23 +92,9 @@
     }
     else{
         $result = false;
-        $exception = $targetFilePath;
+        $exception = "El archivo no pudo ser movido al servidor";
     }
-    if($result)
-    {
-    echo json_encode([
-        'status' => true
-    ]);
-    return;
-    }
-    else{
-        echo json_encode([
-            'status' => false,
-            'error' => $exception,
-            'levelInfo' => $levelInfo
-        ]);
-        return;
-    }
+
     try{
         $db->queryInsert("CALL sp_Contents(1,NULL,?,?,?)",[
             $file,

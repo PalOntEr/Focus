@@ -4,6 +4,7 @@
     </div>
     <div class="flex justify-between mr-2">
         <p class="text-sm text-color">8:30pm</p>
-        <p class="text-sm text-color">Seen</p>
+        <p class="translate text-sm text-color opacity-80 hover:opacity-100 transition-all select-none cursor-pointer">Translate Message</p>
+        <!-- <p class="text-sm text-color">Seen</p> -->
     </div>
 </div>
