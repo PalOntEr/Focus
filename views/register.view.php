@@ -134,11 +134,17 @@
     event.preventDefault();
     let allFilled = true;
 
-    inputs.forEach(input => {
-        if (!input.value) {
+    for (let i = 0; i < inputs.length; i++) {
+        if (!inputs[i].value) {
             allFilled = false;
+            swal({
+                icon: 'error',
+                title: '☠️',
+                text: `Please fill in the ${inputs[i].id} field!`
+            });
+            return;
         }
-    });
+    }
 
     if(inputs[2].value !== inputs[3].value)
     {
@@ -146,15 +152,6 @@
             icon: 'error',
             title: '☠️',
             text: 'Passwords dont match!'
-        });
-        return;
-    }
-
-    if (!allFilled) {
-        swal({
-            icon: 'error',
-            title: '☠️',
-            text: 'Please fill in all fields!'
         });
         return;
     }
@@ -171,7 +168,7 @@
         });
         return;
     }
-
+    
     let letra = inputs[6].value.charAt(0);
     inputs[6].value = letra;
     let letra2 = inputs[4].value.charAt(0);
