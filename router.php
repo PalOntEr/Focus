@@ -217,6 +217,13 @@ $routes = [
         'callback' => function() {
             require __DIR__.'/controllers/translate.php';
         }
+    ],
+    [
+        'method' => 'GET',
+        'path' => '/courses/get',
+        'callback' => function() {
+            require __DIR__.'/controllers/getCourses.php';
+        }
     ]
 ];
 

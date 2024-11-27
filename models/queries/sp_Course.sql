@@ -19,7 +19,7 @@ BEGIN
     CASE p_Opc
         WHEN 1 THEN -- INSERT
             INSERT INTO Courses(courseDescription,courseTitle,courseImage,categoryId,instructorId,coursePrice)
-        VALUES(p_courseDescription,p_courseTitle,p_courseImage,p_categoryId,p_instructorId,p_coursePrice);
+            VALUES(p_courseDescription,p_courseTitle,p_courseImage,p_categoryId,p_instructorId,p_coursePrice);
         WHEN 2 THEN -- UPDATE
             UPDATE Courses
             SET courseDescription = p_courseDescription,
@@ -35,18 +35,18 @@ BEGIN
             SET deactivationDate = CURRENT_TIMESTAMP
             WHERE courseId = p_courseId;
         WHEN 4 THEN -- SELECT ALL
-            SELECT courseId, creationDate, modificationDate, deactivationDate,courseTitle,courseImage, categoryId, instructorId, coursePrice
+            SELECT courseId, creationDate, modificationDate, deactivationDate, courseTitle, categoryId, instructorId, coursePrice, courseDescription, courseImage
             FROM Courses;
         WHEN 5 THEN -- SELECT WITH FILTER
-            SELECT courseId, creationDate, modificationDate, deactivationDate,courseTitle,courseImage, categoryId, instructorId, coursePrice
+            SELECT courseId, creationDate, modificationDate, deactivationDate, courseTitle, categoryId, instructorId, coursePrice, courseDescription, courseImage
             FROM Courses
-WHERE (p_courseId IS NULL OR p_courseId = courseId)
-  AND (p_categoryId IS NULL OR p_categoryId = categoryId)
-  AND (p_coursePrice IS NULL OR p_coursePrice = coursePrice)
-  AND (p_courseTitle IS NULL OR p_courseTitle = courseTitle)
-  AND (p_courseDescription IS NULL OR p_courseDescription = courseDescription)
-  AND (p_instructorId IS NULL OR p_instructorId = instructorId)
-  AND (p_deactivationDate IS NULL OR p_deactivationDate = deactivationDate);
+            WHERE (p_courseId IS NULL OR courseId = p_courseId)
+                AND (p_categoryId IS NULL OR categoryId = p_categoryId)
+                AND (p_coursePrice IS NULL OR coursePrice = p_coursePrice)
+                AND (p_courseTitle IS NULL OR courseTitle LIKE CONCAT('%', p_courseTitle, '%'))
+                AND (p_courseDescription IS NULL OR courseDescription LIKE CONCAT('%', p_courseDescription, '%'))
+                AND (p_instructorId IS NULL OR instructorId = p_instructorId)
+                AND (p_deactivationDate IS NULL OR deactivationDate = p_deactivationDate);
     END CASE;
 END
 
