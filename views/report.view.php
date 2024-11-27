@@ -154,6 +154,8 @@ require 'views/components/navbar.php';
 
 <script>
 
+    function GetCategories()
+    {
     fetch('/categories')
     .then(response => response.json())
     .then(data => {
@@ -182,7 +184,9 @@ require 'views/components/navbar.php';
                         i++;
         })
     });
-
+    }
+    
+GetCategories();
     fetch('/users')
         .then(response => response.json())
         .then(data => {
@@ -349,7 +353,7 @@ require 'views/components/navbar.php';
             confirmButtonText: 'OK'
             }).then((result) => {
                 if(result.isConfirmed){
-                    location.reload();
+                    GetCategories();
                 }
             });
             hideCategoryModal();
