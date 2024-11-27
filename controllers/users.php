@@ -174,7 +174,8 @@ else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 "role" => $role,
                 "birthdate" => $birthdate,
                 "profilePicture" => $user['profilePicture'],
-                "gender" => $gender
+                "gender" => $gender,
+                "creationDate" => $user['creationDate']
             ];
 
         echo json_encode([

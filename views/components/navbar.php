@@ -8,18 +8,9 @@
         <a href="/home" class="text-3xl font-bold ease-in duration-150 prevent-select tracking-wider">FOCUS</a>
 
         <div class="flex space-x-4">
-            <select class="bg-transparent outline-none border-0 w-1/3">
+            <select id="navBarCategorySelector" class="bg-transparent outline-none border-0 w-1/3">
                 <option>
                 <a class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">All</a>
-                </option>
-                <option>
-                <a class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Computer Science</a>
-                </option>
-                <option>
-                <a class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Languages</a>
-                </option>
-                <option>
-                <a class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Engineering</a>
                 </option>
             </select>
             <form action="/advSearch" method="GET" class="hidden md:flex justify-center items-start">
@@ -80,4 +71,20 @@
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.js"></script>
+
+    <script>fetch("/categories")
+.then(response => response.json())
+.then(data => {
+const categorySelector = document.getElementById("navBarCategorySelector");
+
+data.payload.categories.forEach((category) => {
+            const option = document.createElement("option");
+            option.value = category.categoryId;
+            const a = document.createElement("a");
+            a.className = "block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+            a.textContent = category.categoryName;
+            option.appendChild(a);
+            categorySelector.appendChild(option);
+        });
+}); </script>
 </nav>

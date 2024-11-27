@@ -1,6 +1,7 @@
 DROP PROCEDURE IF EXISTS sp_Categories;
 
-DELIMITER //
+DELIMITER / /
+
 CREATE PROCEDURE sp_Categories(
     IN p_Opc INT,
     IN p_categoryId INT,
@@ -8,6 +9,7 @@ CREATE PROCEDURE sp_Categories(
     IN p_categoryDescription TEXT,
     IN p_creatorId INT
 )
+
 BEGIN
     CASE p_Opc
         WHEN 1 THEN -- INSERT
@@ -33,6 +35,9 @@ BEGIN
               AND (IFNULL(p_categoryName, categoryName) = categoryName)
               AND (IFNULL(p_categoryDescription, categoryDescription) = categoryDescription)
               AND (IFNULL(p_creatorId, creatorId) = creatorId);
+        WHEN 6 THEN -- SELECT WITH NAME OF CREATOR
+        SELECT `categoryId`,`categoryName`, `categoryDescription`, `fullName` AS User, `creationDate` AS Created FROM CategoryInfo;
     END CASE;
 END;
-DELIMITER;
+
+DELIMITER //;
