@@ -70,7 +70,7 @@ fetch("/courses/get")
     .then(data => {
         if (data.status) {
             const recentlyUpdatedContainer = document.getElementById("recentlyUpdated");
-            const courses = data.payload.courses;
+            let courses = data.payload.courses;
 
             courses.sort((a, b) => new Date(b.creationDate) - new Date(a.creationDate));
 
