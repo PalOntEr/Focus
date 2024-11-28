@@ -12,12 +12,30 @@
     </style>
 </head>
 <script>
-    function addToCart() {
-        swal({
-            icon: 'success',
-            title: '🎉',
-            text: 'The course has been added to your cart.',
-            confirmButtonText: 'OK'
-        });
+    function addToCart(id) {
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        if (cart.includes(id)) {
+            swal('The course is already in your cart.', {
+                title: '😵‍💫',
+                icon: 'info',
+            });
+        } else {
+            swal({
+            icon: 'info',
+            title: '🧐',
+            text: 'Do you want to add this course to your cart?',
+            buttons: true,
+            dangerMode: true,
+            }).then((willAdd) => {
+            if (willAdd) {
+                cart.push(id);
+                localStorage.setItem('cart', JSON.stringify(cart));
+                swal('The course has been added to your cart.', {
+                    title: '💸',
+                    icon: 'success',
+                });
+            }
+            });
+        }
     };
 </script>
