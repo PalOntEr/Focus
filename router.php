@@ -121,13 +121,6 @@ $routes = [
     ],
     [
         'method' => 'GET',
-        'path' => '/courses',
-        'callback' => function() {
-            require __DIR__.'/controllers/courses.php';
-        }
-    ],
-    [
-        'method' => 'GET',
         'path' => '/level',
         'callback' => function() {
             require __DIR__.'/controllers/level.php';
@@ -316,6 +309,20 @@ $routes = [
         'path' => '/courses/get',
         'callback' => function() {
             require __DIR__.'/controllers/getCourses.php';
+        }
+    ],
+    [
+        'method' => 'POST',
+        'path' => '/courses/patch',
+        'callback' => function() {
+            require __DIR__.'/controllers/updateCourses.php';
+        }
+    ],
+    [
+        'method' => 'POST',
+        'path' => '/levels/patch',
+        'callback' => function() {
+            require __DIR__.'/controllers/updateLevels.php';
         }
     ]
 ];
