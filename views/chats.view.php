@@ -7,10 +7,11 @@
 ?>
 <div class="container mx-auto flex flex-col sm:flex-row h-full w-screen mt-4">
     <div class="hidden sm:flex flex-col h-5/6 w-1/3 bg-primary rounded-xl mx-5 p-5">
-        <div class="flex justify-between items-center mb-5">
+        <div class="flex justify-between items-center mb-5 space-x-5">
             <h1 class="text-2xl text-color font-extrabold">Chats</h1>
-            <button class="hidden md:block px-2 py-1 bg-secondary text-white rounded">New Chat</button>
-            <button class="block md:hidden px-2 py-1 bg-secondary text-white rounded">➕</button>
+            <select id="user" name="user" class="user mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md">
+                <option value="">Select an instructor</option>
+            </select>
         </div>
         <div class="chatPreviewContainer flex flex-col space-y-2 overflow-y-scroll h-full rounded-xl">
         </div>
@@ -30,10 +31,11 @@
         </div>
     </div>
     <div class="flex sm:hidden flex-col h-5/6 w-[90%] bg-primary rounded-xl mx-5 p-5">
-        <div class="flex justify-between items-center mb-5">
+        <div class="flex justify-between items-center mb-5 space-x-5">
             <h1 class="text-2xl font-bold">Chats</h1>
-            <button class="hidden md:block px-2 py-1 bg-secondary text-white rounded">New Chat</button>
-            <button class="block md:hidden px-2 py-1 bg-secondary text-white rounded">➕</button>
+            <select id="user" name="user" class="user mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md">
+                <option value="">Select an instructor</option>
+            </select>
         </div>
         <div class="chatPreviewContainer flex flex-col space-y-2 overflow-y-scroll h-full rounded-xl">
         </div>
@@ -43,85 +45,133 @@
 <script>
     let currentReceiverId = <?= $_GET['insId'] ?? 0 ?>;
     const userId = <?= $_SESSION['user']['userId'] ?? 0 ?>;
+    const chatPreviewContainer = document.querySelectorAll('.chatPreviewContainer');
+    const uniqueChats = new Map();
+
+    let users = {};
 
     document.addEventListener('DOMContentLoaded', async () => {
-        const chatPreviewContainer = document.querySelectorAll('.chatPreviewContainer');
         
         try {
-            const senderChats = await fetch(`/messages?get_chat=true&sender_id=${userId}`);
-            const senderData = await senderChats.json();
-            const uniqueChats = new Map();
-
-            if (senderData.status) {
-                const chats = senderData.payload.chats;
-
-                chats.forEach(chat => {
-                    const otherUserId = chat.senderId === userId ? chat.receiverId : chat.senderId;
-                    if (!uniqueChats.has(otherUserId)) {
-                        uniqueChats.set(otherUserId, chat);
-                    }
-                });
-            }
-
-            const receiverChats = await fetch(`/messages?get_chat=false&sender_id=${userId}`);
-            const receiverData = await receiverChats.json();
             
-            if (receiverData.status) {
-                const chats = receiverData.payload.chats;
-
-                chats.forEach(chat => {
-                    const otherUserId = chat.senderId === userId ? chat.receiverId : chat.senderId;
-                    if (!uniqueChats.has(otherUserId)) {
-                        uniqueChats.set(otherUserId, chat);
-                    }
-                });
-
-                chatPreviewContainer.innerHTML = '';
-                uniqueChats.forEach(chat => {
-                    const otherUserId = chat.senderId === userId ? chat.receiverId : chat.senderId;
-                    const otherUserName = chat.senderId === userId ? chat.receiverUsername : chat.senderUsername;
-                    let chatPreview = `<?php require 'views/components/chatPreview.php'; ?>`;
-                    chatPreview = chatPreview.replace('Dobeto', otherUserName);
-                    chatPreview = chatPreview.replace('id="receiverID"', `id="receiverID-${otherUserId}"`);
-                    chatPreviewContainer.forEach(container => container.innerHTML += chatPreview);
-                });
-                
-                if (currentReceiverId !== 0) {
-                    const existingChatPreview = document.getElementById(`receiverID-${currentReceiverId}`);
-                    if (!existingChatPreview) {
-                        const otherUserId = currentReceiverId;
-                        const otherUserName = <?= $_GET['insName'] ?? "a" ?>;
-                        let chatPreview = `<?php require 'views/components/chatPreview.php'; ?>`;
-                        chatPreview = chatPreview.replace('Dobeto', otherUserName);
-                        chatPreview = chatPreview.replace('id="receiverID"', `id="receiverID-${otherUserId}"`);
-                        chatPreviewContainer.forEach(container => container.innerHTML += chatPreview);
-                    }
+            fetch('/users')
+            .then(response => response.json())
+            .then(data => {
+                if (data.status) {
+                    users = data.payload.users.reduce((acc, user) => {
+                        acc[user.userId] = user;
+                        return acc;
+                    }, {});
+                    const userSelector = document.querySelectorAll('.user');
+                    data.payload.users.forEach(user => {
+                        if (user.role === 'I' && user.userId !== userId) {
+                            userSelector.forEach(selector => {
+                                const option = document.createElement('option');
+                                option.value = user.userId;
+                                option.textContent = user.username;
+                                selector.appendChild(option);
+                            });
+                        }
+                    });
+                    userSelector.forEach(selector => {
+                        selector.addEventListener('change', () => {
+                            if (selector.value === '' || parseInt(selector.value) === 0) {
+                                return;
+                            }
+                            currentReceiverId = parseInt(selector.value);
+                            getChats();
+                        });
+                    });
+                    
+                } else {
+                    swal({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Failed to fetch users.',
+                    });
                 }
-
-            }
-
-            document.querySelectorAll('[id^="receiverID-"]').forEach(chatPreview => {
-                chatPreview.addEventListener('click', () => {
-                const currentReceiverName = document.getElementById('currentReceiverName');
-                currentReceiverName.innerText = chatPreview.querySelector('.receiver-name').innerText;
-                
-                const receiverId = chatPreview.id.split('-')[1];
-                currentReceiverId = receiverId;
-                
-                const chatMessagesContainer = document.getElementById('chatMessagesContainer');
-                    getChatMessages()
+            })
+            .catch(error => {
+                console.error('Error fetching users:', error);
+                swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'An error occurred while fetching users. Please try again later.',
                 });
             });
 
-            if (currentReceiverId !== 0) {
-                const existingChatPreview = document.getElementById(`receiverID-${currentReceiverId}`);
-                existingChatPreview.click();
-            }
+            getChats();
 
         } catch (error) {
             console.error('Error fetching chats:', error);
         }
+            
     });
+
+    async function getChats(){
+        const senderChats = await fetch(`/messages?get_chat=true&sender_id=${userId}`);
+        const senderData = await senderChats.json();
+        if (senderData.status) {
+            const chats = senderData.payload.chats;
+            chats.forEach(chat => {
+                const otherUserId = chat.senderId === userId ? chat.receiverId : chat.senderId;
+                if (!uniqueChats.has(otherUserId)) {
+                    uniqueChats.set(otherUserId, chat);
+                }
+            });
+        }
+        const receiverChats = await fetch(`/messages?get_chat=false&sender_id=${userId}`);
+        const receiverData = await receiverChats.json();
+        
+        if (receiverData.status) {
+            const chats = receiverData.payload.chats;
+            chats.forEach(chat => {
+                const otherUserId = chat.senderId === userId ? chat.receiverId : chat.senderId;
+                if (!uniqueChats.has(otherUserId)) {
+                    uniqueChats.set(otherUserId, chat);
+                }
+            });
+            chatPreviewContainer.forEach(container => container.innerHTML = '');
+            uniqueChats.forEach(chat => {
+                const otherUserId = chat.senderId === userId ? chat.receiverId : chat.senderId;
+                const otherUserName = chat.senderId === userId ? chat.receiverUsername : chat.senderUsername;
+                let chatPreview = `<?php require 'views/components/chatPreview.php'; ?>`;
+                chatPreview = chatPreview.replace('Dobeto', otherUserName);
+                chatPreview = chatPreview.replace('id="receiverID"', `id="receiverID-${otherUserId}"`);
+                chatPreviewContainer.forEach(container => container.innerHTML += chatPreview);
+            });
+            
+            if (currentReceiverId !== 0) {
+                const existingChatPreview = document.getElementById(`receiverID-${currentReceiverId}`);
+                if (!existingChatPreview) {
+                    const otherUserId = currentReceiverId;
+                    const otherUserName = users[otherUserId].username;
+                    let chatPreview = `<?php require 'views/components/chatPreview.php'; ?>`;
+                    chatPreview = chatPreview.replace('Dobeto', otherUserName);
+                    chatPreview = chatPreview.replace('id="receiverID"', `id="receiverID-${otherUserId}"`);
+                    chatPreviewContainer.forEach(container => container.innerHTML += chatPreview);
+                }
+            }
+        }
+
+        document.querySelectorAll('[id^="receiverID-"]').forEach(chatPreview => {
+            chatPreview.addEventListener('click', () => {
+            const currentReceiverName = document.getElementById('currentReceiverName');
+            currentReceiverName.innerText = chatPreview.querySelector('.receiver-name').innerText;
+            
+            const receiverId = chatPreview.id.split('-')[1];
+            currentReceiverId = receiverId;
+            
+            const chatMessagesContainer = document.getElementById('chatMessagesContainer');
+                getChatMessages()
+            });
+        });
+
+        if (currentReceiverId !== 0) {
+            const existingChatPreview = document.getElementById(`receiverID-${currentReceiverId}`);
+            existingChatPreview.click();
+        }
+    } 
 
     async function sendMessage(){
         
