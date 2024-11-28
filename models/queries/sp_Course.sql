@@ -46,7 +46,9 @@ BEGIN
                 AND (p_courseTitle IS NULL OR courseTitle LIKE CONCAT('%', p_courseTitle, '%'))
                 AND (p_courseDescription IS NULL OR courseDescription LIKE CONCAT('%', p_courseDescription, '%'))
                 AND (p_instructorId IS NULL OR instructorId = p_instructorId)
-                AND (p_deactivationDate IS NULL OR deactivationDate = p_deactivationDate);
+                AND (p_creationDate IS NULL OR DATEDIFF(creationDate, p_creationDate) >= 0)
+                AND (p_modificationDate IS NULL OR DATEDIFF(creationDate, p_modificationDate) <= 0)
+                AND (p_deactivationDate IS NULL OR DATEDIFF(deactivationDate, p_deactivationDate) <= 0);
     END CASE;
 END
 

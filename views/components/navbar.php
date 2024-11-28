@@ -8,14 +8,12 @@
         <a href="/home" class="text-3xl font-bold ease-in duration-150 prevent-select tracking-wider">FOCUS</a>
 
         <div class="flex space-x-4">
-            <select id="navBarCategorySelector" class="bg-transparent outline-none border-0 w-1/3">
-                <option>
-                <a class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">All</a>
-                </option>
-            </select>
-            <form action="/advSearch" method="GET" class="hidden md:flex justify-center items-start">
+            <form action="/advSearch" method="GET" class="hidden md:flex justify-center items-start space-x-2">
+                <select name="category" id="navBarCategorySelector" class="bg-transparent outline-none border-0 w-1/3 h-full">
+                    <option class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" value="0">All</option>
+                </select>
                 <input type="text" name="search" placeholder="Search..." class="px-2 py-1 rounded sm:w-auto md:w-96">
-                <button type="submit" class="ml-2 px-2 py-1 bg-comp-2 text-secondary font-semibold rounded">Search</button>
+                <button type="submit" class="px-2 py-1 bg-comp-2 text-secondary font-semibold rounded">Search</button>
             </form>
         </div>
         <div class="flex space-x-4 items-center">

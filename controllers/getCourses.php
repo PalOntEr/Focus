@@ -10,14 +10,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $db = new Database($config['database']);
 
     $courseId = $_GET['course_id'] ?? null;
-    $creationDate = $_GET['creation_date'] ?? null;
-    $modificationDate = $_GET['modification_date'] ?? null;
+    $creationDate = isset($_GET['creation_date']) ? urldecode($_GET['creation_date']) : null;
+    $modificationDate = isset($_GET['modification_date']) ? urldecode($_GET['modification_date']) : null;
     $categoryId = $_GET['category_id'] ?? null;
     $coursePrice = $_GET['course_price'] ?? null;
     $courseTitle = $_GET['course_title'] ?? null;
     $courseDescription = $_GET['course_description'] ?? null;
     $instructorId = $_GET['instructor_id'] ?? null;
-    $deactivationDate = $_GET['deactivation_date'] ?? null;
+    $deactivationDate = isset($_GET['deactivation_date']) ? urldecode($_GET['deactivation_date']) : null;
     $courseImage = $_GET['course_image'] ?? null;
 
     try {
@@ -44,12 +44,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         }
         unset($course);
 
-        echo json_encode([
-            'status' => true,
+        if (empty($courses)) {
+            echo json_encode([
+            'status' => false,
             'payload' => [
-                'courses' => $courses
+                'error' => 'No courses found'
             ]
-        ]);
+            ]);
+            return;
+        }else{
+            echo json_encode([
+                'status' => true,
+                'payload' => [
+                    'courses' => $courses
+                ]
+            ]);
+            return;
+        }
     } catch (PDOException $e) {
         http_response_code(500);
         echo json_encode([
