@@ -1,7 +1,7 @@
 <?php
 require 'views/components/header.php';
 require 'views/components/navbar.php';
-$usertype = $_SESSION['usertype'] ?? 'guest';
+$usertype = $_SESSION['user']['role'] ?? 'guest';
 ?>
 
 <div class="flex flex-col container sm:mx-auto overflow-x-hidden items-center">
@@ -26,8 +26,8 @@ $usertype = $_SESSION['usertype'] ?? 'guest';
 
             Whether you are a beginner looking to start your programming journey or an experienced developer wanting to enhance your skills, this course will provide you with the knowledge and tools needed to succeed in PHP development.
         </div>
-        <?php if ($usertype === 'instructor'): ?>
-                <button class="delete-button" onclick="location.href='/createCourse?update=true'">
+        <?php if ($usertype === 'I'): ?>
+                <button class="delete-button" onclick="location.href='/createCourse?update=true&courseId=1'">
                     <img class="h-5 w-5 bg-color p-1 rounded-full" src="https://cdn-icons-png.flaticon.com/512/1042/1042474.png" alt="delete">
                 </button>
             <?php endif; ?>
