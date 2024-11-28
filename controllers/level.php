@@ -1,4 +1,80 @@
 <?php
+    if($_SERVER['REQUEST_METHOD'] === 'GET')
+    {
+        require __DIR__.'/../config/db.php';
+        $config = require __DIR__.'/../config/config.php';
+    
+        $db = new Database($config['database']);
+    
+        $levelId = $_GET['level_id'] ?? null;
+        $creationDate = isset($_GET['creation_date']) ? urldecode($_GET['creation_date']) : null;
+        $modificationDate = isset($_GET['modification_date']) ? urldecode($_GET['modification_date']) : null;
+        $levelName = $_GET['level_name'] ?? null;
+        $levelNumber = $_GET['level_number'] ?? null;
+        $levelDescription = $_GET['level_description'] ?? null;
+        $levelCost = $_GET['level_cost'] ?? null;
+        $courseId = $_GET['course_id'] ?? null;
+    
+        try {
+            $option = ($levelId === null && $creationDate === null && $modificationDate === null && $levelName === null && $levelNumber === null && $levelDescription === null && $levelCost === null && $courseId === null) ? 4 : 5;
+    
+            $levels = $db->queryFetchAll("CALL sp_Levels($option, ?, ?, ?, ?, ?, ?, ?, ?)", [
+                $levelId,
+                $creationDate,
+                $modificationDate,
+                $levelName,
+                $levelNumber,
+                $levelDescription,
+                $levelCost,
+                $courseId
+            ]);
+    
+            foreach ($levels as &$level) {
+                $contents = $db->queryFetchAll("CALL sp_Contents(4, NULL,NULL,NULL, NULL, ?)", [
+                    $level['levelId']
+                ]);
+                $level['contents'] = $contents;
+            }
+    
+            foreach ($levels as &$level) {
+                if (isset($level['contents'])) {
+                    foreach ($level['contents'] as &$content) {
+                        if (isset($content['contentData'])) {
+                            $content['contentData'] = base64_decode($content['contentData']);
+                        }
+                    }
+                    unset($content);
+                }
+            }
+            unset($level);
+    
+            if (empty($levels)) {
+                echo json_encode([
+                    'status' => false,
+                    'payload' => [
+                        'error' => 'No levels found'
+                    ]
+                ]);
+                return;
+            } else {
+                echo json_encode([
+                    'status' => true,
+                    'payload' => [
+                        'levels' => $levels
+                    ]
+                ]);
+                return;
+            }
+        } catch (PDOException $e) {
+            http_response_code(500);
+            echo json_encode([
+                'status' => false,
+                'payload' => [
+                    'error' => $e->getMessage()
+                ]
+            ]);
+        }
+    }
 
     if($_SERVER['REQUEST_METHOD'] === 'POST')
     {
@@ -78,8 +154,9 @@
 
     if (move_uploaded_file($_FILES['levelVideo']['tmp_name'], $targetFilePath)) {
         try{
-            $db->queryInsert("CALL sp_Contents(1,NULL,?,?,?)",[
+            $db->queryInsert("CALL sp_Contents(1,NULL,?,?,?,?)",[
                 base64_encode($targetFilePath),
+                $_FILES['levelVideo']['name'],
                 ".mp4",
                 $levelInfo["levelId"]
             ]);
@@ -96,8 +173,9 @@
     }
 
     try{
-        $db->queryInsert("CALL sp_Contents(1,NULL,?,?,?)",[
+        $db->queryInsert("CALL sp_Contents(1,NULL,?,?,?,?)",[
             $file,
+            $_FILES['levelFile']['name'],
             $fileType['type'],
             $levelInfo["levelId"]
         ]);

@@ -4,7 +4,6 @@
 
     $isUpdating = isset($_GET['update']) && $_GET['update'] === 'true';
     $courseId = isset($_GET['courseId']) ? $_GET['courseId'] : NULL;
-    var_dump($courseId);
 ?>
 <div class="container mx-auto space-y-5">
     <div class="text-center">
@@ -65,12 +64,12 @@
         <h3 class="mx-10 text-3xl font-bold text-secondary mb-2">Payment Method</h3>
         <div class="flex justify-evenly mx-10 text-primary">
             <label class="flex items-center">
-                <input type="radio" name="payment_method" value="one_time" class="mr-2" checked>
+                <input id ="oneTime" type="radio" name="payment_method" value="one_time" class="mr-2" checked>
                 One time
                 <input type="number" name="one_time_amount" placeholder="Enter amount" class="outline-none ml-2 p-1 rounded-md bg-comp-1 text-color">
             </label>
             <label class="flex items-center">
-                <input type="radio" name="payment_method" value="level_based" class="mr-2">
+                <input id="levelBased" type="radio" name="payment_method" value="level_based" class="mr-2">
                 Level Based
             </label>
         </div>
@@ -83,29 +82,13 @@
 
 <script>
 
-    function getCourseInformation(){
-        const courseId = <?= $courseId ?>
-        
-        if(<?= $isUpdating ?> === 1)
-        {   
-            fetch("/courses?courseId=" + courseId)
-            .then(response => response.json())
-            .then(data => {
-                const courseInfo = data.payload;
-                document.getElementById("title").value = courseInfo.course.courseTitle;
-                document.getElementById("desc").value = courseInfo.course.courseDesc;
-            });
-        }
+let courseInfo = {};
 
-    }
-
-    getCourseInformation();
-
-    fetch("/categories")
+let deletedLevels = [];
+fetch("/categories")
     .then(response => response.json())
     .then(data => {
     const categorySelector = document.getElementById("category");
-
 
     data.payload.categories.forEach((category) => {
                 const option = document.createElement("option");
@@ -113,9 +96,138 @@
                 option.textContent = category.categoryName;
                 categorySelector.appendChild(option);
             });
-    });
 
+            categorySelector.value = courseInfo.categoryId;
+        });
+        
 
+    function getCourseInformation(){
+        const courseId = <?= $courseId ?>
+        
+        if(<?= $isUpdating ?> === 1)
+        {   
+            fetch("/courses/get?course_id=" + courseId)
+            .then(response => response.json())
+            .then(data => {
+                courseInfo = data.payload.courses[0];
+                
+                document.getElementById("title").value = courseInfo.courseTitle;
+                document.getElementById("desc").value = courseInfo.courseDescription;
+                const img = document.createElement('img');
+                img.src = "data:image/*;base64," + courseInfo.courseImage;
+                img.classList.add('w-full', 'h-full', 'object-cover', 'rounded-lg');
+                const photoDiv = document.querySelector('label[for="photo"] .flex');
+                photoDiv.innerHTML = '';
+                photoDiv.appendChild(img);
+
+                if(courseInfo.coursePrice !== null)
+                {
+                    document.getElementById("oneTime").checked = true;
+                }
+                else{
+                    document.getElementById("levelBased").checked = true;
+                }
+            });
+
+            let currentLevelNum = 0;
+            
+
+            fetch("/level?course_id=" + courseId)
+            .then(response => response.json())
+            .then(data => {
+                let levelInfo = data.payload.levels;
+
+                levelInfo.forEach(level => {
+                    currentLevelNum++;        
+                    const levelPreviewContainer = document.getElementById("LevelPreviewContainer");
+                    const levelPreview = document.createElement('div');
+                    let levelhtml = `<?php require 'views/components/createLevelPreview.php'; ?>`;
+                    levelhtml = levelhtml.replace(/LEVEL_NUM/g, currentLevelNum);
+                    
+                    levelhtml = levelhtml.replace(/LEVEL_ID/g, level.levelId);
+                    levelPreview.innerHTML = levelhtml;
+                    levelPreview.querySelector(".levelName").value = level.levelName;
+                    levelPreview.querySelector(".levelDescription").value = level.levelDescription;
+                    levelPreview.querySelector(".individualCost").value = level.levelCost;
+
+                    levelPreviewContainer.appendChild(levelPreview);
+
+                    const individualCostElements = document.querySelectorAll('[name="individualCost"]');
+                    if (this.value === 'one_time') {
+                    individualCostElements.forEach(element => element.classList.add('hidden'));
+                } else {
+                    individualCostElements.forEach(element => element.classList.remove('hidden'));
+                }
+                const deleteButton = levelPreview.querySelector('.DeleteLevel');
+        const addVideo = levelPreview.querySelectorAll('.videoRef');
+        const addFile = levelPreview.querySelectorAll('.fileRef');
+        const videoinput = levelPreview.querySelectorAll('.video');
+        const fileinput = levelPreview.querySelectorAll('.file');
+
+        addVideo.forEach((link) => {
+            link.addEventListener("click", function(e) {
+                e.preventDefault();
+                const levelContainer = link.closest(".Level");
+                const fileInput = levelContainer.querySelector(".video");
+                fileInput.click();
+            });
+        });
+
+        addFile.forEach((link) => {
+            link.addEventListener("click", function(e) {
+                e.preventDefault();
+                const levelContainer = link.closest(".Level");
+                const fileInput = levelContainer.querySelector(".file");
+                fileInput.click();
+            });
+        });
+
+        videoinput.forEach((video) => {
+            video.addEventListener('change', function () {
+        const levelContainer = video.closest('.Level');
+        let fileNameDisplay = levelContainer.querySelector('.videoNameDisplay');
+
+        if (!fileNameDisplay) {
+            fileNameDisplay = document.createElement('div');
+            fileNameDisplay.classList.add('videoNameDisplay');
+            levelContainer.appendChild(fileNameDisplay);
+        }
+
+        const fileName = video.files.length > 0 ? video.files[0].name : 'No file selected';
+        fileNameDisplay.textContent = fileName;
+             });
+        });
+        
+        fileinput.forEach((file) => {
+        file.addEventListener('change', function () {
+        const levelContainer = file.closest('.Level');
+        let fileNameDisplay = levelContainer.querySelector('.fileNameDisplay');
+
+        if (!fileNameDisplay) {
+            fileNameDisplay = document.createElement('div');
+            fileNameDisplay.classList.add('fileNameDisplay');
+            levelContainer.appendChild(fileNameDisplay);
+        }
+
+        const fileName = file.files.length > 0 ? file.files[0].name : 'No file selected';
+        fileNameDisplay.textContent = fileName;
+             });
+        });
+             
+        deleteButton.addEventListener('click', function (e) {
+        e.preventDefault();  
+        const levelId = this.closest(".Level").id;
+        console.log(levelId);
+        deletedLevels.push(levelId);
+        levelPreview.remove();
+        updateLevelNumbers();
+                });
+            });
+        });
+    }
+    }
+
+    getCourseInformation();
     let currentLevelNum = 0;
     document.querySelector("#AddLevel").addEventListener("click", function () {
         const levelPreviewContainer = document.getElementById("LevelPreviewContainer");
@@ -125,6 +237,7 @@
         
         currentLevelNum++;        
         levelhtml = levelhtml.replace(/LEVEL_NUM/g, currentLevelNum);
+        levelhtml = levelhtml.replace(/LEVEL_ID/g, "");
 
         levelPreview.innerHTML = levelhtml;
         levelPreviewContainer.appendChild(levelPreview);
@@ -184,10 +297,12 @@
         fileNameDisplay.textContent = fileName;
              });
         });
-        
              
         deleteButton.addEventListener('click', function (e) {
         e.preventDefault();  
+        const levelId = this.closest(".Level").id;
+        console.log(levelId);
+        deletedLevels.push(levelId);
         levelPreview.remove();
         updateLevelNumbers();
        });
@@ -198,7 +313,7 @@
 
         levels.forEach((level,index) => {
             const levelNum = index+1;
-            level.id = `level-${levelNum}`; 
+            level.id = `${levelNum}`; 
             level.querySelector('.font-bold').textContent = levelNum;  
         });
 
@@ -281,7 +396,8 @@
         });
 
     
-
+        if(!<?=$isUpdating?>)
+        {
         fetch("/createCourse", {
             method:"POST",
             body: formData
@@ -297,7 +413,6 @@
                 LevelInfo.levelVideo = level.querySelector('.video').files[0];
                 LevelInfo.levelFile = level.querySelector('.file').files[0];
                 LevelInfo.levelCost = level.querySelector('.individualCost').value;
-                LevelInfo.CourseId = courseId;
             let formData = new FormData();
     
         // Append text fields to FormData
@@ -306,7 +421,6 @@
         formData.append("levelDescription", LevelInfo.levelDescription);
         formData.append("levelCost", LevelInfo.levelCost ? LevelInfo.levelCost : null);
         formData.append("CourseId", courseId);
-    
         // Append files to FormData
         formData.append("levelVideo", LevelInfo.levelVideo);  // Assuming only one file
         formData.append("levelFile", LevelInfo.levelFile);    // Assuming only one file
@@ -317,17 +431,71 @@
         body: formData
                 }).then(response => response.json())
                 .then(data => {
-                    console.log(data);
+                    swal({
+                        icon: 'success',
+                        title: '🎉',
+                        text: 'Course <?= $isUpdating ? 'updated' : 'created'; ?> successfully!',
+                    });
                 });
             });
         });
-        
+    }
+    else
+    {
+        const formData = new FormData();
 
-        swal({
-            icon: 'success',
-            title: '🎉',
-            text: 'Course <?= $isUpdating ? 'updated' : 'created'; ?> successfully!',
+        formData.append("title",title);
+        formData.append("description",description);
+        formData.append("category",category);
+        formData.append("courseImage", document.getElementById("photo").files[0])
+
+        if(paymentMethod.value === 'one_time')
+        {
+            formData.append("oneTimeAmount",oneTimeAmount);
+        }
+        else{
+            formData.append("oneTimeAmount", null);
+        }
+
+        formData.append("course_Id", <?=$courseId?>);
+        fetch("/courses/patch",{
+            method:"POST",
+            body:formData
+        }).then(response => response.json())
+        .then(data => {
+            console.log(data.status);
+            if (data.status === true)
+            {
+                let formData = new FormData();
+                let LevelsCreated = [];
+                levelId.forEach((level) => {
+                let LevelInfo = {};
+                LevelInfo.levelNumber = level.id;
+                LevelInfo.levelName = level.querySelector('.levelName').value;
+                LevelInfo.levelDescription = level.querySelector('.levelDescription').value;
+                LevelInfo.levelVideo = level.querySelector('.video').files[0];
+                LevelInfo.levelFile = level.querySelector('.file').files[0];
+                LevelInfo.levelCost = level.querySelector('.individualCost').value;
+                LevelInfo.levelId = level.querySelector('.LevelId').id;
+                LevelsCreated.push(LevelInfo);
+            });
+        formData.append("LevelsCreated", JSON.stringify(LevelsCreated));
+        formData.append("deletedLevels",JSON.stringify(deletedLevels));
+        fetch("/levels/patch",{
+        method:"POST",
+        body: formData
+                }).then(response => response.json())
+                .then(data => {
+                    swal({
+                        icon: 'success',
+                        title: '🎉',
+                        text: 'Course <?= $isUpdating ? 'updated' : 'created'; ?> successfully!',
+                    });
+                });
+            }
         });
+    }
+
     });
 
     document.querySelector('#photo').addEventListener('change', function(event) {
