@@ -62,7 +62,7 @@ CREATE TABLE Courses (
     courseImage LONGBLOB NOT NULL COMMENT 'Course image',
     categoryId INT NOT NULL COMMENT 'Foreign key of the course category',
     instructorId INT NOT NULL COMMENT 'Foreign key of the instructor',
-    coursePrice DECIMAL(10, 2) NOT NULL COMMENT 'Course price',
+    coursePrice DECIMAL(10, 2) NULL COMMENT 'Course price',
     FOREIGN KEY (instructorId) REFERENCES Users (userId),
     FOREIGN KEY (categoryId) REFERENCES Categories (categoryId),
     INDEX (categoryId)
