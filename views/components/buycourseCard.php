@@ -12,7 +12,7 @@
                 <div>Computer Science</div>
             </div>
             <div class="text-secondary w-full flex place-content-between">
-                <p><a href="/user">Instructor</a></p>
+                <p><a href="/profile">Instructor</a></p>
             </div>
         </div>
         <div class="flex w-full text-color text-justify text-sm h-full">
@@ -20,10 +20,7 @@
         </div>
         <div class="w-full flex flex-row items-center justify-between">
             <select class="bg-comp-1 text-color rounded p-1">
-                <option value="0">All levels</option>
-                <option value="1">Level 1</option>
-                <option value="2">Level 2</option>
-                <option value="3">Level 3</option>
+                <option value="0">ALLCOURSESORLEVELS</option>
             </select>
             <button onclick="removeFromCart(0)" class="">DELETE</button>
         </div>

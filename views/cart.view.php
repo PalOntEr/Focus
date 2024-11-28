@@ -15,7 +15,7 @@
                 <div class="font-bold text-comp-1 text-sm my-3">SUBTOTAL: <span id="subTotal" class="font-normal text-color">$0.00 MXN</span></div>
                 <div class="font-bold text-comp-1 text-sm my-3">TOTAL: <span id="total" class="font-normal text-color">$0.00 MXN</span></div>
                 <div class="h-px w-full bg-comp-2 my-4"></div>   
-                <button onclick="location.href='/checkout'"class="w-full bg-comp-1 text-sm p-2 text-color rounded-md font-bold">PROCEED TO CHECKOUT</button>
+                <button onclick="goToCheckout()"class="w-full bg-comp-1 text-sm p-2 text-color rounded-md font-bold">PROCEED TO CHECKOUT</button>
             </div>
         </div>
     </div>
@@ -52,6 +52,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     async function loadcart(){
         cart = JSON.parse(localStorage.getItem('cart')) || [];
         totalCourses.innerText = cart.length;
+        subTotalAmount = 0;
+        totalAmount = 0;
+        subTotal.innerText = `$${subTotalAmount} MXN`;
+        total.innerText = `$${totalAmount} MXN`;
         if (cart.length === 0) {
             cartCourseCards.innerHTML = '<p class="text-3xl self-center justify-self-center animate-bounce">Add courses to your cart to see them here...</p>';
             return;
@@ -71,7 +75,20 @@ document.addEventListener('DOMContentLoaded', async () => {
                         .replace('Computer Science', categoriesData[course.categoryId - 1].categoryName)
                         .replace('Instructor', users[course.instructorId].username)
                         .replace('Descripcion', course.courseDescription)
-                        .replace('removeFromCart(0)', `removeFromCart(${course.courseId})`);
+                        .replace('removeFromCart(0)', `removeFromCart(${course.courseId})`)
+                    
+                    if (course.coursePrice !== null) {
+                        courseCard = courseCard.replace('<option value="0">ALLCOURSESORLEVELS</option>', `<option value="0">ALL LEVELS</option>`)
+                            .replace('<select class="bg-comp-1 text-color rounded p-1">', `<select disabled class="bg-comp-1 text-color rounded p-1">`);
+
+                        const levelResponse = await fetch(`/levels/get?course_id=${course.courseId}`);
+                        const levelData = await levelResponse.json();
+                        if (levelData.status && levelData.payload.levels.length > 0) {
+                            for (const level of levelData.payload.levels) {
+                                courseCard = courseCard.replace('<option value="0">ALL LEVELS</option>', `<option value="${level.levelId}">${level.levelName}</option>`);
+                            }
+                        }
+                    }
                     cartCourseCards.innerHTML += courseCard;
                     subTotalAmount += parseFloat(course.coursePrice).toFixed(2);
                 }
@@ -100,6 +117,10 @@ function removeFromCart(id){
 async function loadcart2(){
     cart = JSON.parse(localStorage.getItem('cart')) || [];
     totalCourses.innerText = cart.length;
+    subTotalAmount = 0;
+    totalAmount = 0;
+    subTotal.innerText = `$${subTotalAmount} MXN`;
+    total.innerText = `$${totalAmount} MXN`;
     if (cart.length === 0) {
         cartCourseCards.innerHTML = '<p class="text-3xl self-center justify-self-center animate-bounce">Add courses to your cart to see them here...</p>';
         return;
@@ -131,6 +152,14 @@ async function loadcart2(){
         } catch (error) {
             console.error('Error fetching course data:', error);
         }
+    }
+}
+
+function goToCheckout(){
+    if (cart.length === 0) {
+        swal("🚫", "Your cart is empty. Please add courses to your cart before proceeding to checkout.", "error");
+    } else {
+        window.location.href = '/checkout';
     }
 }
 
