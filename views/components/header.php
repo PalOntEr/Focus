@@ -11,3 +11,13 @@
         <?php require 'views/css/global.css'; ?>
     </style>
 </head>
+<script>
+    function addToCart() {
+        swal({
+            icon: 'success',
+            title: '🎉',
+            text: 'The course has been added to your cart.',
+            confirmButtonText: 'OK'
+        });
+    };
+</script>
