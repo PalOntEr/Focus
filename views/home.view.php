@@ -61,7 +61,7 @@ fetch("/categories")
                 </div>
                 `
             )
-            .join(""); // Join the array of strings into a single HTML string
+            .join("");
     });
 });
 
@@ -72,8 +72,9 @@ fetch("/courses/get")
             const recentlyUpdatedContainer = document.getElementById("recentlyUpdated");
             const courses = data.payload.courses;
 
-            // Sort courses by creation date in descending order
             courses.sort((a, b) => new Date(b.creationDate) - new Date(a.creationDate));
+
+            courses = courses.slice(0, 10);
 
             recentlyUpdatedContainer.innerHTML = courses
                 .map(
@@ -87,7 +88,7 @@ fetch("/courses/get")
                         return courseHtml;
                     }
                 )
-                .join(""); // Join the array of strings into a single HTML string
+                .join("");
         } else {
             console.error('No courses found');
         }
