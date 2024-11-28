@@ -3,6 +3,8 @@
     require 'views/components/navbar.php';
 
     $isUpdating = isset($_GET['update']) && $_GET['update'] === 'true';
+    $courseId = isset($_GET['courseId']) ? $_GET['courseId'] : NULL;
+    var_dump($courseId);
 ?>
 <div class="container mx-auto space-y-5">
     <div class="text-center">
@@ -80,6 +82,24 @@
 
 
 <script>
+
+    function getCourseInformation(){
+        const courseId = <?= $courseId ?>
+        
+        if(<?= $isUpdating ?> === 1)
+        {   
+            fetch("/courses?courseId=" + courseId)
+            .then(response => response.json())
+            .then(data => {
+                const courseInfo = data.payload;
+                document.getElementById("title").value = courseInfo.course.courseTitle;
+                document.getElementById("desc").value = courseInfo.course.courseDesc;
+            });
+        }
+
+    }
+
+    getCourseInformation();
 
     fetch("/categories")
     .then(response => response.json())
@@ -252,14 +272,22 @@
         else{
             formData.append("oneTimeAmount", null);
         }
-        
-        
+
+        const levelData = [];
+
+        levelId.forEach((level, index) => {
+            formData.append(`levelData[${index}][levelVideo]`, level.querySelector('.video').files[0]);
+            formData.append(`levelData[${index}][levelFile]`, level.querySelector('.file').files[0]);
+        });
+
+    
+
         fetch("/createCourse", {
             method:"POST",
             body: formData
-        }).then(response => response.json())
-        .then(data => {
-            const courseId = data.payload.courseId
+            }).then(response => response.json())
+            .then(data => {
+            const courseId = data.payload.courseId;
             const levelData = [];
             levelId.forEach((level) => {
                 let LevelInfo = {};
@@ -270,23 +298,23 @@
                 LevelInfo.levelFile = level.querySelector('.file').files[0];
                 LevelInfo.levelCost = level.querySelector('.individualCost').value;
                 LevelInfo.CourseId = courseId;
-    let formData = new FormData();
+            let formData = new FormData();
     
-    // Append text fields to FormData
-    formData.append("levelNumber", LevelInfo.levelNumber);
-    formData.append("levelName", LevelInfo.levelName);
-    formData.append("levelDescription", LevelInfo.levelDescription);
-    formData.append("levelCost", LevelInfo.levelCost ? LevelInfo.levelCost : null);
-    formData.append("CourseId", courseId);
+        // Append text fields to FormData
+        formData.append("levelNumber", LevelInfo.levelNumber);
+        formData.append("levelName", LevelInfo.levelName);
+        formData.append("levelDescription", LevelInfo.levelDescription);
+        formData.append("levelCost", LevelInfo.levelCost ? LevelInfo.levelCost : null);
+        formData.append("CourseId", courseId);
     
-    // Append files to FormData
-    formData.append("levelVideo", LevelInfo.levelVideo);  // Assuming only one file
-    formData.append("levelFile", LevelInfo.levelFile);    // Assuming only one file
+        // Append files to FormData
+        formData.append("levelVideo", LevelInfo.levelVideo);  // Assuming only one file
+        formData.append("levelFile", LevelInfo.levelFile);    // Assuming only one file
     
     
-                fetch("/level",{
-                    method:"POST",
-                    body: formData
+        fetch("/level",{
+        method:"POST",
+        body: formData
                 }).then(response => response.json())
                 .then(data => {
                     console.log(data);
