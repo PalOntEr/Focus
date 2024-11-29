@@ -13,6 +13,9 @@ BEGIN
         INSERT INTO PurchasedLevels (levelId, userId, completed)
         VALUES (NEW.levelId, NEW.userId, FALSE);
     END IF;
+    
+    INSERT INTO Kardex (userId, courseId)
+    VALUES (NEW.userId, NEW.courseId);
 END;
 
 //

@@ -9,7 +9,7 @@ SELECT
     u.fullName AS fullName,
     c.courseId AS courseId,
     c.courseTitle AS courseTitle,
-    COUNT(nc.levelId) AS totalCoursedLevels,
+    COUNT(CASE WHEN nc.completed = TRUE THEN 1 ELSE NULL END) AS totalCoursedLevels,
     CAST((COUNT(CASE WHEN nc.completed = TRUE THEN 1 ELSE NULL END) / (SELECT totalLevels FROM levelsPerCourse n WHERE n.courseId = c.courseId)) * 100 AS DECIMAL(27,2)) AS percentageCompleted
 FROM
     PurchasedLevels nc
