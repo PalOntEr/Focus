@@ -359,6 +359,13 @@ $routes = [
         'callback' => function() {
             require __DIR__.'/controllers/perCourseSales.php';    
         }
+    ],
+    [
+        'method' => 'GET',
+        'path' => '/reports/instructor/salesPerStudent',
+        'callback' => function() {
+            require __DIR__.'/controllers/perStudentSales.php';    
+        }
     ]
 ];
 
