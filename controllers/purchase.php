@@ -8,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (!isset($_POST['purchaseDate'])) $missingFields[] = 'purchaseDate';
     if (!isset($_POST['userId'])) $missingFields[] = 'userId';
     if (!isset($_POST['courseId'])) $missingFields[] = 'courseId';
-    if (!isset($_POST['levelId'])) $missingFields[] = 'levelId';
+    if (!isset($_POST['courseId']) && !isset($_POST['levelId'])) $missingFields[] = 'levelId';
     if (!isset($_POST['paymentMethod'])) $missingFields[] = 'paymentMethod';
     if (!isset($_POST['paymentType'])) $missingFields[] = 'paymentType';
     if (!isset($_POST['paymentAmount'])) $missingFields[] = 'paymentAmount';
@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $purchaseDate = $_POST['purchaseDate'];
     $userId = $_POST['userId'];
     $courseId = $_POST['courseId'];
-    $levelId = $_POST['levelId'];
+    $levelId = $_POST['levelId'] ?? null;
     $paymentMethod = $_POST['paymentMethod'];
     $paymentType = $_POST['paymentType'];
     $paymentAmount = $_POST['paymentAmount'];
