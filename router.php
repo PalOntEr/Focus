@@ -348,6 +348,13 @@ $routes = [
     ],
     [
         'method' => 'POST',
+        'path' => '/comments',
+        'callback' => function() {
+            require __DIR__.'/controllers/comments.php';
+        }
+    ],
+    [
+        'method' => 'POST',
         'path' => '/purchase',
         'callback' => function() {
             require __DIR__.'/controllers/purchase.php';    
@@ -358,6 +365,20 @@ $routes = [
         'path' => '/levels',
         'callback' => function() {
             require __DIR__.'/controllers/levels.php';
+        }
+    ],
+    [
+        'method' => 'GET',
+        'path' => '/purchasedLevels/get',
+        'callback' => function() {
+            require __DIR__.'/controllers/getPurchasedLevels.php';
+        }
+    ],
+    [
+        'method' => 'POST',
+        'path' => '/purchasedLevels/put',
+        'callback' => function() {
+            require __DIR__.'/controllers/updatePurchasedLevels.php';
         }
     ]
 ];
