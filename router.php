@@ -338,6 +338,13 @@ $routes = [
         'callback' => function() {
             require __DIR__.'/controllers/updateContent.php';
         }
+    ],
+    [
+        'method' => 'GET',
+        'path' => '/comments',
+        'callback' => function() {
+            require __DIR__.'/controllers/comments.php';
+        }
     ]
 ];
 

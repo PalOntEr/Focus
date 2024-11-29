@@ -7,7 +7,7 @@ $usertype = $_SESSION['user']['role'] ?? 'guest';
 <div class="flex flex-col container sm:mx-auto overflow-x-hidden items-center">
     <div class="h-1/3 flex flex-col sm:flex-row w-5/6 sm:w-full sm:space-x-2 space-y-2 sm:space-y-0 justify-center mx-2 sm:mx-0 items-center sm:items-start">
         <?php require 'views/components/courseInfo.php'; ?>
-        <div class="flex bg-primary w-5/6 sm:w-2/3 h-3/5 sm:h-full px-5 py-2 text-justify text-color rounded-xl overflow-y-scroll">
+        <div id="description" class="flex bg-primary w-5/6 sm:w-2/3 h-3/5 sm:h-full px-5 py-2 text-justify text-color rounded-xl overflow-y-scroll">
             In this course, you will learn the fundamentals of PHP programming, including syntax, control structures, functions, and object-oriented programming. You will also explore advanced topics such as database interactions, session management, and security practices. By the end of the course, you will be able to build dynamic and interactive web applications using PHP.
 
             The course is designed to provide hands-on experience through practical exercises and real-world projects. You will start with basic PHP scripts and gradually move on to more complex applications. Topics covered include:
@@ -35,14 +35,7 @@ $usertype = $_SESSION['user']['role'] ?? 'guest';
     <div class="h-1/3 flex flex-col items-center sm:items-start mx-4 sm:mx-0">
         <h1 class="text-4xl font-bold text-primary">LEVELS</h1>
         <div class="h-0.5 bg-comp-1 w-full"></div>
-        <div class="flex flex-row items-center justify-center h-96 w-5/6 sm:w-full my-2 overflow-y-scroll sm:overflow-y-auto flex-wrap">
-            <?php
-            for ($i = 1; $i <= 28; $i++) {
-                $comment = "lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi.";
-                $level = $i;
-                require 'views/components/levelCard.php';
-            }
-            ?>
+        <div id="LevelsContainer" class="flex flex-row items-center justify-center h-96 w-5/6 sm:w-full my-2 overflow-y-scroll sm:overflow-y-auto flex-wrap">
         </div>
     </div>
     <div class="h-1/3 flex flex-col items-center sm:items-start mx-4 sm:mx-0">
@@ -88,7 +81,57 @@ $usertype = $_SESSION['user']['role'] ?? 'guest';
 </div>
 
 <script>
-    
+
+let CourseId = 7;
+let CourseImage;
+function getCourseInformation()
+{
+
+    fetch("/courses/get?course_id=" + CourseId)
+    .then(response => response.json())
+    .then(data => {
+        const CourseInfo = data.payload.courses[0];
+        let Description = document.getElementById("description");
+        let Title = document.getElementById("Title");
+        let Image = document.getElementById("CourseImage");
+        Description.textContent= CourseInfo.courseDescription;
+        Title.textContent = CourseInfo.courseTitle;
+        Image.src = "data:image/*;base64," + CourseInfo.courseImage;
+        CourseImage = Image.src;
+    });
+}
+
+function getLevelsOfCourse(){
+    fetch("/level?course_id="+ CourseId)
+    .then(response => response.json())
+    .then(data => {
+        const Levels = data.payload.levels;
+        
+        Levels.forEach((level,index) => {
+            const levelPreviewContainer = document.getElementById("LevelsContainer");
+            const levelPreview = document.createElement('div');
+            let levelhtml = `<?php require 'views/components/levelCard.php'; ?>`;
+            levelhtml = levelhtml.replace(/LEVEL_NUM/g, index+1);
+            levelPreview.innerHTML = levelhtml;
+
+            levelPreview.querySelector(".LevelName").textContent = level.levelName;
+            levelPreview.querySelector(".CourseImage").src = CourseImage;
+            levelPreviewContainer.append(levelPreview);
+        });
+    });
+}
+
+function getReviewsOfCourse(){
+    fetch("/comments?course_id="+CourseId)
+    .then(response => response.json())
+    .then(data => {
+    })
+}
+
+getCourseInformation();
+getLevelsOfCourse();
+getReviewsOfCourse();   
+
 function showCommentModal() {
     document.getElementById('commentModal').classList.remove('hidden');
     document.getElementById('commentModal').classList.add('flex');
