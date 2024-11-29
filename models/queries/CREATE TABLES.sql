@@ -72,6 +72,8 @@ CREATE TABLE Levels (
     levelId INT NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary key of the level',
     creationDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Level creation date',
     modificationDate DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT 'Level modification date',
+    deactivationDate DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT 'Level deactivation date',
+    `active` BOOLEAN NULL  DEFAULT TRUE COMMENT 'Level status',
     levelName VARCHAR(50) NOT NULL COMMENT 'Level name',
     levelNumber INT NOT NULL COMMENT 'Level number',
     levelDescription TEXT NOT NULL COMMENT 'Level description',
@@ -85,6 +87,7 @@ CREATE TABLE Contents (
     contentId INT NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary key of the content',
     mimeType VARCHAR(128) NOT NULL COMMENT 'Content type',
     file LONGBLOB NOT NULL COMMENT 'Content file',
+    name VARCHAR(128) NOT NULL COMMENT 'File Name',
     levelId INT NOT NULL COMMENT 'Foreign key of the level',
     FOREIGN KEY (levelId) REFERENCES Levels (levelId),
     INDEX (levelId)
