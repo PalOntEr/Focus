@@ -9,10 +9,8 @@ if($_SERVER["REQUEST_METHOD"] === "POST")
     $result = true;
 
 
-    $videoFile = $_FILES['videoFile'];
-    $file = $_FILES['file'];
-    $videoName = $_POST['videoName'];
-    $fileName = $_POST['fileName'];
+    $videoFile = $_FILES['videoFile'] ?? null;
+    $file = $_FILES['file'] ?? null;
     $levelNumber = $_POST['levelNumber'];
     $courseId = $_POST['courseId'];
 
@@ -22,8 +20,13 @@ if($_SERVER["REQUEST_METHOD"] === "POST")
             $courseId
         ]);
         
-        if(isset($_FILES['videoFile']))
+        
+        if(isset($videoFile))
         {
+            $db->queryFetch("CALL sp_Contents(6,NULL,NULL,NULL,?,?)",[
+                ".mp4",
+                $LevelRef["levelId"]
+            ]);
             $targetDir = "videos/";
 
             if (!is_dir($targetDir)) {
@@ -55,8 +58,12 @@ if($_SERVER["REQUEST_METHOD"] === "POST")
             }
         }
 
-        if(isset($_FILES['file']))
+        if(isset($file))
         {
+            $db->queryFetch("CALL sp_Contents(6,NULL,NULL,NULL,?,?)",[
+                $file["type"],
+                $LevelRef["levelId"]
+            ]);
             $fileType = $_FILES['file'];
             $file = file_get_contents($_FILES['file']['tmp_name']);
         

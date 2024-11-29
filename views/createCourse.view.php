@@ -123,7 +123,7 @@ fetch("/categories")
 
                 if(courseInfo.coursePrice !== null)
                 {
-                    document.getElementById("oneTime").checked = true;
+                    document.getElementById("oneTime").checked = true;  
                 }
                 else{
                     document.getElementById("levelBased").checked = true;
@@ -156,79 +156,81 @@ fetch("/categories")
                         levelPreview.querySelector(".individualCost").value = level.levelCost;
     
                         levelPreviewContainer.appendChild(levelPreview);
-    
+                        let paymentMethod = document.querySelector('input[name="payment_method"]:checked');
+                        
                         const individualCostElements = document.querySelectorAll('[name="individualCost"]');
-                        if (level.levelCost === null) {
+                        if (level.levelCost === null || paymentMethod.value == "one_time") {
                         individualCostElements.forEach(element => element.classList.add('hidden'));
                     } else {
                         individualCostElements.forEach(element => element.classList.remove('hidden'));
                     }
+
                     const deleteButton = levelPreview.querySelector('.DeleteLevel');
-                    const addVideo = levelPreview.querySelectorAll('.videoRef');
-                    const addFile = levelPreview.querySelectorAll('.fileRef');
-                    const videoinput = levelPreview.querySelectorAll('.video');
-                    const fileinput = levelPreview.querySelectorAll('.file');
-    
-                            addVideo.forEach((link) => {
-                            link.addEventListener("click", function(e) {
+                    levelInfo[index].Files.forEach(file => {
+                    const addVideo = levelPreview.querySelector('.videoRef');
+                    const addFile = levelPreview.querySelector('.fileRef');
+                    const videoinput = levelPreview.querySelector('.video');
+                    const fileinput = levelPreview.querySelector('.file');
+                    if(file.mimeType === '.mp4')
+                    {
+                        
+                            addVideo.addEventListener("click", function(e) {
                                 e.preventDefault();
-                                const levelContainer = link.closest(".Level");
+                                const levelContainer = addVideo.closest(".Level");
                                 const fileInput = levelContainer.querySelector(".video");
                                 fileInput.click();
                             });
-                            addFile.forEach((link) => {
-                                link.addEventListener("click", function(e) {
-                                    e.preventDefault();
-                                    const levelContainer = link.closest(".Level");
-                                    const fileInput = levelContainer.querySelector(".file");
-                                    fileInput.click();
-                                });
+                    
+                            addFile.addEventListener("click", function(e) {
+                                e.preventDefault();
+                                const levelContainer = addFile.closest(".Level");
+                                const fileInput = levelContainer.querySelector(".file");
+                                fileInput.click();
                             });
-                            videoinput.forEach((video) => {
-                                console.log(levelInfo[index].Files[0].name);
-                                const fileName = levelInfo[index].Files[0].name;
-                                const levelContainer = video.closest('.Level');
-                                let fileNameDisplay = levelContainer.querySelector('.videoNameDisplay');
-                                fileNameDisplay.id = levelInfo[index].Files[0].contentId; 
 
-                                video.addEventListener('change', function () {
-                                    const levelContainer = video.closest('.Level');
+                            const fileName = file.name;
+                            const levelContainer = videoinput.closest('.Level');
+                            let fileNameDisplay = levelContainer.querySelector('.videoNameDisplay');
+                            fileNameDisplay.id = file.contentId; 
+
+                            videoinput.addEventListener('change', function () {
+                                let levelContainer = videoinput.closest('.Level');
                                 let fileNameDisplay = levelContainer.querySelector('.videoNameDisplay');
                                 if (!fileNameDisplay) {
+                                fileNameDisplay = document.createElement('div');
+                                fileNameDisplay.classList.add('videoNameDisplay');
+                                levelContainer.appendChild(fileNameDisplay);
+                                }
+                            const fileName = videoinput.files.length > 0 ? videoinput.files[0].name : 'No file selected';
+                            fileNameDisplay.textContent = "";
+                            fileNameDisplay.textContent = fileName;
+                            });
+
+                            fileNameDisplay.textContent = "";
+                            fileNameDisplay.textContent = fileName;
+                    }
+                    else
+                    {
+                        const fileName = file.name;
+                            const levelContainer = fileinput.closest('.Level');
+                            let fileNameDisplay = levelContainer.querySelector('.fileNameDisplay');
+                            fileNameDisplay.id = file.contentId;
+                                fileinput.addEventListener('change', function () {
+                                const levelContainer = fileinput.closest('.Level');
+                                let fileNameDisplay = levelContainer.querySelector('.fileNameDisplay');
+                                
+                                if (!fileNameDisplay) {
                                     fileNameDisplay = document.createElement('div');
-                                    fileNameDisplay.classList.add('videoNameDisplay');
+                                    fileNameDisplay.classList.add('fileNameDisplay');
                                     levelContainer.appendChild(fileNameDisplay);
                                 }
-                                
-                                let fileName = video.files[0].name || 'No file selected';
-                                fileNameDisplay.textContent = "";
+                                const fileName = fileinput.files.length > 0 ? fileinput.files[0].name : 'No file selected';
+                                fileNameDisplay.textContent ="";        
                                 fileNameDisplay.textContent = fileName;
                                 });
                                 fileNameDisplay.textContent = fileName;
-                            });
-                            
-                            fileinput.forEach((file) => {
-                                console.log(levelInfo[index].Files[1].name);
-                                const fileName = levelInfo[index].Files[1].name;
-                                const levelContainer = file.closest('.Level');
-                                let fileNameDisplay = levelContainer.querySelector('.fileNameDisplay');
-                                fileNameDisplay.id = levelInfo[index].Files[1].contentId;
-                            file.addEventListener('change', function () {
-                            const levelContainer = file.closest('.Level');
-                            let fileNameDisplay = levelContainer.querySelector('.fileNameDisplay');
-                    
-                            if (!fileNameDisplay) {
-                                fileNameDisplay = document.createElement('div');
-                                fileNameDisplay.classList.add('fileNameDisplay');
-                                levelContainer.appendChild(fileNameDisplay);
-                            }
-                            let fileName = file.files[0].name || 'No file selected';
-                            fileNameDisplay.textContent ="";
-
-                            fileNameDisplay.textContent = fileName;
-                            });
-                            fileNameDisplay.textContent = fileName;
-                            });
+                        }
+                        });
                                 
                             deleteButton.addEventListener('click', function (e) {
                             e.preventDefault();  
@@ -240,15 +242,12 @@ fetch("/categories")
                         }
                         levelPreview.remove();
                         updateLevelNumbers();
-                        });
                     });
                 });
             });
-    
-
         });
     }
-    }
+}
 
     getCourseInformation();
 
@@ -415,13 +414,13 @@ fetch("/categories")
         formData.append("category",category);
         formData.append("courseImage", document.getElementById("photo").files[0])
 
-        if(paymentMethod.value === 'one_time')
-        {
-            formData.append("oneTimeAmount",oneTimeAmount);
-        }
-        else{
-            formData.append("oneTimeAmount", null);
-        }
+            if(paymentMethod.value === 'one_time')
+            {
+                formData.append("oneTimeAmount",oneTimeAmount);
+            }
+            else{
+                formData.append("oneTimeAmount", null);
+            }
 
         const levelData = [];
 
@@ -484,6 +483,7 @@ fetch("/categories")
         formData.append("category",category);
         formData.append("courseImage", document.getElementById("photo").files[0])
 
+        console.log(paymentMethod.value);
         if(paymentMethod.value === 'one_time')
         {
             formData.append("oneTimeAmount",oneTimeAmount);
@@ -530,8 +530,6 @@ fetch("/categories")
 
                         formData.append("videoFile",videoFile);
                         formData.append("file",file);
-                        formData.append("videoName",videoName);
-                        formData.append("fileName",fileName);
                         formData.append("levelNumber", level.id);
                         formData.append("courseId", <?= $courseId ?>);
 

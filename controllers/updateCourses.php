@@ -38,8 +38,9 @@ if($_SERVER["REQUEST_METHOD"] === "POST")
     $coursePrice = $_POST['oneTimeAmount'];
     $courseImage = file_get_contents($_FILES['courseImage']["tmp_name"]);
     
+
     if (empty($coursePrice) || $coursePrice === 'null') {
-        $coursePrice = NULL;  // This will pass as a NULL value in the SQL query
+        $coursePrice = null;  // This will pass as a NULL value in the SQL query
     }
 
     try{
