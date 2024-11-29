@@ -7,7 +7,7 @@ $usertype = $_SESSION['user']['role'] ?? 'guest';
 <div class="flex flex-col container sm:mx-auto overflow-x-hidden items-center">
     <div class="h-1/3 flex flex-col sm:flex-row w-5/6 sm:w-full sm:space-x-2 space-y-2 sm:space-y-0 justify-center mx-2 sm:mx-0 items-center sm:items-start">
         <?php require 'views/components/courseInfo.php'; ?>
-        <div id="description" class="flex bg-primary w-5/6 sm:w-2/3 h-3/5 sm:h-full px-5 py-2 text-justify text-color rounded-xl overflow-y-scroll">
+        <div id="description" class="flex bg-primary w-5/6 sm:w-2/3 h-full px-5 py-2 text-justify text-color rounded-xl overflow-y-scroll">
             In this course, you will learn the fundamentals of PHP programming, including syntax, control structures, functions, and object-oriented programming. You will also explore advanced topics such as database interactions, session management, and security practices. By the end of the course, you will be able to build dynamic and interactive web applications using PHP.
 
             The course is designed to provide hands-on experience through practical exercises and real-world projects. You will start with basic PHP scripts and gradually move on to more complex applications. Topics covered include:
@@ -32,7 +32,7 @@ $usertype = $_SESSION['user']['role'] ?? 'guest';
                 </button>
             <?php endif; ?>
     </div>
-    <div class="h-1/3 flex flex-col items-center sm:items-start mx-4 sm:mx-0">
+    <div class="w-full h-1/3 flex flex-col items-center sm:items-start mx-4 sm:mx-0">
         <h1 class="text-4xl font-bold text-primary">LEVELS</h1>
         <div class="h-0.5 bg-comp-1 w-full"></div>
         <div id="LevelsContainer" class="flex flex-row items-center justify-center h-96 w-5/6 sm:w-full my-2 overflow-y-scroll sm:overflow-y-auto flex-wrap">
@@ -82,7 +82,8 @@ $usertype = $_SESSION['user']['role'] ?? 'guest';
 
 <script>
 
-let CourseId = 7;
+let CourseId = <?= $_GET['course_id'] ?? 1 ?>;
+
 let CourseImage;
 function getCourseInformation()
 {

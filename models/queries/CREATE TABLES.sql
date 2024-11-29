@@ -2,6 +2,8 @@ CREATE DATABASE IF NOT EXISTS db_pcwi;
 
 USE db_pcwi;
 
+DROP TABLE IF EXISTS Purchases;
+
 DROP TABLE IF EXISTS Kardex;
 
 DROP TABLE IF EXISTS DeletedComments;
@@ -10,7 +12,7 @@ DROP TABLE IF EXISTS Comments;
 
 DROP TABLE IF EXISTS Contents;
 
-DROP TABLE IF EXISTS CompletedLevels;
+DROP TABLE IF EXISTS PurchasedLevels;
 
 DROP TABLE IF EXISTS Levels;
 
@@ -111,8 +113,6 @@ CREATE TABLE Kardex (
     completionDate DATETIME DEFAULT NULL COMMENT 'Course completion date',
     userId INT NOT NULL COMMENT 'Foreign key of the user',
     courseId INT NOT NULL COMMENT 'Foreign key of the course',
-    paymentMethod VARCHAR(20) NOT NULL COMMENT 'Course payment method',
-    paymentType CHAR NOT NULL COMMENT 'Course payment type',
     PRIMARY KEY (userId, courseId),
     FOREIGN KEY (userId) REFERENCES Users (userId),
     FOREIGN KEY (courseId) REFERENCES Courses (courseId),
@@ -120,13 +120,29 @@ CREATE TABLE Kardex (
     INDEX (userId)
 ) COMMENT 'Kardex table';
 
-CREATE TABLE CompletedLevels (
+CREATE TABLE Purchases (
+    purchaseId INT NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary key of the purchase',
+    purchaseDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Purchase date',
+    userId INT NOT NULL COMMENT 'Foreign key of the user that bought the course',
+    courseId INT NOT NULL COMMENT 'Foreign key of the course',
+    levelId INT NULL COMMENT 'Foreign key of the level, NULL if the purchase is for a course',
+    paymentMethod VARCHAR(20) NOT NULL COMMENT 'Payment method',
+    paymentType ENUM('L', 'C') NOT NULL COMMENT 'Course payment type L for level and C for course',
+    paymentAmount DECIMAL(10, 2) NOT NULL COMMENT 'Payment amount',
+    FOREIGN KEY (userId) REFERENCES Users (userId),
+    FOREIGN KEY (courseId) REFERENCES Courses (courseId),
+    INDEX (courseId),
+    INDEX (userId)
+) COMMENT 'Purchase table';
+
+CREATE TABLE PurchasedLevels (
     levelId INT NOT NULL COMMENT 'Foreign key of the level',
     userId INT NOT NULL COMMENT 'Foreign key of the user',
+    completed BOOLEAN NOT NULL DEFAULT FALSE COMMENT 'Level completion status',
     PRIMARY KEY (levelId, userId),
     FOREIGN KEY (levelId) REFERENCES Levels (levelId),
     FOREIGN KEY (userId) REFERENCES Users (userId)
-) COMMENT 'Completed levels table';
+) COMMENT 'Purchased levels table';
 
 CREATE TABLE Comments (
     commentId INT NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary key of the comment',

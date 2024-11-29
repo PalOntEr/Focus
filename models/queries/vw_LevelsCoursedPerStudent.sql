@@ -12,7 +12,7 @@ SELECT
     COUNT(nc.levelId) AS totalCoursedLevels,
     CAST((COUNT(nc.levelId) / (SELECT totalLevels FROM levelsPerCourse n WHERE n.courseId = c.courseId)) * 100 AS DECIMAL(27,2)) AS percentageCompleted
 FROM
-    CompletedLevels nc
+    PurchasedLevels nc
 JOIN
     Levels n ON nc.levelId = n.levelId
 JOIN
