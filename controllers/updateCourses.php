@@ -1,8 +1,10 @@
 <?php
-if($_SERVER['REQUEST_METHOD'] === 'POST')
+
+if($_SERVER["REQUEST_METHOD"] === "POST")
 {
     $missingFields = [];
 
+    if (!isset($_POST['course_Id'])) $missingFields[] = 'course_Id';
     if (!isset($_POST['title'])) $missingFields[] = 'title';
     if (!isset($_POST['description'])) $missingFields[] = 'description';
     if (!isset($_POST['category'])) $missingFields[] = 'category';
@@ -29,6 +31,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
 
     $result = true;
 
+    $courseId = $_POST['course_Id'];
     $title = $_POST['title'];
     $description = $_POST['description'];
     $category = $_POST['category'];
@@ -38,22 +41,19 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
     if (empty($coursePrice) || $coursePrice === 'null') {
         $coursePrice = NULL;  // This will pass as a NULL value in the SQL query
     }
+
     try{
-        $db->queryInsert("CALL sp_Course(1,NULL,NULL,NULL,NULL,?,?,?,?,?,?)",[
+        $db->queryInsert("CALL sp_Course(2,?,NULL,NULL,NULL, ?,?,?,?,NULL, ?)", [
+            $courseId,
             $description,
             $title,
             $courseImage,
             $category,
-            $_SESSION['user']['userId'],
             $coursePrice
         ]);
-
-        $courseCreated = $db->queryFetch("CALL sp_Course(5, NULL, NULL,NULL,NULL,?,?,NULL,NULL,NULL,NULL)", [
-            $description,
-            $title
-        ]);
     }
-    catch(PDOException $e) {
+    catch(PDOException $e)
+    {
         $result = false;
         $exception = $e;
     }
@@ -63,7 +63,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
         echo json_encode([
             'status' => true,
             'payload' => [
-                'courseId' => $courseCreated['courseId']
+                'message' => 'Course Updated Succesfully'
             ]
         ]);
         return;
@@ -78,10 +78,3 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
         return;
     }
 }
-
-
-if($_SERVER['REQUEST_METHOD'] === 'GET')
-{
-    require 'views/createCourse.view.php';
-}
-?>

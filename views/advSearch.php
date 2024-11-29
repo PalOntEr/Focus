@@ -121,10 +121,10 @@ require 'views/components/navbar.php';
             });
     });
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded',async function() {
         const urlParams = new URLSearchParams(window.location.search);
 
-        fetch("/categories").then(response => response.json()).then(data => {
+        await fetch("/categories").then(response => response.json()).then(data => {
             const categorySelector = document.getElementById("category");
             data.payload.categories.forEach((category) => {
                 const option = document.createElement("option");

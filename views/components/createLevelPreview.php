@@ -1,7 +1,7 @@
 
 <div id="LEVEL_NUM" class="Level flex items-center justify-between border-b-2 p-1">
     <div class="flex w-1/2 items-center space-x-2 text-sm">
-        <div class="w-1/12 font-bold text-color">
+        <div id="LEVEL_ID" class="LevelId w-1/12 font-bold text-color">
             LEVEL_NUM
         </div>
         <div class="w-5/12">

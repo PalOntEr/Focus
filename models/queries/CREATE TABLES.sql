@@ -66,7 +66,7 @@ CREATE TABLE Courses (
     courseImage LONGBLOB NOT NULL COMMENT 'Course image',
     categoryId INT NOT NULL COMMENT 'Foreign key of the course category',
     instructorId INT NOT NULL COMMENT 'Foreign key of the instructor',
-    coursePrice DECIMAL(10, 2) NOT NULL COMMENT 'Course price',
+    coursePrice DECIMAL(10, 2) NULL COMMENT 'Course price',
     FOREIGN KEY (instructorId) REFERENCES Users (userId),
     FOREIGN KEY (categoryId) REFERENCES Categories (categoryId),
     INDEX (categoryId)
@@ -76,6 +76,8 @@ CREATE TABLE Levels (
     levelId INT NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary key of the level',
     creationDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Level creation date',
     modificationDate DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT 'Level modification date',
+    deactivationDate DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT 'Level deactivation date',
+    `active` BOOLEAN NULL  DEFAULT TRUE COMMENT 'Level status',
     levelName VARCHAR(50) NOT NULL COMMENT 'Level name',
     levelNumber INT NOT NULL COMMENT 'Level number',
     levelDescription TEXT NOT NULL COMMENT 'Level description',
@@ -89,6 +91,7 @@ CREATE TABLE Contents (
     contentId INT NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary key of the content',
     mimeType VARCHAR(128) NOT NULL COMMENT 'Content type',
     file LONGBLOB NOT NULL COMMENT 'Content file',
+    name VARCHAR(128) NOT NULL COMMENT 'File Name',
     levelId INT NOT NULL COMMENT 'Foreign key of the level',
     FOREIGN KEY (levelId) REFERENCES Levels (levelId),
     INDEX (levelId)
@@ -146,6 +149,7 @@ CREATE TABLE PurchasedLevels (
 CREATE TABLE Comments (
     commentId INT NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary key of the comment',
     creationDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Comment creation date',
+    deactivationDate DATETIME NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Comment deactivation date',
     rating INT NOT NULL COMMENT 'Course rating',
     comment TEXT NOT NULL COMMENT 'Comment',
     userId INT NOT NULL COMMENT 'Foreign key of the user',

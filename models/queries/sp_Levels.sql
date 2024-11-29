@@ -10,7 +10,8 @@ CREATE PROCEDURE sp_Levels(
     IN p_levelNumber INT,
     IN p_levelDescription TEXT,
     IN p_levelCost DECIMAL(10,2),
-    IN p_courseId INT
+    IN p_courseId INT,
+    IN p_active BOOLEAN
 )
 BEGIN
     CASE p_Opc
@@ -27,7 +28,9 @@ BEGIN
                 courseId = p_courseId
             WHERE levelId = p_levelId;
         WHEN 3 THEN -- DELETE
-            DELETE FROM levels
+            UPDATE levels
+            SET active = FALSE,
+            `levelNumber` = 0
             WHERE levelId = p_levelId;
         WHEN 4 THEN -- SELECT ALL
             SELECT levelId, creationDate, modificationDate, levelName, levelNumber, levelDescription, levelCost, courseId
@@ -35,14 +38,15 @@ BEGIN
         WHEN 5 THEN -- SELECT WITH FILTER
             SELECT levelId, creationDate, modificationDate, levelName, levelNumber, levelDescription, levelCost, courseId
             FROM Levels
-WHERE (p_levelId IS NULL OR p_levelId = levelId)
-  AND (p_creationDate IS NULL OR p_creationDate = creationDate)
-  AND (p_modificationDate IS NULL OR p_modificationDate = modificationDate)
-  AND (p_levelName IS NULL OR p_levelName = levelName)
-  AND (p_levelNumber IS NULL OR p_levelNumber = levelNumber)
-  AND (p_levelDescription IS NULL OR p_levelDescription = levelDescription)
-  AND (p_levelCost IS NULL OR p_levelCost = levelCost)
-  AND (p_courseId IS NULL OR p_courseId = courseId);
+            WHERE (p_levelId IS NULL OR levelId = p_levelId)
+                AND (p_levelName IS NULL OR levelName LIKE CONCAT('%', p_levelName, '%'))
+                AND (p_levelNumber IS NULL OR levelNumber = p_levelNumber)
+                AND (p_levelDescription IS NULL OR levelDescription LIKE CONCAT('%', p_levelDescription, '%'))
+                AND (p_levelCost IS NULL OR levelCost = p_levelCost)
+                AND (p_courseId IS NULL OR courseId = p_courseId)
+                AND (p_creationDate IS NULL OR DATEDIFF(creationDate, p_creationDate) >= 0)
+                AND (p_modificationDate IS NULL OR DATEDIFF(modificationDate, p_modificationDate) <= 0)
+                AND (p_active IS NULL OR p_active = active);
     END CASE;
 END;
 DELIMITER;
