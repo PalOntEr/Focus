@@ -75,6 +75,7 @@ document.addEventListener("DOMContentLoaded", async ()=>{
                     levelhtml = levelhtml.replace(/LEVEL_ID/g,levelFound.levelId);
                     levelhtml = levelhtml.replace(/LEVEL_NUM/g,levelFound.levelNumber);
                     levelhtml = levelhtml.replace(/COURSE_ID/g,levelFound.courseId);
+                    levelhtml = levelhtml.replace(/LEVEL_NAME/g,levelFound.levelName);
                     levelPreview.innerHTML = levelhtml;
 
                     levelPreviewContainer.append(levelPreview);
