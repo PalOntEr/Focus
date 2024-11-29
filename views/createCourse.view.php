@@ -378,6 +378,21 @@ fetch("/categories")
             event.preventDefault();
             return;
         }
+        else if (paymentMethod.value === 'level_based') {
+            let levelCosts = document.querySelectorAll('.individualCost');
+            levelCosts.forEach((cost) => {
+                if (!cost.value) {
+                    swal({
+                        icon: 'error',
+                        title: '☠️',
+                        text: 'Please fill out all level costs.',
+                    });
+                    event.preventDefault();
+                    return;
+                }
+            });
+        }
+
 
         // for (let i = 0; i < levelNames.length; i++) {
         //     if (!levelNames[i].value || !levelDescriptions[i].value) {

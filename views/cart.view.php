@@ -31,9 +31,10 @@ const cartCourseCards = document.getElementById('cartCourseCards');
 const totalCourses = document.getElementById('totalCourses');
 const subTotal = document.getElementById('subTotal');
 const total = document.getElementById('total');
-let subTotalAmount = 0;
-let totalAmount = 0;
+let subTotalAmount = 0.0;
+let totalAmount = 0.0;
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
+const cartItems = [];
 let categoriesData = {};
 const users = {};
 
@@ -42,6 +43,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const categoriesResponse = await fetch('/categories');
     categoriesData = await categoriesResponse.json();
     categoriesData = categoriesData.payload.categories;
+
+    let levelsInCourses = [];
 
     const usersResponse = await fetch('/users');
     const usersData = await usersResponse.json();
@@ -79,28 +82,70 @@ document.addEventListener('DOMContentLoaded', async () => {
                     
                     if (course.coursePrice !== null) {
                         courseCard = courseCard.replace('<option value="0">ALLCOURSESORLEVELS</option>', `<option value="0">ALL LEVELS</option>`)
-                            .replace('<select class="bg-comp-1 text-color rounded p-1">', `<select disabled class="bg-comp-1 text-color rounded p-1">`);
-
-                        const levelResponse = await fetch(`/levels/get?course_id=${course.courseId}`);
+                            .replace('<select class="courseLevelChosen bg-comp-1 text-color rounded p-1">', `<select disabled class="courseLevelChosen bg-comp-1 text-color rounded p-1">`);
+                        subTotalAmount += parseFloat(course.coursePrice);
+                        cartItems.push(course);
+                    }
+                    else {
+                        const levelResponse = await fetch(`/level?course_id=${course.courseId}`);
                         const levelData = await levelResponse.json();
                         if (levelData.status && levelData.payload.levels.length > 0) {
+                            let levels = '';
                             for (const level of levelData.payload.levels) {
-                                courseCard = courseCard.replace('<option value="0">ALL LEVELS</option>', `<option value="${level.levelId}">${level.levelName}</option>`);
+                                levels += `<option id="level-${level.levelId}" value="${level.levelCost}">${level.levelName}</option>`;
+                                levelsInCourses.push(level);
                             }
+                            const firstLevelCost = parseFloat(levelData.payload.levels[0].levelCost);
+                            courseCard = courseCard.replace('<option value="0">ALLCOURSESORLEVELS</option>', levels)                            
+                                                        .replace('<select class="courseLevelChosen bg-comp-1 text-color rounded p-1">', `<select data-previous-selection="${levelData.payload.levels[0].levelId}" data-previous-cost="${firstLevelCost}" class="courseLevelChosen bg-comp-1 text-color rounded p-1">`);
+                            subTotalAmount += parseFloat(firstLevelCost);
+                            cartItems.push(levelData.payload.levels[0]);
                         }
+                            
                     }
+
                     cartCourseCards.innerHTML += courseCard;
-                    subTotalAmount += parseFloat(course.coursePrice).toFixed(2);
                 }
-                
-                subTotal.innerText = `$${subTotalAmount} MXN`;
-                totalAmount = (subTotalAmount * 1.15).toFixed(2);
-                total.innerText = `$${totalAmount} MXN`;
+                                  
+
+                totalAmount = subTotalAmount * 1.15;
+                subTotal.innerText = `$${parseFloat(subTotalAmount).toFixed(2)} MXN`;
+                total.innerText = `$${parseFloat(totalAmount).toFixed(2)} MXN`;
 
             } catch (error) {
                 console.error('Error fetching course data:', error);
             }
         }
+
+        document.querySelectorAll('.courseLevelChosen').forEach(select => {
+            select.addEventListener('change', (event) => {
+                const selectedOption = event.target.options[event.target.selectedIndex];
+                const selectedCost = parseFloat(selectedOption.value);
+                const previousCost = parseFloat(event.target.getAttribute('data-previous-cost')) || 0;
+
+                subTotalAmount = subTotalAmount - previousCost + selectedCost;
+                totalAmount = subTotalAmount * 1.15;
+
+                subTotal.innerText = `$${subTotalAmount.toFixed(2)} MXN`;
+                total.innerText = `$${totalAmount.toFixed(2)} MXN`;
+
+                const previousSelectionId = event.target.getAttribute('data-previous-selection');
+                const newSelectionId = selectedOption.id.split('-')[1];
+
+                if (previousSelectionId) {
+                    const previousLevelIndex = cartItems.findIndex(item => item.levelId == previousSelectionId);
+                    if (previousLevelIndex !== -1) {
+                        cartItems.splice(previousLevelIndex, 1);
+                    }
+                }
+
+                const newLevel = levelsInCourses.find(level => level.levelId == newSelectionId);
+                cartItems.push(newLevel);
+
+                event.target.setAttribute('data-previous-selection', newSelectionId);
+                event.target.setAttribute('data-previous-cost', selectedCost);
+            });
+        });
     }
 
     loadcart();
@@ -113,6 +158,7 @@ function removeFromCart(id){
     localStorage.setItem('cart', JSON.stringify(newCart));
     loadcart2();
 }
+
 
 async function loadcart2(){
     cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -130,7 +176,6 @@ async function loadcart2(){
         try {
             const coursesResponse = await fetch(`/courses/get?course_id=${courseId}`);
             const coursesData = await coursesResponse.json();
-
             if (coursesData.status && coursesData.payload.courses.length > 0) {
                 const course = coursesData.payload.courses[0];
                 let courseCard = `<?php require 'views/components/buycourseCard.php'; ?>`;
@@ -140,25 +185,71 @@ async function loadcart2(){
                     .replace('Computer Science', categoriesData[course.categoryId - 1].categoryName)
                     .replace('Instructor', users[course.instructorId].username)
                     .replace('Descripcion', course.courseDescription)
-                    .replace('removeFromCart(0)', `removeFromCart(${course.courseId})`);
+                    .replace('removeFromCart(0)', `removeFromCart(${course.courseId})`)
+                
+                if (course.coursePrice !== null) {
+                    courseCard = courseCard.replace('<option value="0">ALLCOURSESORLEVELS</option>', `<option value="0">ALL LEVELS</option>`)
+                        .replace('<select class="courseLevelChosen bg-comp-1 text-color rounded p-1">', `<select disabled class="courseLevelChosen bg-comp-1 text-color rounded p-1">`);
+                    subTotalAmount += parseFloat(course.coursePrice);
+                    cartItems.push(course);
+                }
+                else {
+                    const levelResponse = await fetch(`/level?course_id=${course.courseId}`);
+                    const levelData = await levelResponse.json();
+                    if (levelData.status && levelData.payload.levels.length > 0) {
+                        let levels = '';
+                        for (const level of levelData.payload.levels) {
+                            levels += `<option id="level-${level.levelId}" value="${level.levelCost}">${level.levelName}</option>`;
+                            levelsInCourses.push(level);
+                        }
+                        const firstLevelCost = parseFloat(levelData.payload.levels[0].levelCost);
+                        courseCard = courseCard.replace('<option value="0">ALLCOURSESORLEVELS</option>', levels)                            
+                                                    .replace('<select class="courseLevelChosen bg-comp-1 text-color rounded p-1">', `<select data-previous-selection="${levelData.payload.levels[0].levelId}" data-previous-cost="${firstLevelCost}" class="courseLevelChosen bg-comp-1 text-color rounded p-1">`);
+                        subTotalAmount += parseFloat(firstLevelCost);
+                        cartItems.push(levelData.payload.levels[0]);
+                    }
+                        
+                }
                 cartCourseCards.innerHTML += courseCard;
-                subTotalAmount += course.coursePrice;
             }
-            
-            subTotal.innerText = `$${subTotalAmount} MXN`;
+                              
             totalAmount = subTotalAmount * 1.15;
-            total.innerText = `$${totalAmount} MXN`;
-
+            subTotal.innerText = `$${parseFloat(subTotalAmount).toFixed(2)} MXN`;
+            total.innerText = `$${parseFloat(totalAmount).toFixed(2)} MXN`;
         } catch (error) {
             console.error('Error fetching course data:', error);
         }
     }
+    document.querySelectorAll('.courseLevelChosen').forEach(select => {
+        select.addEventListener('change', (event) => {
+            const selectedOption = event.target.options[event.target.selectedIndex];
+            const selectedCost = parseFloat(selectedOption.value);
+            const previousCost = parseFloat(event.target.getAttribute('data-previous-cost')) || 0;
+            subTotalAmount = subTotalAmount - previousCost + selectedCost;
+            totalAmount = subTotalAmount * 1.15;
+            subTotal.innerText = `$${subTotalAmount.toFixed(2)} MXN`;
+            total.innerText = `$${totalAmount.toFixed(2)} MXN`;
+            const previousSelectionId = event.target.getAttribute('data-previous-selection');
+            const newSelectionId = selectedOption.id.split('-')[1];
+            if (previousSelectionId) {
+                const previousLevelIndex = cartItems.findIndex(item => item.levelId == previousSelectionId);
+                if (previousLevelIndex !== -1) {
+                    cartItems.splice(previousLevelIndex, 1);
+                }
+            }
+            const newLevel = levelsInCourses.find(level => level.levelId == newSelectionId);
+            cartItems.push(newLevel);
+            event.target.setAttribute('data-previous-selection', newSelectionId);
+            event.target.setAttribute('data-previous-cost', selectedCost);
+        });
+    });
 }
 
 function goToCheckout(){
     if (cart.length === 0) {
         swal("🚫", "Your cart is empty. Please add courses to your cart before proceeding to checkout.", "error");
     } else {
+        sessionStorage.setItem('checkoutItems', JSON.stringify(cartItems));
         window.location.href = '/checkout';
     }
 }

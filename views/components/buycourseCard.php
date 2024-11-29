@@ -19,7 +19,7 @@
             Descripcion
         </div>
         <div class="w-full flex flex-row items-center justify-between">
-            <select class="bg-comp-1 text-color rounded p-1">
+            <select class="courseLevelChosen bg-comp-1 text-color rounded p-1">
                 <option value="0">ALLCOURSESORLEVELS</option>
             </select>
             <button onclick="removeFromCart(0)" class="">DELETE</button>

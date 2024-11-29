@@ -345,6 +345,13 @@ $routes = [
         'callback' => function() {
             require __DIR__.'/controllers/comments.php';
         }
+    ],
+    [
+        'method' => 'POST',
+        'path' => '/purchase',
+        'callback' => function() {
+            require __DIR__.'/controllers/purchase.php';    
+        }
     ]
 ];
 
