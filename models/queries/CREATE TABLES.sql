@@ -131,6 +131,7 @@ CREATE TABLE CompletedLevels (
 CREATE TABLE Comments (
     commentId INT NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary key of the comment',
     creationDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Comment creation date',
+    deactivationDate DATETIME NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Comment deactivation date',
     rating INT NOT NULL COMMENT 'Course rating',
     comment TEXT NOT NULL COMMENT 'Comment',
     userId INT NOT NULL COMMENT 'Foreign key of the user',
