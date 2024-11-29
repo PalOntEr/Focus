@@ -38,7 +38,7 @@ $usertype = $_SESSION['user']['role'] ?? 'guest';
         <div id="LevelsContainer" class="flex flex-row items-center justify-center h-96 w-5/6 sm:w-full my-2 overflow-y-scroll sm:overflow-y-auto flex-wrap">
         </div>
     </div>
-    <div class="h-1/3 flex flex-col items-center sm:items-start mx-4 sm:mx-0">
+    <div class="h-1/3 w-full flex flex-col items-center sm:items-start mx-4 sm:mx-0">
         <div class="flex w-full justify-between items-center">
             <h1 class="text-4xl font-bold text-primary">REVIEWS</h1>
             <button class="comment-button" onclick="showCommentModal()">
@@ -46,17 +46,8 @@ $usertype = $_SESSION['user']['role'] ?? 'guest';
         </button>
         </div>
         <div class="h-0.5 bg-comp-1 w-full"></div>
-        <div class="container mx-auto flex flex-row items-center justify-center h-96 overflow-y-scroll sm:overflow-y-auto w-5/6 sm:w-full my-2 flex-wrap">
+        <div id="CommentsContainer" class="container mx-auto flex flex-row items-center justify-center h-96 overflow-y-scroll sm:overflow-y-auto w-5/6 sm:w-full my-2 flex-wrap">
             <?php
-            for ($i = 1; $i <= 5; $i++) {
-                for ($j = 1; $j <= 5; $j++) {
-                    $comment = "lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi.";
-                    $stars = rand(1, 5);
-                    $commentUser = "Dobeto";
-                    $commentDate = date('Y-m-d H:i');
-                    require 'views/components/commentCard.php';
-                }
-            }
             ?>
         </div>
     </div>
@@ -82,57 +73,116 @@ $usertype = $_SESSION['user']['role'] ?? 'guest';
 
 <script>
 
-let CourseId = <?= $_GET['course_id'] ?? 1 ?>;
 
-let CourseImage;
-function getCourseInformation()
-{
+const users = {};
 
-    fetch("/courses/get?course_id=" + CourseId)
-    .then(response => response.json())
-    .then(data => {
-        const CourseInfo = data.payload.courses[0];
-        let Description = document.getElementById("description");
-        let Title = document.getElementById("Title");
-        let Image = document.getElementById("CourseImage");
-        Description.textContent= CourseInfo.courseDescription;
-        Title.textContent = CourseInfo.courseTitle;
-        Image.src = "data:image/*;base64," + CourseInfo.courseImage;
-        CourseImage = Image.src;
+document.addEventListener("DOMContentLoaded", async ()=>{
+    const usersResponse = await fetch('/users');
+    const usersData = await usersResponse.json();
+    usersData.payload.users.forEach(user => {
+        users[user.userId] = user;
     });
-}
-
-function getLevelsOfCourse(){
-    fetch("/level?course_id="+ CourseId)
-    .then(response => response.json())
-    .then(data => {
-        const Levels = data.payload.levels;
-        
-        Levels.forEach((level,index) => {
-            const levelPreviewContainer = document.getElementById("LevelsContainer");
-            const levelPreview = document.createElement('div');
-            let levelhtml = `<?php require 'views/components/levelCard.php'; ?>`;
-            levelhtml = levelhtml.replace(/LEVEL_NUM/g, index+1);
-            levelPreview.innerHTML = levelhtml;
-
-            levelPreview.querySelector(".LevelName").textContent = level.levelName;
-            levelPreview.querySelector(".CourseImage").src = CourseImage;
-            levelPreviewContainer.append(levelPreview);
+    let CourseId = <?= $_GET['course_id'] ?? 1 ?>;
+    
+    let CourseImage;
+    function getCourseInformation()
+    {
+    
+        fetch("/courses/get?course_id=" + CourseId)
+        .then(response => response.json())
+        .then(data => {
+            const CourseInfo = data.payload.courses[0];
+            let Description = document.getElementById("description");
+            let Title = document.getElementById("Title");
+            let Image = document.getElementById("CourseImage");
+            Description.textContent= CourseInfo.courseDescription;
+            Title.textContent = CourseInfo.courseTitle;
+            Image.src = "data:image/*;base64," + CourseInfo.courseImage;
+            CourseImage = Image.src;
         });
+    }
+    
+    function getLevelsOfCourse(){
+        fetch("/level?course_id="+ CourseId)
+        .then(response => response.json())
+        .then(data => {
+            const Levels = data.payload.levels;
+            
+            Levels.forEach((level,index) => {
+                const levelPreviewContainer = document.getElementById("LevelsContainer");
+                const levelPreview = document.createElement('div');
+                let levelhtml = `<?php require 'views/components/levelCard.php'; ?>`;
+                levelhtml = levelhtml.replace(/LEVEL_NUM/g, index+1);
+                levelPreview.innerHTML = levelhtml;
+    
+                levelPreview.querySelector(".LevelName").textContent = level.levelName;
+                levelPreview.querySelector(".CourseImage").src = CourseImage;
+                levelPreviewContainer.append(levelPreview);
+            });
+        });
+    }
+    
+    function getReviewsOfCourse(){
+        fetch("/comments?course_id="+CourseId)
+        .then(response => response.json())
+        .then(data => {
+            const Reviews = data.payload;
+            
+            console.log(data);
+            Reviews.forEach(review => {
+                const levelPreviewContainer = document.getElementById("CommentsContainer");
+                const levelPreview = document.createElement('div');
+                let levelhtml = `<?php require 'views/components/commentCard.php'; ?>`;
+                levelPreview.innerHTML = levelhtml;
+                
+                console.log(users);
+                levelPreview.querySelector(".Rating").textContent = review.rating + "/5⭐";
+                levelPreview.querySelector(".User").textContent = users[review.userId].username;
+                levelPreview.querySelector(".Comment").textContent = review.comment;
+                levelPreview.querySelector(".CommentDate").textContent = review.creationDate;
+
+                levelPreviewContainer.append(levelPreview);
+            });
+        })
+    }
+    
+    getCourseInformation();
+    getLevelsOfCourse();
+    getReviewsOfCourse();   
+})
+
+
+
+function showModal() {
+    document.getElementById('deleteModal').classList.remove('hidden');
+    document.getElementById('deleteModal').classList.add('flex');
+}
+
+function hideModal() {
+    document.getElementById('deleteModal').classList.add('hidden');
+    document.getElementById('deleteModal').classList.remove('flex');
+}
+
+function confirmDelete() {
+    const reason = document.querySelector('#deleteReason').value.trim();
+    if (reason === '') {
+        swal({
+            title: 'Error!',
+            text: 'Please provide a reason for deletion.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+        return;
+    }
+
+    swal({
+        title: 'Deleted!',
+        text: 'Comment has been deleted.',
+        icon: 'success',
+        confirmButtonText: 'OK'
     });
+    hideModal();
 }
-
-function getReviewsOfCourse(){
-    fetch("/comments?course_id="+CourseId)
-    .then(response => response.json())
-    .then(data => {
-    })
-}
-
-getCourseInformation();
-getLevelsOfCourse();
-getReviewsOfCourse();   
-
 function showCommentModal() {
     document.getElementById('commentModal').classList.remove('hidden');
     document.getElementById('commentModal').classList.add('flex');
