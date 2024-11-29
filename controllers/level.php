@@ -14,11 +14,10 @@
         $levelDescription = $_GET['level_description'] ?? null;
         $levelCost = $_GET['level_cost'] ?? null;
         $courseId = $_GET['course_id'] ?? null;
-    
         try {
             $option = ($levelId === null && $creationDate === null && $modificationDate === null && $levelName === null && $levelNumber === null && $levelDescription === null && $levelCost === null && $courseId === null) ? 4 : 5;
     
-            $levels = $db->queryFetchAll("CALL sp_Levels($option, ?, ?, ?, ?, ?, ?, ?, ?)", [
+            $levels = $db->queryFetchAll("CALL sp_Levels($option, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [
                 $levelId,
                 $creationDate,
                 $modificationDate,
@@ -26,28 +25,9 @@
                 $levelNumber,
                 $levelDescription,
                 $levelCost,
-                $courseId
+                $courseId,
+                true
             ]);
-    
-            foreach ($levels as &$level) {
-                $contents = $db->queryFetchAll("CALL sp_Contents(4, NULL,NULL,NULL, NULL, ?)", [
-                    $level['levelId']
-                ]);
-                $level['contents'] = $contents;
-            }
-    
-            foreach ($levels as &$level) {
-                if (isset($level['contents'])) {
-                    foreach ($level['contents'] as &$content) {
-                        if (isset($content['contentData'])) {
-                            $content['contentData'] = base64_decode($content['contentData']);
-                        }
-                    }
-                    unset($content);
-                }
-            }
-            unset($level);
-    
             if (empty($levels)) {
                 echo json_encode([
                     'status' => false,
@@ -117,7 +97,7 @@
             $levelCost = NULL;  // This will pass as a NULL value in the SQL query
         }
     try{
-        $db->queryInsert("CALL sp_Levels(1,NULL,NULL,NULL,?,?,?,?,?)",[
+        $db->queryInsert("CALL sp_Levels(1,NULL,NULL,NULL,?,?,?,?,?,NULL)",[
             $levelName,
             $levelNumber,
             $levelDescription,
@@ -125,7 +105,7 @@
             $courseId
         ]);
 
-        $levelInfo = $db->queryFetch("CALL sp_Levels(5, NULL,NULL,NULL,?,?,NULL,NULL,NULL)",[
+        $levelInfo = $db->queryFetch("CALL sp_Levels(5, NULL,NULL,NULL,?,?,NULL,NULL,NULL,NULL)",[
             $levelName,
             $levelNumber
         ]);

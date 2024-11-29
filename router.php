@@ -324,6 +324,20 @@ $routes = [
         'callback' => function() {
             require __DIR__.'/controllers/updateLevels.php';
         }
+    ],
+    [
+        'method' => 'GET',
+        'path' => '/Content/get',
+        'callback' => function() {
+            require __DIR__.'/controllers/getContent.php';
+        }
+    ],
+    [
+        'method' => 'POST',
+        'path' => '/Content/patch',
+        'callback' => function() {
+            require __DIR__.'/controllers/updateContent.php';
+        }
     ]
 ];
 
