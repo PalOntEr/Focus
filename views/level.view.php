@@ -5,10 +5,10 @@
 <div class="container mx-auto flex h-full space-y-2 sm:space-y-0 space-x-4 items-center flex-col sm:flex-row">
 
     <div class=" w-5/6 sm:w-2/3 h-full font-bold">
-        <div class="text-primary text-md">
+        <div id="CourseName" class="text-primary text-md">
             Course name
         </div>
-        <div class="text-secondary text-2xl">
+        <div id="LevelName" class="text-secondary text-2xl">
             Level name
         </div>
         <div class="bg-gray-600 m-4 rounded-xl">
@@ -45,5 +45,55 @@
             ?>
         </div>
     </div>
-
 </div>
+
+<script>
+const users = {};
+
+document.addEventListener("DOMContentLoaded", async ()=>{
+    const usersResponse = await fetch('/users');
+    const usersData = await usersResponse.json();
+    usersData.payload.users.forEach(user => {
+        users[user.userId] = user;
+    });
+
+    let CourseId = <?= $_GET['course'] ?? 1 ?>;
+
+    function getCourseInformation(){
+        fetch("/courses/get?course_id=" + CourseId)
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById("CourseName").textContent = data.payload.courses[0].courseTitle;
+        });
+    }
+
+    function getLevelsInformation(){
+        fetch("/level?course_id=" + CourseId)
+        .then(response => response.json())
+        .then(data => {
+            const LevelsFound = data.payload.levels;
+
+            LevelsFound.forEach(levelFound => {
+                
+            });
+        });
+    }
+
+    function getLevelInformation(){
+        fetch("/level?course_id="+ CourseId + "&level_id="+ <?= $_GET["level"];?> )
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById("LevelName").textContent = data.payload.levels[0].levelName;
+            
+            fetch("/Content/get?level_id="+<?= $_GET["level"];?>)
+            .then(response => response.json())
+            .then(data => {
+                
+            });
+        });
+    }
+    getCourseInformation();
+    getLevelInformation();
+    getLevelsInformation();
+});
+</script>

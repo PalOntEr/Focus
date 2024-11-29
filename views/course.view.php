@@ -72,8 +72,6 @@ $usertype = $_SESSION['user']['role'] ?? 'guest';
 </div>
 
 <script>
-
-
 const users = {};
 
 document.addEventListener("DOMContentLoaded", async ()=>{
@@ -113,6 +111,8 @@ document.addEventListener("DOMContentLoaded", async ()=>{
                 const levelPreview = document.createElement('div');
                 let levelhtml = `<?php require 'views/components/levelCard.php'; ?>`;
                 levelhtml = levelhtml.replace(/LEVEL_NUM/g, index+1);
+                levelhtml = levelhtml.replace(/LEVEL_ID/g, level.levelId);
+                levelhtml = levelhtml.replace(/COURSE_ID/g, level.courseId);
                 levelPreview.innerHTML = levelhtml;
     
                 levelPreview.querySelector(".LevelName").textContent = level.levelName;

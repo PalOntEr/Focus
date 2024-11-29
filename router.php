@@ -352,6 +352,13 @@ $routes = [
         'callback' => function() {
             require __DIR__.'/controllers/purchase.php';    
         }
+    ],
+    [
+        'method' => 'GET',
+        'path' => '/levels',
+        'callback' => function() {
+            require __DIR__.'/controllers/levels.php';
+        }
     ]
 ];
 

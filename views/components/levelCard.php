@@ -9,7 +9,7 @@
             <div class="LevelName text-comp-2">Intro</div>
     </div>
     <div class="flex w-full h-1/6 p-1 items-center justify-center font-semibold">
-        <button onclick="location.href='/level'" class="w-full text-center bg-comp-1 text-color rounded p-px hover:opacity-80 font-bold">
+        <button onclick="location.href='/levels?level=LEVEL_ID&course=COURSE_ID'" class="w-full text-center bg-comp-1 text-color rounded p-px hover:opacity-80 font-bold">
             PLAY
         </button>
     </div>
