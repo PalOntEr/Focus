@@ -2,10 +2,10 @@
     <div class="flex w-full h-1/4 p-1 items-center justify-between font-semibold">
         <div class="flex items-center w-1/2 text-color font-semibold">
             <img class="w-6 h-6 mr-1" src="https://www.iconpacks.net/icons/2/free-user-icon-3296-thumb.png" alt="user">    
-            <?= $commentUser ?>
+            <p class="User text-color"></p>
         </div>
         <div class="flex items-center justify-end w-1/2">
-            <div class="text-comp-2 mr-2"><?= $stars ?>/5⭐</div>
+            <div class="Rating text-comp-2 mr-2"></div>
             <?php if ($usertype === 'admin'): ?>
                 <button class="delete-button" onclick="showModal()">
                     <img class="h-5 w-5 bg-color p-1 rounded-md" src="https://cdn-icons-png.flaticon.com/512/1017/1017530.png" alt="delete">
@@ -14,10 +14,9 @@
         </div>
     </div>
     <div class="flex w-full h-3/4 px-3 items-center justify-between font-semibold overflow-y-scroll">
-        <div class="text-color"><?= $comment ?></div>
+        <div class="Comment text-color"></div>
     </div>
-    <div class="flex w-full h-1/4 p-1 items-center justify-end text-color text-sm">
-        <?= $commentDate ?>
+    <div class="CommentDate flex w-full h-1/4 p-1 items-center justify-end text-color text-sm">
     </div>
 </div>
 
@@ -33,35 +32,3 @@
     </div>
 </div>
 
-<script>
-function showModal() {
-    document.getElementById('deleteModal').classList.remove('hidden');
-    document.getElementById('deleteModal').classList.add('flex');
-}
-
-function hideModal() {
-    document.getElementById('deleteModal').classList.add('hidden');
-    document.getElementById('deleteModal').classList.remove('flex');
-}
-
-function confirmDelete() {
-    const reason = document.querySelector('#deleteReason').value.trim();
-    if (reason === '') {
-        swal({
-            title: 'Error!',
-            text: 'Please provide a reason for deletion.',
-            icon: 'error',
-            confirmButtonText: 'OK'
-        });
-        return;
-    }
-
-    swal({
-        title: 'Deleted!',
-        text: 'Comment has been deleted.',
-        icon: 'success',
-        confirmButtonText: 'OK'
-    });
-    hideModal();
-}
-</script>
