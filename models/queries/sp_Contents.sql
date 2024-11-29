@@ -33,7 +33,8 @@ BEGIN
                         name = p_name
                     WHERE levelId = p_levelId;
     WHEN 6 THEN DELETE FROM contents
-    WHERE `levelId` = p_levelId;
+    WHERE `levelId` = p_levelId
+    AND mimeType = p_mimeType;
         END CASE;
 
 END$$
