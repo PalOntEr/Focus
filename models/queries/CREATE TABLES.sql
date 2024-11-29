@@ -4,8 +4,6 @@ USE db_pcwi;
 
 DROP TABLE IF EXISTS Purchases;
 
-DROP TABLE IF EXISTS PurchasedLevels;
-
 DROP TABLE IF EXISTS Kardex;
 
 DROP TABLE IF EXISTS DeletedComments;
@@ -14,7 +12,7 @@ DROP TABLE IF EXISTS Comments;
 
 DROP TABLE IF EXISTS Contents;
 
-DROP TABLE IF EXISTS CompletedLevels;
+DROP TABLE IF EXISTS PurchasedLevels;
 
 DROP TABLE IF EXISTS Levels;
 
@@ -125,7 +123,7 @@ CREATE TABLE Kardex (
 CREATE TABLE Purchases (
     purchaseId INT NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary key of the purchase',
     purchaseDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Purchase date',
-    userId INT NOT NULL COMMENT 'Foreign key of the user',
+    userId INT NOT NULL COMMENT 'Foreign key of the user that bought the course',
     courseId INT NOT NULL COMMENT 'Foreign key of the course',
     levelId INT NULL COMMENT 'Foreign key of the level, NULL if the purchase is for a course',
     paymentMethod VARCHAR(20) NOT NULL COMMENT 'Payment method',

@@ -10,7 +10,7 @@
         <div class="text-comp-2">4.3/5⭐</div>
     </div>
     <div class="flex flex-row justify-evenly w-full">
-        <button onclick="location.href='/course'" class="w-full mx-2 text-center bg-comp-1 text-color rounded p-1 hover:opacity-80 font-bold">
+        <button onclick="location.href='/course?course_id=0'" class="w-full mx-2 text-center bg-comp-1 text-color rounded p-1 hover:opacity-80 font-bold">
         PREVIEW
         </button>
         <button onclick="addToCart(0)" class="w-full mx-2 text-center bg-comp-1 text-color rounded p-1 hover:opacity-80 font-bold">
