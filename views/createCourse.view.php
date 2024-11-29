@@ -66,7 +66,7 @@
             <label class="flex items-center">
                 <input id ="oneTime" type="radio" name="payment_method" value="one_time" class="mr-2" checked>
                 One time
-                <input type="number" name="one_time_amount" placeholder="Enter amount" class="outline-none ml-2 p-1 rounded-md bg-comp-1 text-color">
+                <input id="oneTimeAmount" type="number" name="one_time_amount" placeholder="Enter amount" class="outline-none ml-2 p-1 rounded-md bg-comp-1 text-color">
             </label>
             <label class="flex items-center">
                 <input id="levelBased" type="radio" name="payment_method" value="level_based" class="mr-2">
@@ -128,6 +128,8 @@ fetch("/categories")
                 else{
                     document.getElementById("levelBased").checked = true;
                 }
+
+                document.getElementById("oneTimeAmount").value = courseInfo.coursePrice;
             });
 
             
@@ -156,7 +158,7 @@ fetch("/categories")
                         levelPreviewContainer.appendChild(levelPreview);
     
                         const individualCostElements = document.querySelectorAll('[name="individualCost"]');
-                        if (this.value === 'one_time') {
+                        if (level.levelCost === null) {
                         individualCostElements.forEach(element => element.classList.add('hidden'));
                     } else {
                         individualCostElements.forEach(element => element.classList.remove('hidden'));
