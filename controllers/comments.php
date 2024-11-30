@@ -1,10 +1,11 @@
 <?php
+
+require __DIR__.'/../models/entities/comments.php';
+
+$commentsModel = new CommentsModel();
+
 if($_SERVER["REQUEST_METHOD"] === "GET")
 {
-    require __DIR__.'/../config/db.php';
-    $config = require __DIR__.'/../config/config.php';
-
-    $db = new Database($config['database']);
 
 $commentId = $_GET['comment_id'] ?? null;
 $creationDate = isset($_GET['creation_date']) ? urldecode($_GET['creation_date']) : null;
@@ -25,7 +26,7 @@ if (!$commentId && !$courseId && !$userId) {
 
 try {
     // Example: Call a stored procedure with the retrieved parameters
-    $result = $db->queryFetchAll("CALL sp_Comments(5,?, ?, ?, ?, ?, ?, ?)", [
+    $result = $commentsModel->getCommentsWithFilters(
         $commentId,
         $creationDate,
         $deactivationDate,
@@ -33,7 +34,7 @@ try {
         $userId,
         $courseId,
         $rating
-    ]);
+    );
 
     // Return success response
     echo json_encode([
@@ -56,21 +57,11 @@ if($_SERVER['REQUEST_METHOD'] === "POST")
     $rating = $_POST["rating"];
     $userId = $_POST["userId"];
     $courseId = $_POST["courseId"];
-
-    require __DIR__.'/../config/db.php';
-    $config = require __DIR__.'/../config/config.php';
-
-    $db = new Database($config['database']);
     
     $result = true;
 
     try{
-        $db->queryInsert("CALL sp_Comments(1,NULL,NULL,NULL,?,?,?,?)",[
-            $comment,
-            $userId,
-            $courseId,
-            $rating
-        ]);
+        $commentsModel->insertComment($comment, $userId, $courseId, $rating);
     }catch(PDOException $e)
     {
         $result = false;

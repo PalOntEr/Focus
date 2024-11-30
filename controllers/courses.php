@@ -1,33 +1,33 @@
 <?php
+
+require __DIR__.'/../models/entities/courses.php';
+require __DIR__.'/../models/entities/levels.php';
+require __DIR__.'/../models/entities/contents.php';
+
+$courseModel = new CourseModel();
+$levelModel = new LevelModel();
+$contentModel = new ContentsModel();
+
 if($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET['courseId']))
 {
     $CourseId = $_GET['courseId'];
-        
-    require __DIR__.'/../config/db.php';
-    $config = require __DIR__.'/../config/config.php';
-
-    $db = new Database($config['database']);
 
     $result = true;
 
     try{
-        $CourseFound = $db->queryFetch("CALL sp_Course(5,?,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)",[
-            $CourseId
-        ]);
+        $CourseFound = $courseModel->getCourseById($CourseId);
 
         if (isset($CourseFound['courseImage'])) {
                 $CourseFound['courseImage'] = base64_encode($CourseFound['courseImage']);
             }
 
-        $levels = $db->queryFetchAll("CALL sp_Levels(5,NULL,NULL,NULL,NULL,NULL,NULL,NULL,?)",[
+        $levels = $levelModel->getLevelByCourseId(
             $CourseId
-        ]);
+        );
 
         foreach ($levels as &$level) {
             // Fetch content for the current level
-            $contents = $db->queryFetchAll("CALL sp_Contents(4, NULL,NULL,NULL,?)", [
-                $level['levelId']
-            ]);
+            $contents = $contentModel->getContentsOfLevel($level['levelId']);
             foreach ($contents as &$content) {
                 if (isset($content['file'])) {
                     $content['file'] = base64_encode($content['file']);

@@ -2,6 +2,9 @@
 
 header('Content-Type: application/json');
 
+require __DIR__.'/../models/entities/instructorReports.php';
+$instructorReportsModel = new InstructorReportsModel();
+
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $instructorId = $_GET['instructorId'] ?? null;
     $creationDate = isset($_GET['creationDate']) ? urldecode($_GET['creationDate']) : null;
@@ -9,21 +12,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $categoryId = $_GET['categoryId'] ?? null;
     $courseId = $_GET['courseId'] ?? null;
 
-    require __DIR__.'/../config/db.php';
-    $config = require __DIR__.'/../config/config.php';
-
-    $db = new Database($config['database']);
-
     $result = true;
 
     try {
-        $salesReport = $db->queryFetchAll("CALL sp_InstructorReports(1, ?, ?, ?, ?, ?)", [
+        $salesReport = $instructorReportsModel->getPerCourseSalesFiltered(
             $instructorId,
             $creationDate,
             $modificationDate,
             $categoryId,
             $courseId
-        ]);
+        );
     } catch (PDOException $e) {
         $result = false;
         $exception = $e;

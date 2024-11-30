@@ -1,4 +1,8 @@
 <?php
+
+require __DIR__.'/../models/entities/purchasedLevels.php';
+$purchaseModel = new PurchasedLevelsModel();
+
 if($_SERVER["REQUEST_METHOD"] === "GET")
 {
     $levelId = $_GET['level_id'] ?? null;
@@ -13,11 +17,7 @@ if($_SERVER["REQUEST_METHOD"] === "GET")
     $result = true;
 
     try{
-        $levelsFound = $db->queryFetchAll("CALL sp_PurchasedLevels(4,?,?,?)",[
-            $levelId,
-            $userId,
-            $completed
-        ]);
+        $levelsFound = $purchaseModel->getPurchasedLevelsByUser($levelId, $userId, $completed);
     }
     catch(PDOException $e)
     {

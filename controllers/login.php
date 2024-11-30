@@ -1,5 +1,8 @@
 <?php 
 
+require __DIR__.'/../models/entities/users.php';
+$userModel = new UserModel();
+
 if($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     header('Content-Type: application/json');
@@ -22,22 +25,13 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    require __DIR__.'/../config/db.php';
-    $config = require __DIR__.'/../config/config.php';
-
-    $db = new Database($config['database']);
-
     $result = true;
 
     try {
-        $tempUser = $db->queryFetch("CALL sp_Users (5, NULL, NULL, NULL, NULL, ?, NULL, NULL, NULL, NULL, NULL, NULL, NULL)", [
-            $email
-        ]);
+        $tempUser = $userModel->getUserByEmail($email);
 
         if ($tempUser && password_verify($password, $tempUser['password'])){
-            $user = $db->queryFetch("CALL sp_Users (4, NULL, NULL, NULL, NULL, ?, NULL, NULL, NULL, NULL, NULL, NULL, NULL)", [
-                $email
-            ]);
+            $user = $userModel->loginUserByEmail($email);
 
             $user['profilePicture'] = base64_encode($user['profilePicture']);            
         }
