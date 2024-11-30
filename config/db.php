@@ -1,18 +1,34 @@
 <?php
-// Configuración de la base de datos
-define('DB_SERVER', 'localhost');
-define('DB_USERNAME', 'root');
-define('DB_PASSWORD', '');
-define('DB_DATABASE', 'DB_Cursos');
 
-function getDatabaseConnection() {
-    $connection = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_DATABASE);
-    if ($connection->connect_error) {
-        die("Conexión fallida: " . $connection->connect_error);
+class Database{
+    public $connection;
+
+    public function __construct($config){
+        $dsn = 'mysql:' . http_build_query($config,"",";");
+
+        $this->connection = new PDO($dsn, $config['user'], $config['password']);
     }
-    return $connection;
-}
 
-// Configuración de error
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+    public function queryFetch($query, $array = []){
+        $stmt = $this->connection->prepare($query);
+
+        $stmt->execute($array);
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function queryFetchAll($query, $array = []){
+        $stmt = $this->connection->prepare($query);
+
+        $stmt->execute($array);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
+    public function queryInsert($query, $array = []){
+        $stmt = $this->connection->prepare($query);
+
+        $stmt->execute($array);
+
+    }
+}

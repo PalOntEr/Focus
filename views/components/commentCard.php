@@ -2,11 +2,11 @@
     <div class="flex w-full h-1/4 p-1 items-center justify-between font-semibold">
         <div class="flex items-center w-1/2 text-color font-semibold">
             <img class="w-6 h-6 mr-1" src="https://www.iconpacks.net/icons/2/free-user-icon-3296-thumb.png" alt="user">    
-            <?= $commentUser ?>
+            <p class="User text-color"></p>
         </div>
         <div class="flex items-center justify-end w-1/2">
-            <div class="text-comp-2 mr-2"><?= $stars ?>/5⭐</div>
-            <?php if ($usertype === 'admin'): ?>
+            <div class="Rating text-comp-2 mr-2"></div>
+            <?php if ($usertype === 'A'): ?>
                 <button class="delete-button" onclick="showModal()">
                     <img class="h-5 w-5 bg-color p-1 rounded-md" src="https://cdn-icons-png.flaticon.com/512/1017/1017530.png" alt="delete">
                 </button>
@@ -14,11 +14,10 @@
         </div>
     </div>
     <div class="flex w-full h-3/4 px-3 items-center justify-between font-semibold overflow-y-scroll">
-        <div class="text-color"><?= $comment ?></div>
+        <div class="Comment text-color"></div>
     </div>
-    <div class="flex w-full h-1/4 p-1 items-center justify-end text-color text-sm">
-        <?= $commentDate ?>
-    </div>
+    <div class="CommentDate flex w-full h-1/4 p-1 items-center justify-end text-color text-sm">
+    </div>  
 </div>
 
 <div id="deleteModal" class="modal hidden fixed inset-0 bg-gray-600 bg-opacity-50 items-center justify-center">
@@ -28,40 +27,8 @@
         <textarea id="deleteReason" class="w-full p-2 rounded border border-gray-300" rows="4"></textarea>
         <div class="flex justify-end">
             <button class="bg-gray-300 px-4 py-2 rounded mr-2" onclick="hideModal()">Cancel</button>
-            <button class="bg-red-500 text-white px-4 py-2 rounded" onclick="confirmDelete()">Delete</button>
+            <button id="COMMENT_ID" class="DeleteButton bg-red-500 text-white px-4 py-2 rounded" onclick="confirmDelete()">Delete</button>
         </div>
     </div>
 </div>
 
-<script>
-function showModal() {
-    document.getElementById('deleteModal').classList.remove('hidden');
-    document.getElementById('deleteModal').classList.add('flex');
-}
-
-function hideModal() {
-    document.getElementById('deleteModal').classList.add('hidden');
-    document.getElementById('deleteModal').classList.remove('flex');
-}
-
-function confirmDelete() {
-    const reason = document.querySelector('#deleteReason').value.trim();
-    if (reason === '') {
-        swal({
-            title: 'Error!',
-            text: 'Please provide a reason for deletion.',
-            icon: 'error',
-            confirmButtonText: 'OK'
-        });
-        return;
-    }
-
-    swal({
-        title: 'Deleted!',
-        text: 'Comment has been deleted.',
-        icon: 'success',
-        confirmButtonText: 'OK'
-    });
-    hideModal();
-}
-</script>

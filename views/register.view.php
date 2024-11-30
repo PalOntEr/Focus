@@ -6,8 +6,9 @@
 
     if ($isUpdating) {
         require 'views/components/navbar.php';
+        $birthdate = new DateTime($_SESSION["user"]["birthdate"]);
+        $formattedDate = $birthdate->format('Y-m-d');
     }
-
 ?>
 
 <div class="h-screen w-screen container mx-auto flex flex-col lg:flex-row items-center justify-center">
@@ -23,16 +24,20 @@
                     echo '<h2 class="text-color text-3xl text-center w-full mb-6 font-bold">Create Account</h2>';
                 }
             ?>
-            <form id="register" class="container flex flex-col md:justify-between h-full font-semibold mb-4" action="<?= $isUpdating ? '/user' : '/login'; ?>" method="GET">
+            <form id="<?= $isUpdating ? 'update' : 'register' ?>" class="container flex flex-col md:justify-between h-full font-semibold mb-4" action="<?= $isUpdating ? '/user' : '/login'; ?>" method="GET" enctype ="multipart/form-data">
                 <div class="flex flex-col md:flex-row w-full items-center space-y-6 md:space-y-0 md:space-x-6 mb-6">
                     <div class="flex flex-col w-5/6 space-y-4 md:w-1/2">
                         <div>
                             <label for="User" class="text-secondary">Username:</label>
-                            <input id="User" type="text" class="w-full bg-transparent border-t-transparent border-b-2 outline-none text-color" />
+                            <input id="User" type="text" class="w-full bg-transparent border-t-transparent border-b-2 outline-none text-color" value = "<?= $isUpdating ? $_SESSION["user"]["username"] : "" ?>"/>
+                        </div>
+                        <div>
+                            <label for="FullName" class="text-secondary">Full Name:</label>
+                            <input id="FullName" type="text" class="w-full bg-transparent border-t-transparent border-b-2 outline-none text-color"  value = "<?= $isUpdating ? $_SESSION["user"]["fullName"] : "" ?>"/> 
                         </div>
                         <div>
                             <label for="Email" class="text-secondary">Email:</label>
-                            <input id="Email" type="text" class="w-full bg-transparent border-t-transparent border-b-2 outline-none text-color" />
+                            <input id="Email" type="text" class="w-full bg-transparent border-t-transparent border-b-2 outline-none text-color"  value = "<?= $isUpdating ? $_SESSION["user"]["email"] : "" ?>"/>
                         </div>
                         <div>
                             <label for="password" class="text-secondary">Password:</label>
@@ -47,8 +52,8 @@
                                 <label for="Role" class="text-secondary">Role</label>
                             </div>
                             <select id="Role" class="rounded-md border-0 bg-comp-2 text-primary font-semibold py-0 pl-2 pr-7 h-[26px] outline-none w-full sm:text-sm">
-                                <option>Student</option>
-                                <option>Instructor</option>
+                            <option value="Student" <?= isset($_SESSION["user"]) ? ($_SESSION["user"]["role"] == "S" ? 'selected' : "") : "" ?> >Student</option>
+                            <option value="Instructor" <?= isset($_SESSION["user"]) ? ($_SESSION["user"]["role"] == "I" ? 'selected' : "") : "" ?> >Instructor</option>
                             </select>
                         </div>
                     </div>
@@ -62,21 +67,21 @@
                                 <p class="mb-2 text-center text-sm text-secondary dark:text-gray-400"><span class="font-semibold">Click to upload</span> or drag and drop</p>
                                 <p class="text-xs text-center text-secondary dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
                             </div>
-                            <input id="Photo" type="file" class="hidden" />
+                            <input id="Photo" name="profilePicture" type="file" class="hidden" />
                         </label>
                         <div>
                             <div class="">
                                 <label for="Gender" class="text-comp-2">Gender</label>
                             </div>
                             <select id="Gender" class="rounded-md border-0 bg-comp-2 text-primary font-semibold py-0 pl-2 pr-7 h-[26px] outline-none w-full sm:text-sm">
-                                <option>Male</option>
-                                <option>Female</option>
-                                <option>Prefer not to say</option>
+                            <option value="Male" <?= isset($_SESSION["user"]) ? ($_SESSION["user"]["gender"] == "M" ? 'selected' :  "") : "" ?>>Male</option>
+                                <option value="Female" <?= isset($_SESSION["user"]) ? ($_SESSION["user"]["gender"] == "F" ? 'selected' :  "") : "" ?>>Female</option>
+                                <option value="Prefer not to say" <?= isset($_SESSION["user"]) ? ($_SESSION["user"]["gender"] == "P" ? 'selected' :  "") : "" ?>>Prefer not to say</option>
                             </select>
                         </div>
                         <div>
                             <label for="Birthdate" class="text-comp-2">Birthdate:</label>
-                            <input id="Birthdate" type="date" class="w-full bg-transparent border-t-transparent border-b-2 outline-none text-color" />
+                            <input id="Birthdate" type="date" class="w-full bg-transparent border-t-transparent border-b-2 outline-none text-color" value = "<?= htmlspecialchars($formattedDate) ?>" />
                         </div>
                     </div>
                 </div>
@@ -100,6 +105,7 @@
 </div>
 
 <script>
+
     const inputs = [
         document.querySelector('#User'),
         document.querySelector('#Email'),
@@ -108,80 +114,152 @@
         document.querySelector('#Role'),
         document.querySelector('#Photo'),
         document.querySelector('#Gender'),
-        document.querySelector('#Birthdate')
+        document.querySelector('#Birthdate'),
+        document.querySelector('#FullName')
     ];
-
-    document.querySelector('#register').addEventListener('submit', function(event) {
-        let allFilled = true;
-
-        inputs.forEach(input => {
-            if (!input.value) {
-                allFilled = false;
-            }
-        });
-
-        if (!allFilled) {
-            event.preventDefault();
-            swal({
-                icon: 'error',
-                title: '☠️',
-                text: 'Please fill in all fields!'
-            });
-            return;
-        }
-
-        const email = inputs.find(input => input.id === 'Email').value;
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-        if (!emailPattern.test(email)) {
-            event.preventDefault();
-            swal({
-                icon: 'error',
-                title: '☠️',
-                text: 'Please enter a valid email address!'
-            });
-            return;
-        }
-
-        const password = inputs.find(input => input.id === 'password').value;
-        const confirmPassword = inputs.find(input => input.id === 'ConfirmPassword').value;
-        const specialChars = /[¡”#$%&/=’?¡¿:;,.\-_+*{[\]}]/;
-        const uppercasePattern = /[A-Z]/;
-        const numberPattern = /[0-9]/;
-
-        if (password.length < 8 || !specialChars.test(password) || !uppercasePattern.test(password) || !numberPattern.test(password)) {
-            event.preventDefault();
-            swal({
-                icon: 'error',
-                title: '☠️',
-                text: 'Password must be at least 8 characters long and contain at least one special character (¡”#$%&/=’?¡¿:;,.-_+*{][}), one uppercase letter, and one number.'
-            });
-            return;
-        }
-
-        if (password !== confirmPassword) {
-            event.preventDefault();
-            swal({
-                icon: 'error',
-                title: '☠️',
-                text: 'Passwords do not match!'
-            });
-            return;
-        }
-
-        swal({
-            icon: 'success',
-            title: '🎉',
-            text: 'Account <?php 
-            if($isUpdating){
-                echo 'updated';
-            }else{
-                echo 'created';
-            }
-            ?> successfully!'
-        });
-
+    
+    document.addEventListener("DOMContentLoaded", function ()
+    {   
+        let imgUser = "<?= $_SESSION["user"]["profilePicture"] ?? "" ?>";
+        if(imgUser=== "") return;
+        const img = document.createElement('img');
+        img.src = `data:image/*;base64,${imgUser}`;
+        img.classList.add('w-full', 'h-full', 'object-cover', 'rounded-lg');
+        const photoDiv = document.querySelector('label[for="Photo"] .flex');
+        photoDiv.innerHTML = '';
+        photoDiv.appendChild(img);
     });
+
+    document.querySelector('#register, #update').addEventListener('submit', function(event) {
+    event.preventDefault();
+    let allFilled = true;
+
+    inputs.forEach(input => {
+        if (!input.value) {
+            allFilled = false;
+        }
+    });
+
+    for (let i = 0; i < inputs.length; i++) {
+        if (!inputs[i].value) {
+            allFilled = false;
+            swal({
+                icon: 'error',
+                title: '☠️',
+                text: `Please fill in the ${inputs[i].id} field!`
+            });
+            return;
+        }
+    }
+
+    if(inputs[2].value !== inputs[3].value)
+    {
+        swal({
+            icon: 'error',
+            title: '☠️',
+            text: 'Passwords dont match!'
+        });
+        return;
+    }
+
+    if (!allFilled) {
+        swal({
+            icon: 'error',
+            title: '☠️',
+            text: 'Please fill in all fields!'
+        });
+        return;
+    }
+
+    const email = inputs.find(input => input.id === 'Email').value;
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailPattern.test(email)) {
+        event.preventDefault();
+        swal({
+            icon: 'error',
+            title: '☠️',
+            text: 'Please enter a valid email address!'
+        });
+        return;
+    }
+
+    let letra = inputs[6].value.charAt(0);
+    inputs[6].value = letra;
+    let letra2 = inputs[4].value.charAt(0);
+    inputs[4].value = letra2;
+    
+    event.preventDefault();
+    const password = inputs.find(input => input.id === 'password').value;
+    const confirmPassword = inputs.find(input => input.id === 'ConfirmPassword').value;
+    const specialChars = /[¡”#$%&/=’?¡¿:;,.\-_+*{[\]}]/;
+    const uppercasePattern = /[A-Z]/;
+    const numberPattern = /[0-9]/;
+
+    if (password.length < 8 || !specialChars.test(password) || !uppercasePattern.test(password) || !numberPattern.test(password)) {
+        event.preventDefault();
+        swal({
+            icon: 'error',
+            title: '☠️',
+            text: 'Password must be at least 8 characters long and contain at least one special character (¡”#$%&/=’?¡¿:;,.-_+*{][}), one uppercase letter, and one number.'
+        });
+        return;
+    }
+
+    if (password !== confirmPassword) {
+        event.preventDefault();
+        swal({
+            icon: 'error',
+            title: '☠️',
+            text: 'Passwords do not match!'
+        });
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("profilePicture", document.getElementById("Photo").files[0]);
+    console.log( document.getElementById("Photo").files[0]);
+    formData.append("user", inputs[0].value);
+    formData.append("fullName",inputs[8].value);
+    formData.append("email",inputs[1].value);
+    formData.append("password",inputs[2].value);
+    formData.append("role",letra2);
+    formData.append("birthdate",inputs[7].value);
+    formData.append("gender",letra);
+    formData.append("isUpdating",<?= $isUpdating ? "true" : "false"  ?>);
+
+    fetch('users', {
+        method: "POST",
+        body: formData,
+    }).then(response => response.json())
+    .then(data => {
+        if (data.status) {
+            console.log(data.payload.user);
+            swal({
+                icon: 'success',
+                title: '🎉',
+                text: 'Account <?php 
+                if($isUpdating){
+                    echo 'updated';
+                }else{
+                    echo 'created';
+                }
+                ?> successfully!'
+            }).then(() => {
+                window.location.href = <?= $isUpdating ? '"/profile?myProfile=true"' : '"/home"' ?>;
+            });
+
+        } else {
+            swal({
+                icon: 'error',
+                title: '☠️',
+                text: data.payload.error
+            });
+        }
+    });
+});
+
+
 
     document.querySelector('#Photo').addEventListener('change', function(event) {
         const file = event.target.files[0];

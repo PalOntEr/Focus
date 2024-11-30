@@ -9,9 +9,9 @@ require 'views/components/header.php';
     <div class="bg-primary flex w-5/6 md:w-1/2 place-content-evenly rounded-xl">
         <div id="Form-Container" class="flex flex-col mx-4 2xl:mx-6 my-12">
             <h2 class="text-color text-3xl text-center w-full mb-6 font-bold">Log In</h2>
-            <form id="login" class="flex flex-col justify-between h-52 font-semibold mb-4" action="/home" method="GET">
+            <form id="login" class="flex flex-col justify-between h-52 font-semibold mb-4">
                 <div>
-                    <p class="text-secondary">Username:</p>
+                    <p class="text-secondary">Email:</p>
                     <input id="user" type="text" class="w-full bg-transparent border-t-transparent border-b-2 outline-none text-color" />
                 </div>
                 <div>
@@ -33,12 +33,17 @@ require 'views/components/header.php';
     </div>
 </div>
 <script>
+
+    localStorage.clear();
+    sessionStorage.clear();
+
     const inputs = [
         document.querySelector('#user'),
         document.querySelector('#password'),
     ];
 
     document.querySelector('#login').addEventListener('submit', function(event) {
+        event.preventDefault();
         let allFilled = true;
 
         inputs.forEach(input => {
@@ -48,7 +53,6 @@ require 'views/components/header.php';
         });
 
         if (!allFilled) {
-            event.preventDefault();
             swal({
                 icon: 'error',
                 title: '☠️',
@@ -58,31 +62,34 @@ require 'views/components/header.php';
         }
 
         const username = document.querySelector('#user').value;
-        
-        let usertype = 'student';
-        if (username === 'Roberto') {
-            usertype = 'instructor';
-        } else if (username === 'Max') {
-            usertype = 'admin';
-        }
+        const password = document.querySelector('#password').value;
 
-        sessionStorage.setItem('usertype', usertype);
-
-        fetch('setUser', {
+        fetch('login', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/x-www-form-urlencoded'
             },
-            body: JSON.stringify({ usertype: usertype })
+            body: new URLSearchParams({
+                email: inputs[0].value,
+                password: inputs[1].value
+            }),
         }).then(response => response.json())
         .then(data => {
-            if (data.success) {
-                window.location.href = '/home';
+            if (data.status) {
+                console.log(data.payload.user);
+                swal({
+                    icon: 'success',
+                    title: '🎉',
+                    text: 'Welcome back!'
+                }).then(() => {
+                    sessionStorage.setItem('user', data.payload.user);
+                    window.location.href = '/home';
+                });
             } else {
                 swal({
                     icon: 'error',
                     title: '☠️',
-                    text: 'Failed to store user type in php session!'
+                    text: data.payload.error
                 });
             }
         });
