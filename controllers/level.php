@@ -17,9 +17,10 @@ $contentModel = new ContentsModel();
         $levelDescription = $_GET['level_description'] ?? null;
         $levelCost = $_GET['level_cost'] ?? null;
         $courseId = $_GET['course_id'] ?? null;
+        $levelLink = $_GET['levelLink'] ?? null;
         try {
             $option = ($levelId === null && $creationDate === null && $modificationDate === null && $levelName === null && $levelNumber === null && $levelDescription === null && $levelCost === null && $courseId === null) ? 4 : 5;
-    
+            
             $levels = $levelModel->getLevelsWithFilters(
                 $levelId, 
                 $creationDate, 
@@ -68,7 +69,8 @@ $contentModel = new ContentsModel();
         if (!isset($_FILES['levelVideo'])) $missingFields[] = 'levelVideo';
         if (!isset($_FILES['levelFile'])) $missingFields[] = 'levelFile';
         if (!isset($_POST['levelCost'])) $missingFields[] = 'levelCost';
-    
+        if (!isset($_POST['levelLink'])) $missingFields[] = 'levelLink';
+        
     
         if (!empty($missingFields)) {
             http_response_code(400);
@@ -89,6 +91,7 @@ $contentModel = new ContentsModel();
         $levelNumber = $_POST['levelNumber'];
         $courseId = $_POST['CourseId'];
         $levelCost = $_POST['levelCost'];
+        $levelLink = $_POST['levelLink'];
 
         // Check if levelCost is empty or 'null' and set it to actual SQL NULL
         if (empty($levelCost) || $levelCost === 'null') {
@@ -100,7 +103,8 @@ $contentModel = new ContentsModel();
             $levelNumber, 
             $levelDescription, 
             $levelCost, 
-            $courseId);
+            $courseId,
+            $levelLink);
 
             
         $levelInfo = $levelModel->getLevelInfo($levelName, $levelNumber);

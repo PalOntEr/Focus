@@ -83,33 +83,35 @@ document.addEventListener("DOMContentLoaded", async ()=>{
                     levelPreview.querySelector(".Level").onclick = function () {
                         alert("No lo tienes comprado gg");
                     };
-
+                    
                     const exists = PurchasedLevels.some(Purchasedlevel => Purchasedlevel.levelId === levelFound.levelId);
                     if(exists)
                     {
                         levelPreview.querySelector(".Level").onclick = function () {
                             location.href = '/levels?level=' + levelFound.levelId + '&course=' + levelFound.courseId;
-                            };
+                        };
                     }
-
+                    
                     if (<?= $_GET["level"] ?> === levelFound.levelId) {
                         const levelNameElement = document.getElementById("LevelName");
                         if (levelNameElement) {
                             levelNameElement.textContent = levelFound.levelName;
+                            document.getElementById("LevelLink").href = "https://"+ levelFound.link;
+                            document.getElementById("LevelLink").textContent ="https://" +levelFound.link;
                         }
                     }
+                });
             });
-        });
-    }
+        }
 
     
     
-    function getLevelInformation(){
-        fetch("/Content/get?level_id="+<?= $_GET["level"];?>)
-        .then(response => response.json())
-        .then(data => {
-            const ContentFound = data.payload.content;
-            
+        function getLevelInformation(){
+            fetch("/Content/get?level_id="+<?= $_GET["level"];?>)
+            .then(response => response.json())
+            .then(data => {
+                const ContentFound = data.payload.content;
+                
             ContentFound.forEach(Content => {
                 if(Content.mimeType === ".mp4")
                 {
@@ -178,7 +180,14 @@ document.getElementById("FinishLevel").addEventListener("click",function(){
     method:"POST",
     body:formData
     }).then(response => response.json())
-    .then(data => console.log(data));
+    .then(data => {
+        swal({
+            icon: 'success',
+            title: '🎉',
+            text: `Level Completed`,
+        })
+        console.log(data);
+    });
     
     
 });

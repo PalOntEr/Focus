@@ -1,6 +1,6 @@
 <?php
 
-require __DIR__.'/../../config/db.php';
+require_once __DIR__.'/../../config/db.php';
 
 class LevelModel {
     private $db;
@@ -27,7 +27,7 @@ class LevelModel {
     }
 
     public function getLevelsWithFilters($levelId = NULL, $creationDate = NULL, $modificationDate = NULL, $levelName = NULL, $levelNumber = NULL, $levelDescription = NULL, $levelCost = NULL, $courseId = NULL, $active = NULL) {
-        return $this->db->queryFetchAll("CALL sp_Levels(5, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [
+        return $this->db->queryFetchAll("CALL sp_Levels(5, ?, ?, ?, ?, ?, ?, ?, ?, ?,NULL)", [
             $levelId,
             $creationDate,
             $modificationDate,
@@ -41,19 +41,20 @@ class LevelModel {
     }
 
     public function getLevelInfo($levelName, $levelNumber) {
-        return $this->db->queryFetch("CALL sp_Levels(5, NULL,NULL,NULL,?,?,NULL,NULL,NULL,NULL)",[
+        return $this->db->queryFetch("CALL sp_Levels(5, NULL,NULL,NULL,?,?,NULL,NULL,NULL,NULL,NULL)",[
             $levelName,
             $levelNumber
         ]);
     }
 
-    public function createLevel($levelName, $levelNumber, $levelDescription, $levelCost, $courseId) {
-        return $this->db->queryInsert("CALL sp_Levels(1,NULL,NULL,NULL,?,?,?,?,?,NULL)", [
+    public function createLevel($levelName, $levelNumber, $levelDescription, $levelCost, $courseId, $Link) {
+        return $this->db->queryInsert("CALL sp_Levels(1,NULL,NULL,NULL,?,?,?,?,?,NULL,?)", [
             $levelName,
             $levelNumber,
             $levelDescription,
             $levelCost,
-            $courseId
+            $courseId,
+            $Link
         ]);
     }
 

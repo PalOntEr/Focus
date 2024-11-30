@@ -40,15 +40,10 @@ if($_SERVER["REQUEST_METHOD"] === "POST")
 
 if($_SERVER["REQUEST_METHOD"] === "GET")
 {
-    require __DIR__.'/../config/db.php';
-    $config = require __DIR__.'/../config/config.php';
-
-    $db = new Database($config['database']);
-
     $result = true;
 
     try{
-        $DeletedComments = $db->queryFetchAll("CALL sp_Comments(6,NULL,NULL,NULL,NULL,NULL,NULL,NULL)",[]);
+        $DeletedComments = $commentModel->getDeletedComments();
     }
     catch(PDOException $e)
     {

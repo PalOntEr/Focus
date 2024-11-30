@@ -21,17 +21,17 @@ BEGIN
             INSERT INTO Courses(courseDescription,courseTitle,courseImage,categoryId,instructorId,coursePrice)
             VALUES(p_courseDescription,p_courseTitle,p_courseImage,p_categoryId,p_instructorId,p_coursePrice);
         WHEN 2 THEN -- UPDATE
-UPDATE Courses
-SET 
-    courseDescription = IF(p_courseDescription IS NULL, courseDescription, p_courseDescription),
-    courseTitle = IF(p_courseTitle IS NULL, courseTitle, p_courseTitle),
-    modificationDate = CURRENT_TIMESTAMP,
-    courseImage = IF(p_courseImage IS NULL, courseImage, p_courseImage),
-    categoryId = IF(p_categoryId IS NULL, categoryId, p_categoryId),
-    instructorId = IF(p_instructorId IS NULL, instructorId, p_instructorId),
-    `deactivationDate` = p_deactivationDate,
-    coursePrice = p_coursePrice
-WHERE courseId = p_courseId;
+            UPDATE Courses
+            SET 
+                courseDescription = IF(p_courseDescription IS NULL, courseDescription, p_courseDescription),
+                courseTitle = IF(p_courseTitle IS NULL, courseTitle, p_courseTitle),
+                modificationDate = CURRENT_TIMESTAMP,
+                courseImage = IF(p_courseImage IS NULL, courseImage, p_courseImage),
+                categoryId = IF(p_categoryId IS NULL, categoryId, p_categoryId),
+                instructorId = IF(p_instructorId IS NULL, instructorId, p_instructorId),
+                `deactivationDate` = p_deactivationDate,
+                coursePrice = CAST(p_coursePrice AS DECIMAL(10, 2))
+            WHERE courseId = p_courseId;
         WHEN 3 THEN -- DELETE
             UPDATE Courses
             SET deactivationDate = CURRENT_TIMESTAMP

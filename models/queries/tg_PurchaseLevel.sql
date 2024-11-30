@@ -24,30 +24,37 @@ END;
 
 DELIMITER ;
 
+DROP TRIGGER IF EXISTS tg_UpdateKardex; 
 DELIMITER //
 CREATE TRIGGER tg_UpdateKardex
 AFTER UPDATE ON PurchasedLevels
 FOR EACH ROW
 BEGIN
-    DECLARE totalLevels INT;
-    DECLARE completedLevels INT;
+    DECLARE T_totalLevels INT;
+    DECLARE T_completedLevels INT;
+    DECLARE PlcourseId INT;
 
-    SELECT totalLevels INTO totalLevels
-    FROM levelsPerCourse WHERE courseId = (SELECT courseId FROM Levels WHERE levelId = NEW.levelId);
+    SELECT courseId INTO PlcourseId
+    FROM Levels
+    WHERE levelId = NEW.levelId;
 
-    SELECT totalCoursedLevels INTO completedLevels
+    SELECT totalLevels INTO T_totalLevels
+    FROM levelsPerCourse WHERE courseId = PlcourseId;
+
+    SELECT totalCoursedLevels INTO T_completedLevels
     FROM LevelsCoursedPerStudent
-    WHERE userId = NEW.userId AND courseId = (SELECT courseId FROM Levels WHERE levelId = NEW.levelId);
+    WHERE userId = NEW.userId AND courseId = PlcourseId;
 
-    IF completedLevels = totalLevels THEN
+    IF T_totalLevels <= T_completedLevels THEN
         UPDATE Kardex
         SET completionDate = NOW(), accessDate = NOW()
-        WHERE userId = NEW.userId AND courseId = (SELECT courseId FROM Levels WHERE levelId = NEW.levelId);
+        WHERE userId = NEW.userId AND courseId = PlcourseId;
     ELSE
         UPDATE Kardex
         SET accessDate = NOW()
-        WHERE userId = NEW.userId AND courseId = (SELECT courseId FROM Levels WHERE levelId = NEW.levelId);
+        WHERE userId = NEW.userId AND courseId = PlcourseId;
     END IF;
+
 END;
 //
 

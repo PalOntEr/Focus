@@ -11,13 +11,14 @@ CREATE PROCEDURE sp_Levels(
     IN p_levelDescription TEXT,
     IN p_levelCost DECIMAL(10,2),
     IN p_courseId INT,
-    IN p_active BOOLEAN
+    IN p_active BOOLEAN,
+    IN p_link VARCHAR(255)
 )
 BEGIN
     CASE p_Opc
         WHEN 1 THEN -- INSERT
-            INSERT INTO levels (creationDate, levelName, levelNumber, levelDescription, levelCost, courseId)
-            VALUES (CURRENT_TIMESTAMP, p_levelName, p_levelNumber, p_levelDescription, p_levelCost, p_courseId);
+            INSERT INTO levels (creationDate, levelName, levelNumber, levelDescription, levelCost, courseId,link)
+            VALUES (CURRENT_TIMESTAMP, p_levelName, p_levelNumber, p_levelDescription, p_levelCost, p_courseId,p_link);
         WHEN 2 THEN -- UPDATE
             UPDATE levels
             SET modificationDate = CURRENT_TIMESTAMP,
@@ -25,7 +26,8 @@ BEGIN
                 levelNumber = p_levelNumber,
                 levelDescription = p_levelDescription,
                 levelCost = p_levelCost,
-                courseId = p_courseId
+                courseId = p_courseId,
+                link = p_link
             WHERE levelId = p_levelId;
         WHEN 3 THEN -- DELETE
             UPDATE levels
@@ -33,10 +35,10 @@ BEGIN
             `levelNumber` = 0
             WHERE levelId = p_levelId;
         WHEN 4 THEN -- SELECT ALL
-            SELECT levelId, creationDate, modificationDate, levelName, levelNumber, levelDescription, levelCost, courseId
+            SELECT levelId, creationDate, modificationDate, levelName, levelNumber, levelDescription, levelCost, courseId,link
             FROM levels;
         WHEN 5 THEN -- SELECT WITH FILTER
-            SELECT levelId, creationDate, modificationDate, levelName, levelNumber, levelDescription, levelCost, courseId
+            SELECT levelId, creationDate, modificationDate, levelName, levelNumber, levelDescription, levelCost, courseId,link
             FROM Levels
             WHERE (p_levelId IS NULL OR levelId = p_levelId)
                 AND (p_levelName IS NULL OR levelName LIKE CONCAT('%', p_levelName, '%'))

@@ -38,5 +38,9 @@ class CommentsModel {
             $userId
         ]);
     }
+
+    public function getDeletedComments() {
+        return $this->db->queryFetchAll("CALL sp_Comments(6,NULL,NULL,NULL,NULL,NULL,NULL,NULL)");
+    }
 }
 ?>

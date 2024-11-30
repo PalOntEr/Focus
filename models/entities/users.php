@@ -25,6 +25,9 @@ class UserModel {
         $user = $this->db->queryFetch("CALL sp_Users (5, NULL, NULL, NULL, NULL, ?, NULL, NULL, NULL, NULL, NULL, NULL, NULL)", [
             $email
         ]);
+        if (isset($user['profilePicture'])) {
+            $user['profilePicture'] = base64_encode($user['profilePicture']);
+        }
         return $user;
     }
 

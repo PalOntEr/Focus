@@ -98,7 +98,7 @@ require 'views/components/navbar.php';
                             .replace('course-number', `course-${course.courseId}`)
                             .replace('PHP Course', course.courseTitle)
                             .replace('Instructor', users[course.instructorId].username)
-                            .replace('4.3/5⭐', `${course.coursePrice}⭐`)
+                            .replace('4.3/5⭐', `${course.averageRating}⭐`)
                             .replace('https://pbs.twimg.com/media/GVq8fLsaoAEnzsl?format=jpg&name=large', `data:image/jpeg;base64,${course.courseImage}`)
                             .replace('/course?course_id=0', `/course?course_id=${course.courseId}`)
                             .replace('addToCart(0)', `addToCart(${course.courseId})`);

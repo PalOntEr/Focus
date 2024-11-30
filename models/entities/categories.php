@@ -21,5 +21,11 @@ class CategoriesModel {
             $creatorId
         ]);
     }
+
+    public function deleteCategory($categoryId) {
+        return $this->db->queryFetch("CALL sp_Categories (3, ?, NULL, NULL, NULL)", [
+            $categoryId
+        ]);
+    }
 }
 ?>

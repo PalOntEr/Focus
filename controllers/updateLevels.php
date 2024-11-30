@@ -17,28 +17,30 @@ if($_SERVER["REQUEST_METHOD"] === "POST")
     try{
     if (is_array($levelsCreated)) {
         foreach ($levelsCreated as $index => $level) {
-            $AlreadyCreated = $db->queryFetchAll("CALL sp_Levels(5,?,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)",[
+            $AlreadyCreated = $db->queryFetchAll("CALL sp_Levels(5,?,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)",[
                 $level['levelId'] === '' ? NULL : $level['levelId']
             ]);
             
             if($level['levelId'] !== '')
             {
-            $db->queryFetch("CALL sp_Levels(2,?,NULL, NULL,?,?,?,?,?,NULL)",[
+            $db->queryFetch("CALL sp_Levels(2,?,NULL, NULL,?,?,?,?,?,NULL,?)",[
                 $level['levelId'],
                 $level['levelName'],
                 $level['levelNumber'],
                 $level['levelDescription'],
                 $level['levelCost'] === '' ? NULL : $level['levelCost'],
-                $level['levelCourse']
+                $level['levelCourse'],
+                $level['levelLink']
             ]);
         }
         else{
-            $db->queryInsert("CALL sp_Levels(1,NULL,NULL,NULL,?,?,?,?,?,NULL)",[
+            $db->queryInsert("CALL sp_Levels(1,NULL,NULL,NULL,?,?,?,?,?,NULL,?)",[
                 $level['levelName'],
                 $level['levelNumber'],
                 $level['levelDescription'],
                 $level['levelCost'] === '' ? NULL : $level['levelCost'],
-                $level['levelCourse']
+                $level['levelCourse'],
+                $level['levelLink']
             ]);
             }
         }
@@ -46,7 +48,7 @@ if($_SERVER["REQUEST_METHOD"] === "POST")
 
     if (is_array($deletedLevels)) {
     foreach ($deletedLevels as $level) {
-            $db->queryFetch("CALL sp_Levels(3, ?,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)",[
+            $db->queryFetch("CALL sp_Levels(3, ?,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)",[
                 $level
             ]);
         }

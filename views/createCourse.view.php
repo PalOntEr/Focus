@@ -155,6 +155,7 @@ fetch("/categories")
                         levelPreview.querySelector(".levelName").value = level.levelName;
                         levelPreview.querySelector(".levelDescription").value = level.levelDescription;
                         levelPreview.querySelector(".individualCost").value = level.levelCost;
+                        levelPreview.querySelector(".levelLink").value = level.link;
     
                         levelPreviewContainer.appendChild(levelPreview);
                         let paymentMethod = document.querySelector('input[name="payment_method"]:checked');
@@ -350,7 +351,8 @@ fetch("/categories")
             }
         });
     });
-
+    
+    const CreateButton = document.getElementById("createCourse");
     async function handleCourseCreationOrUpdate(isUpdating, courseId = null) {
     try {
         let title = document.querySelector('#title').value;
@@ -413,7 +415,10 @@ fetch("/categories")
         formData.append(`levelData[${index}][levelVideo]`, videoFiles[index].files[0]);
         formData.append(`levelData[${index}][levelFile]`, files[index].files[0]);
         });
-
+        CreateButton.value = "Please Wait";
+        CreateButton.textContent = "Please Wait";
+        CreateButton.disabled = true;
+        CreateButton.style.opacity = 0.8;
         if (!isUpdating) {
             // Create a new course
             const courseResponse = await fetch("/createCourse", {
@@ -436,7 +441,7 @@ fetch("/categories")
             levelFormData.append("levelDescription", level.querySelector('.levelDescription').value);
             levelFormData.append("levelCost", level.querySelector('.individualCost').value || null);
             levelFormData.append("CourseId", courseId);
-            
+            levelFormData.append("levelLink", level.querySelector(".levelLink").value);
             const videoFile = level.querySelector('.video').files[0];
             const file = level.querySelector('.file').files[0];
             
@@ -494,6 +499,8 @@ fetch("/categories")
                 LevelInfo.levelDescription = level.querySelector('.levelDescription').value;
                 LevelInfo.levelCost = level.querySelector('.individualCost').value;
                 LevelInfo.levelId = level.querySelector('.LevelId').id;
+                LevelInfo.levelLink = level.querySelector(".levelLink").value;
+                console.log(level.querySelector('.levelLink').value);
                 LevelInfo.levelCourse = <?=json_encode($courseId)?>;
                 LevelsCreated.push(LevelInfo);
             });
@@ -527,6 +534,11 @@ fetch("/categories")
             icon: 'success',
             title: '🎉',
             text: `Course ${isUpdating ? 'updated' : 'created'} successfully!`,
+        }).then(() => {
+            CreateButton.value = `${isUpdating ? 'Update' : 'Create'} Course`;
+            CreateButton.disabled = false;
+            CreateButton.textContent = `${isUpdating ? 'Update' : 'Create'} Course`;
+            CreateButton.style.opacity = 1;
         });
     } catch (error) {
         console.error("Error during course creation or update:", error);
@@ -535,6 +547,11 @@ fetch("/categories")
             title: '❌',
             text: `An error occurred while ${isUpdating ? 'updating' : 'creating'} the course.
             ${error}`,
+        }).then(() => {
+            CreateButton.value = `${isUpdating ? 'Update' : 'Create'} Course`;
+            CreateButton.disabled = false;
+            CreateButton.textContent = `${isUpdating ? 'Update' : 'Create'} Course`;
+            CreateButton.style.opacity = 1;
         });
     }
 }

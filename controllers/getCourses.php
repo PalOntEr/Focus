@@ -37,16 +37,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 $courseId,
                 $creationDate,
                 $modificationDate,
-                $categoryId,
-                $coursePrice,
-                $courseTitle,
-                $courseDescription,
-                $instructorId,
                 $deactivationDate,
+                $courseDescription,
+                $courseTitle,
                 $courseImage,
-                $getTopSellers,
-                $getTopRating,
-                $getUserRatedCourses
+                $categoryId,
+                $instructorId,
+                $coursePrice
             );
         }
 
@@ -54,7 +51,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             echo json_encode([
                 'status' => false,
                 'payload' => [
-                    'error' => 'No courses found'
+                    'error' => 'No courses found',
+                    "userid" => $instructorId
                 ]
             ]);
             return;
