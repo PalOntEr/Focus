@@ -15,7 +15,7 @@ if($_SERVER["REQUEST_METHOD"] === "POST")
     $courseId = $_POST['courseId'];
 
     try{
-        $LevelRef = $db->queryFetch("CALL sp_Levels(5, NULL, NULL,NULL,NULL,?, NULL,NULL, ?,NULL)",[
+        $LevelRef = $db->queryFetch("CALL sp_Levels(5, NULL, NULL,NULL,NULL,?, NULL,NULL, ?,NULL,NULL)",[
             $levelNumber,
             $courseId
         ]);
