@@ -156,49 +156,47 @@ require 'views/components/navbar.php';
 
     function GetCategories()
     {
-    fetch('/categories')
-    .then(response => response.json())
-    .then(data => {
-        const categoriesReportsBody = document.getElementById('categoriesReportsBody');
-
-        categoriesReportsBody.innerHTML = "";
-        
-        let i = 0;
-        data.payload.categories.forEach(category => {
-
-            const row = document.createElement('tr');
-                        row.classList.add(i % 2 === 0 ? 'bg-comp-1' : 'bg-comp-2', 'text-primary');
-        
-                        row.innerHTML = `
-                            <td>${category.categoryName}</td>
-                            <td class="py-2">${category.categoryDescription}</td>
-                            <td>${category.User}</td>
-                            <td>${category.Created}</td>
-                            <td>
-                            <button class="flex items-center h-full w-full justify-center" onclick="deleteCategory(${category.categoryId})">
-                            <img class="h-5 w-5 bg-color p-1 rounded-md" src="https://cdn-icons-png.flaticon.com/512/1017/1017530.png" alt="delete">
-                        </button></td>
-                        `;
-        
-                        categoriesReportsBody.appendChild(row);
-                        i++;
-        })
-    });
-    }
-    
-GetCategories();
-    fetch('/users')
+        fetch('/categories')
         .then(response => response.json())
         .then(data => {
-            console.log(data);
+            const categoriesReportsBody = document.getElementById('categoriesReportsBody');
+
+            categoriesReportsBody.innerHTML = "";
+            
+            let i = 0;
+            data.payload.categories.forEach(category => {
+
+                const row = document.createElement('tr');
+                            row.classList.add(i % 2 === 0 ? 'bg-comp-1' : 'bg-comp-2', 'text-primary');
+            
+                            row.innerHTML = `
+                                <td>${category.categoryName}</td>
+                                <td class="py-2">${category.categoryDescription}</td>
+                                <td>${category.User}</td>
+                                <td>${category.Created}</td>
+                                <td>
+                                <button class="flex items-center h-full w-full justify-center" onclick="deleteCategory(${category.categoryId})">
+                                <img class="h-5 w-5 bg-color p-1 rounded-md" src="https://cdn-icons-png.flaticon.com/512/1017/1017530.png" alt="delete">
+                            </button></td>
+                            `;
+            
+                            categoriesReportsBody.appendChild(row);
+                            i++;
+            })
+        });
+    }
+    
+    GetCategories();
+
+    fetch('/users/student/report')    
+        .then(response => response.json())
+        .then(data => {
             const studentsReportsBody = document.getElementById('studentsReportsBody');
-            const instructorsReportsBody = document.getElementById('instructorsReportsBody');
 
             studentsReportsBody.innerHTML = ''; // Clear existing rows
             instructorsReportsBody.innerHTML = ''; // Clear existing rows
 
             let i = 0;
-            let j = 0;
             
             data.payload.users.forEach(user => {
                 if (user.role === 'S') {
@@ -209,29 +207,13 @@ GetCategories();
                         <td>${user.email}</td>
                         <td class="py-2">${user.email}</td>
                         <td>${user.creationDate}</td>
-                        <td>${user.enrolledCourses ? user.enrolledCourses : '0%'}</td>
-                        <td>${user.completedCourses ? user.completedCourses : '0%'}</td>
+                        <td>${user.enrolledCourses ? user.enrolledCourses : '0'}</td>
+                        <td>${user.completedCourses ? user.completedCourses : '0'}%</td>
                         <td><input type="checkbox" class="status-checkbox" ${Math.random() > 0.5 ? 'checked' : ''}></td>
                     `;
     
                     studentsReportsBody.appendChild(row);
                     i++;
-                }
-                else if (user.role === 'I') {
-                    const row = document.createElement('tr');
-                    row.classList.add(j % 2 === 0 ? 'bg-comp-1' : 'bg-comp-2', 'text-primary');
-    
-                    row.innerHTML = `
-                        <td>${user.email}</td>
-                        <td class="py-2">${user.email}</td>
-                        <td>${user.creationDate}</td>
-                        <td>${user.createdCourses ? user.createdCourses : '0'}</td>
-                        <td>${user.earnings ? user.earnings : '$0'}</td>
-                        <td><input type="checkbox" class="status-checkbox" ${Math.random() > 0.5 ? 'checked' : ''}></td>
-                    `;
-    
-                    instructorsReportsBody.appendChild(row);
-                    j++;                    
                 }
             });
 
@@ -243,6 +225,57 @@ GetCategories();
                 `;
                 studentsReportsBody.appendChild(row);
             }
+
+            document.querySelectorAll('.status-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        new swal({
+                            icon: 'success',
+                            text: 'User Activated',
+                            title: '☝️🤓',
+                            confirmButtonText: 'OK'
+                        });
+                        return;
+                    } else {
+                        new swal({
+                            icon: 'success',
+                            text: 'User Deactivated',
+                            title: '☠️',
+                            confirmButtonText: 'OK'
+                        });
+                        return;
+                    }
+                });
+            });
+
+        })
+        .catch(error => console.error('Error fetching users:', error));
+
+    fetch('users/instructor/report')
+        .then(response => response.json())
+        .then(data => {
+            const instructorsReportsBody = document.getElementById('instructorsReportsBody');
+            let j = 0;
+            instructorsReportsBody.innerHTML = ''; // Clear existing rows
+            
+            data.payload.users.forEach(user => {
+                if (user.role === 'I') {
+                    const row = document.createElement('tr');
+                    row.classList.add(j % 2 === 0 ? 'bg-comp-1' : 'bg-comp-2', 'text-primary');
+    
+                    row.innerHTML = `
+                        <td>${user.email}</td>
+                        <td class="py-2">${user.email}</td>
+                        <td>${user.creationDate}</td>
+                        <td>${user.createdCourses ? user.createdCourses : '0'}</td>
+                        <td>$${user.earnings ? user.earnings : '0'}</td>
+                        <td><input type="checkbox" class="status-checkbox" ${Math.random() > 0.5 ? 'checked' : ''}></td>
+                    `;
+    
+                    instructorsReportsBody.appendChild(row);
+                    j++;  
+                }
+            });
 
             if(j === 0) {
                 const row = document.createElement('tr');
@@ -274,9 +307,8 @@ GetCategories();
                     }
                 });
             });
-
-        })
-        .catch(error => console.error('Error fetching users:', error));
+            
+        });
 
     document.getElementById('userTypeFilter').addEventListener('change', function() {
         const studentTable = document.getElementById('UserReports-Table-Container');
