@@ -2,10 +2,11 @@
 
 header('Content-Type: application/json');
 
+require __DIR__.'/../models/entities/courses.php';
+$courseModel = new CourseModel();
+
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
-    require __DIR__.'/../models/entities/courses.php';
-    $courseModel = new CourseModel();
 
     $courseId = $_GET['course_id'] ?? null;
     $creationDate = isset($_GET['creation_date']) ? urldecode($_GET['creation_date']) : null;

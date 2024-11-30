@@ -1,7 +1,7 @@
 <?php
 
 
-require __DIR__.'/../../config/db.php';
+require_once __DIR__.'/../../config/db.php';
 
 class UserModel {
     private $db;
@@ -22,12 +22,16 @@ class UserModel {
     }
 
     public function getUserByEmail($email) {
+        $user = $this->db->queryFetch("CALL sp_Users (5, NULL, NULL, NULL, NULL, ?, NULL, NULL, NULL, NULL, NULL, NULL, NULL)", [
+            $email
+        ]);
+        return $user;
+    }
+
+    public function loginUserByEmail($email) {
         $user = $this->db->queryFetch("CALL sp_Users (4, NULL, NULL, NULL, NULL, ?, NULL, NULL, NULL, NULL, NULL, NULL, NULL)", [
             $email
         ]);
-        if ($user && isset($user['profilePicture'])) {
-            $user['profilePicture'] = base64_encode($user['profilePicture']);
-        }
         return $user;
     }
 
