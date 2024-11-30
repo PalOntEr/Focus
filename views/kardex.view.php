@@ -73,13 +73,22 @@ require 'views/components/navbar.php';
     const { PDFDocument, StandardFonts, rgb } = PDFLib;
 
     async function modifyAndDownloadPdf(url,CourseName,user) {
-    // Load an existing PDF
-    const existingPdfBytes = await fetch(url).then((res) => res.arrayBuffer());
-    const pdfDoc = await PDFDocument.load(existingPdfBytes);
+        // Get the first page and modify it
+        const existingPdfBytes = await fetch(url).then((res) => res.arrayBuffer());
+        const pdfDoc = await PDFDocument.load(existingPdfBytes);
+        const pages = pdfDoc.getPages();
+        const firstPage = pages[0];
+        // Load an existing PDF
 
-    // Get the first page and modify it
-    const pages = pdfDoc.getPages();
-    const firstPage = pages[0];
+        const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+        const pageWidth = firstPage.getWidth();
+        const pageHeight = firstPage.getHeight();
+        
+        // Get the width of the text at the specified size
+        const textWidth = font.widthOfTextAtSize(CourseName, 50);
+        
+        const xPosition = (pageWidth - textWidth) / 2;
+        
     firstPage.drawText(user, {
         x: 330,
         y: 320,
@@ -88,7 +97,7 @@ require 'views/components/navbar.php';
     });
 
     firstPage.drawText(CourseName, {
-        x: 215,
+        x: xPosition,
         y: 205,
         size: 50,
         color: rgb(0,0,0),
