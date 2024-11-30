@@ -21,8 +21,8 @@ if($_SERVER["REQUEST_METHOD"] === "POST")
                 $level['levelId'] === '' ? NULL : $level['levelId']
             ]);
             
-        if(!($level['levelId'] !== ''))
-        {
+            if($level['levelId'] !== '')
+            {
             $db->queryFetch("CALL sp_Levels(2,?,NULL, NULL,?,?,?,?,?,NULL)",[
                 $level['levelId'],
                 $level['levelName'],
