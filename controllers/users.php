@@ -2,6 +2,9 @@
 
 header('Content-Type: application/json');
 
+require __DIR__.'/../models/entities/users.php';
+$userModel = new UserModel();
+
 // Get all users as a JSON object
 if($_SERVER['REQUEST_METHOD'] == 'GET') {
 
@@ -12,26 +15,14 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
         $password = password_hash($password, PASSWORD_DEFAULT);
     }
 
-    require __DIR__.'/../config/db.php';
-    $config = require __DIR__.'/../config/config.php';
-
-    $db = new Database($config['database']);
-
     $result = true;
 
     try {
         if($email && $password) {
-            $users = $db->queryFetch("CALL sp_Users (4, NULL, NULL, NULL, NULL, ?, ?, NULL, NULL, NULL, NULL, NULL, NULL)", [
-                $email,
-                $password
-            ]);
-            $_SESSION['user'] = $user;
-        } 
-        // else if($user) {
-        //     $users = $db->queryFetchAll("CALL sp_Users (5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL)", []);
-        // } 
-        else {
-            $users = $db->queryFetchAll("CALL sp_Users (5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL)", []);
+            $users = $userModel->getUserByEmailAndPassword($email, $password);
+            $_SESSION['user'] = $users;
+        } else {
+            $users = $userModel->getAllUsers();
         }
     }
     catch (PDOException $e) {
@@ -40,7 +31,12 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
     }
 
     if($result) {
-        
+        // foreach ($users as &$user) {
+        //     if (isset($user['profilePicture'])) {
+        //         $user['profilePicture'] = base64_encode($user['profilePicture']);
+        //     }
+        // }
+
         echo json_encode([
             'status' => true,
             'payload' => [
@@ -71,7 +67,6 @@ else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (!isset($_POST['gender'])) $missingFields[] = 'gender';
     if (!isset($_POST['isUpdating'])) $missingFields[] = 'isUpdating';
 
-
     if (!empty($missingFields)) {
         http_response_code(400);
         echo json_encode([
@@ -93,90 +88,46 @@ else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $gender = $_POST['gender'];
     $isUpdating = $_POST['isUpdating'];
 
-    
     $profilePicture = file_get_contents($_FILES['profilePicture']["tmp_name"]);
-
-
-    require __DIR__.'/../config/db.php';
-    $config = require __DIR__.'/../config/config.php';
-
-    $db = new Database($config['database']);
 
     $result = true;
 
-    
     try {
-        
-        if($isUpdating == "false")
-        {
+        if ($isUpdating == "false") {
             if ($password) {
-            $password = password_hash($password, PASSWORD_DEFAULT);
+                $password = password_hash($password, PASSWORD_DEFAULT);
             }
-            $db->queryInsert("CALL sp_Users (1, NULL, 'A', ?, ?, ?, ?, NULL, NULL, ?, ?, ?, ?)", [
-                $username,
-                $fullName,
-                $email,
-                $password,
-                $role,
-                $birthdate,
-                $profilePicture,
-                $gender
-            ]);
-            
-            $user = $db->queryFetch("CALL sp_Users (4, NULL, NULL, NULL, NULL, ?, NULL, NULL, NULL, NULL, NULL, NULL, NULL)", [
-                    $email
-            ]);
-            $user['profilePicture'] = base64_encode($user['profilePicture']);
+            $userModel->createUser($username, $fullName, $email, $password, $role, $birthdate, $profilePicture, $gender);
+            $user = $userModel->getUserByEmail($email);
+            // $user['profilePicture'] = base64_encode($user['profilePicture']);
+        } else {
+            $user = $userModel->getUserByEmail($email);
+            if ($user && password_verify($password, $user['password'])) {
+                if ($password) {
+                    $password = password_hash($password, PASSWORD_DEFAULT);
+                }
+                $userModel->updateUser($user["userId"], $username, $fullName, $email, $password, $role, $birthdate, $profilePicture, $gender);
+                $user = $userModel->getUserByEmail($email);
+                // $user['profilePicture'] = base64_encode($user['profilePicture']);
+            }
         }
-        else
-        {
-            
-           $user = $db->queryFetch("CALL sp_Users (5, NULL, NULL, NULL, NULL, ?, NULL, NULL, NULL, NULL, NULL, NULL, NULL)", [
-               $email
-           ]);
-
-           if ($user && password_verify($password, $user['password'])){
-               if ($password) {
-                   $password = password_hash($password, PASSWORD_DEFAULT);
-               }
-               $db->queryFetch("CALL sp_Users (2, ?, 'A', ?, ?, ?, ?, NULL, NULL, ?, ?, ?, ?)", [
-                   $user["userId"],
-                   $username,
-                   $fullName,
-                   $email,
-                   $password,
-                   $role,
-                   $birthdate,
-                   $profilePicture,
-                   $gender
-               ]);
-
-               $user = $db->queryFetch("CALL sp_Users (4, NULL, NULL, NULL, NULL, ?, NULL, NULL, NULL, NULL, NULL, NULL, NULL)", [
-                $email
-                ]);
-               $user['profilePicture'] = base64_encode($user['profilePicture']);
-           }
-       
-        }
-        
-    }
-    catch (PDOException $e) {
+    } catch (PDOException $e) {
         $result = false;
         $exception = $e;
     }
 
-    if($result) {
-            $_SESSION["user"] = [
-                "userId" => $user["userId"],
-                "username" => $username,
-                "fullName" => $fullName,
-                "email" => $email,
-                "role" => $role,
-                "birthdate" => $birthdate,
-                "profilePicture" => $user['profilePicture'],
-                "gender" => $gender,
-                "creationDate" => $user['creationDate']
-            ];
+    if ($result) {
+        $_SESSION["user"] = [
+            "userId" => $user["userId"],
+            "username" => $username,
+            "fullName" => $fullName,
+            "email" => $email,
+            "role" => $role,
+            "birthdate" => $birthdate,
+            "profilePicture" => $user['profilePicture'],
+            "gender" => $gender,
+            "creationDate" => $user['creationDate']
+        ];
 
         echo json_encode([
             'status' => true,
@@ -185,7 +136,6 @@ else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             ]
         ]);
         return;
-
     } else {
         echo json_encode([
             'status' => false,

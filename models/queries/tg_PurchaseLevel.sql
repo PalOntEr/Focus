@@ -23,3 +23,32 @@ END;
 //
 
 DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER tg_UpdateKardex
+AFTER UPDATE ON PurchasedLevels
+FOR EACH ROW
+BEGIN
+    DECLARE totalLevels INT;
+    DECLARE completedLevels INT;
+
+    SELECT totalLevels INTO totalLevels
+    FROM levelsPerCourse WHERE courseId = (SELECT courseId FROM Levels WHERE levelId = NEW.levelId);
+
+    SELECT totalCoursedLevels INTO completedLevels
+    FROM LevelsCoursedPerStudent
+    WHERE userId = NEW.userId AND courseId = (SELECT courseId FROM Levels WHERE levelId = NEW.levelId);
+
+    IF completedLevels = totalLevels THEN
+        UPDATE Kardex
+        SET completionDate = NOW(), accessDate = NOW()
+        WHERE userId = NEW.userId AND courseId = (SELECT courseId FROM Levels WHERE levelId = NEW.levelId);
+    ELSE
+        UPDATE Kardex
+        SET accessDate = NOW()
+        WHERE userId = NEW.userId AND courseId = (SELECT courseId FROM Levels WHERE levelId = NEW.levelId);
+    END IF;
+END;
+//
+
+DELIMITER ;

@@ -76,7 +76,7 @@ BEGIN
             END;
         
         WHEN 5 THEN
-            SELECT userId, username, fullName, email, role, birthdate, password, gender, creationDate
+            SELECT userId, username, fullName, email, role, birthdate, password, gender, creationDate, profilePicture
             FROM Users
             WHERE userId = IFNULL(sp_userId, userId)
             AND status = IFNULL(sp_status, status)
