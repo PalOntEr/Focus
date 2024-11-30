@@ -1,3 +1,4 @@
+DROP DATABASE db_pcwi;
 CREATE DATABASE IF NOT EXISTS db_pcwi;
 
 USE db_pcwi;
