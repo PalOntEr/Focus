@@ -139,7 +139,7 @@ document.addEventListener("DOMContentLoaded", async ()=>{
                 levelPreview.querySelector(".LevelName").textContent = level.levelName;
                 levelPreview.querySelector(".CourseImage").src = CourseImage;
                 levelPreview.querySelector(".Play").disabled = true;
-
+                
                 const exists = PurchasedLevels.some(Purchasedlevel => Purchasedlevel.levelId === level.levelId);
                 if(exists)
                 {
