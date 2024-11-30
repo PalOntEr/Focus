@@ -26,7 +26,6 @@ SELECT
 FROM 
     Courses c
     LEFT JOIN Purchases p ON c.courseId = p.courseId
-    LEFT JOIN vw_levelspurchasedbycourseperstudent l ON c.courseId = l.courseId  
-    LEFT JOIN PurchasedLevels pl ON (p.userId = pl.userId) AND (p.levelId = IFNULL(pl.levelId, p.levelId))
+    LEFT JOIN vw_levelspurchasedbycourseperstudent l ON p.userId = l.userId and p.courseId = l.courseId
 GROUP BY 
-    c.courseId, c.courseTitle, c.deactivationDate;
+    c.courseId;

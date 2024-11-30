@@ -13,8 +13,11 @@ BEGIN
         VALUES (NEW.levelId, NEW.userId, FALSE);
     END IF;
     
-    INSERT INTO Kardex (userId, courseId)
-    VALUES (NEW.userId, NEW.courseId);
+    
+    IF NOT EXISTS (SELECT 1 FROM Kardex WHERE userId = NEW.userId AND courseId = NEW.courseId) THEN
+        INSERT INTO Kardex (userId, courseId)
+        VALUES (NEW.userId, NEW.courseId);
+    END IF;
 END;
 
 //
