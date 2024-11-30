@@ -5,7 +5,7 @@ require 'views/components/navbar.php';
 <div class="container mx-auto">
     <div id="Kardex-Title-Container" class="flex flex-row place-content-between">
         <div>
-            <h2 class="text-4xl text-center md:text-left text-comp-1 font-semibold"><?= $_SESSION['user']['username'] ?></h2>
+            <h2 id="User" class="text-4xl text-center md:text-left text-comp-1 font-semibold"><?= $_SESSION['user']['username'] ?></h2>
             <h1 class="text-8xl text-primary font-extrabold">Kardex</h1>
         </div>
         <div class="self-end text-primary">
@@ -68,7 +68,59 @@ require 'views/components/navbar.php';
         </div>
     </div>
 </div>
+
 <script>
+    const { PDFDocument, StandardFonts, rgb } = PDFLib;
+
+    async function modifyAndDownloadPdf(url,CourseName,user) {
+    // Load an existing PDF
+    const existingPdfBytes = await fetch(url).then((res) => res.arrayBuffer());
+    const pdfDoc = await PDFDocument.load(existingPdfBytes);
+
+    // Get the first page and modify it
+    const pages = pdfDoc.getPages();
+    const firstPage = pages[0];
+    firstPage.drawText(user, {
+        x: 330,
+        y: 320,
+        size: 35,
+        color: rgb(0,0,0),
+    });
+
+    firstPage.drawText(CourseName, {
+        x: 215,
+        y: 205,
+        size: 50,
+        color: rgb(0,0,0),
+    });
+    const date = new Date();
+
+    const year = date.getFullYear();
+const month = date.getMonth() + 1;  // Months are zero-indexed
+const day = date.getDate();
+    firstPage.drawText(day + "/" + month + "/" + year, {
+        x: 500,
+        y: 75,
+        size: 20,
+        color: rgb(0,0,0),
+    });
+
+    // Save the modified PDF
+    const pdfBytes = await pdfDoc.save();
+
+    // Create a Blob from the PDF bytes
+    const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+
+    // Create a download link and trigger the download
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'modified.pdf'; // Set the desired file name
+    link.click();
+
+    // Clean up the object URL
+    URL.revokeObjectURL(link.href);
+}
+
     const categorySelect = document.getElementById('categorySelect');   
     const DateStart = document.getElementById('DateStart'); 
     const DateFinish = document.getElementById('DateFinish');
@@ -76,7 +128,9 @@ require 'views/components/navbar.php';
     const Finished = document.getElementById('Finished');
     let kardexReport = {};
 
-    function downloadDiploma() {
+    function downloadDiploma(CourseName,user) {
+        
+        modifyAndDownloadPdf('public/images/Certificate.pdf',CourseName,user);
         swal({
             title: 'Diploma downloaded',
             icon: 'success',
@@ -106,7 +160,7 @@ require 'views/components/navbar.php';
     document.addEventListener('DOMContentLoaded', () => {
         getKardexReport();
     });
-
+    
     async function getKardexReport() {
         try {
             let queryParams = [];
@@ -153,18 +207,20 @@ require 'views/components/navbar.php';
             `;
             kardexTable.appendChild(row);
         } else {
+            const userName = document.getElementById("User").textContent;
+            console.log(userName);
             reports.forEach((report, index) => {
                 const row = document.createElement('tr');
-                row.classList.add(index % 2 === 0 ? 'bg-comp-1' : 'bg-comp-2', 'text-primary');
+                row.classList.add(index % 2 === 0 ? 'bg-comp-1' : 'bg-comp-2', 'text-primary','report');
                 row.innerHTML = `
-                    <td class="py-2">${report.courseTitle}</td>
+                    <td class="py-2 Title">${report.courseTitle}</td>
                     <td>${report.percentageCompleted}%</td>
                     <td>${report.startDate.split(' ')[0]}</td>
                     <td>${report.endDate}</td>
                     <td>${report.accessDate}</td>
                     <td><input type="checkbox" ${report.isCompleted ? 'checked' : ''} disabled></td>
                     <td>
-                        <a class="justify-center flex ${report.isCompleted ? '' : 'pointer-events-none opacity-50'}" onclick="downloadDiploma()" href="${report.isCompleted ? '/diploma' : '#'}" ${report.isCompleted ? 'download' : ''}>
+                        <a class="Download justify-center flex ${report.isCompleted ? '' : 'pointer-events-none opacity-50'}" onclick="downloadDiploma('${report.courseTitle}','${userName}')" href="#">
                             <img class="h-5 bg-color p-1 rounded-md" src="https://cdn-icons-png.flaticon.com/512/3580/3580085.png" alt="">
                         </a>
                     </td>
@@ -210,5 +266,5 @@ require 'views/components/navbar.php';
         }
         getKardexReport();
     });
-
 </script>
+
