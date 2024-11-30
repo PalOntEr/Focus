@@ -9,7 +9,7 @@ require 'views/components/navbar.php';
             <h1 class="text-8xl text-primary font-extrabold">Kardex</h1>
         </div>
         <div class="self-end text-primary">
-            <p>Enrolled Courses: 3</p>
+            <p id="EnrolledCourses"></p>
         </div>
     </div>
 
@@ -195,6 +195,7 @@ const day = date.getDate();
                     if (Finished.value === 'true') return course.isCompleted;
                     if (Finished.value === 'false') return !course.isCompleted;
                 });
+                document.getElementById("EnrolledCourses").textContent = "Enrolled Courses: " +  reports.length;
                 updateKardexTable(reports); 
             } else {
                 console.error(data.payload.error);
