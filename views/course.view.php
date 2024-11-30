@@ -26,13 +26,13 @@ $usertype = $_SESSION['user']['role'] ?? 'guest';
 
             Whether you are a beginner looking to start your programming journey or an experienced developer wanting to enhance your skills, this course will provide you with the knowledge and tools needed to succeed in PHP development.
         </div>
+        <div id="EditCourse">
         <?php if ($usertype === 'I'): ?>
-                <div id="EditCourse">
                 <button class="delete-button" onclick="location.href='/createCourse?update=true&courseId=<?= $_GET['course_id'] ?>'">
                     <img class="h-5 w-5 bg-color p-1 rounded-full" src="https://cdn-icons-png.flaticon.com/512/1042/1042474.png" alt="delete">
                 </button>
-                </div>
-            <?php endif; ?>
+                <?php endif; ?>
+            </div>
     </div>
     <div class="w-full h-1/3 flex flex-col items-center sm:items-start mx-4 sm:mx-0">
         <h1 class="text-4xl font-bold text-primary">LEVELS</h1>
