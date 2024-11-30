@@ -1,7 +1,10 @@
 <?php
 
 require __DIR__.'/../models/entities/levels.php';
+require __DIR__.'/../models/entities/contents.php';
+
 $levelModel = new LevelModel();
+$contentModel = new ContentsModel();
 
     if($_SERVER['REQUEST_METHOD'] === 'GET')
     {
@@ -130,12 +133,12 @@ $levelModel = new LevelModel();
 
     if (move_uploaded_file($_FILES['levelVideo']['tmp_name'], $targetFilePath)) {
         try{
-            $db->queryInsert("CALL sp_Contents(1,NULL,?,?,?,?)",[
+            $contentModel->insertContent(
                 base64_encode($targetFilePath),
                 $_FILES['levelVideo']['name'],
                 ".mp4",
                 $levelInfo["levelId"]
-            ]);
+            );
             
         }catch(PDOException $e)
         {
@@ -149,12 +152,12 @@ $levelModel = new LevelModel();
     }
 
     try{
-        $db->queryInsert("CALL sp_Contents(1,NULL,?,?,?,?)",[
+        $contentModel->insertContent(
             $file,
             $_FILES['levelFile']['name'],
             $fileType['type'],
             $levelInfo["levelId"]
-        ]);
+        );
         
     }catch(PDOException $e)
     {

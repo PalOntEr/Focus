@@ -27,7 +27,7 @@ BEGIN
         WHEN 4 THEN SELECT contentId, file,name, mimeType, levelId
                     FROM Contents
                     WHERE levelId = p_levelId;
-    WHEN 5 THEN UPDATE Contents
+        WHEN 5 THEN UPDATE Contents
                     SET file = p_file,
                         mimeType = p_mimeType,
                         name = p_name

@@ -2,13 +2,11 @@
 
 header('Content-Type: application/json');
 
+require __DIR__.'/../models/entities/messages.php';
+$messageModel = new MessagesModel();
+
 // Get all messages as a JSON object
 if($_SERVER['REQUEST_METHOD'] == 'GET') {
-
-    require __DIR__.'/../config/db.php';
-    $config = require __DIR__.'/../config/config.php';
-
-    $db = new Database($config['database']);
 
     $result = true;
 
@@ -18,10 +16,10 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
 
     if ($getChat) {
         try {
-            $chats = $db->queryFetchAll("CALL sp_Chats(1, ?, ?)", [
+            $chats = $messageModel->getChats(
                 ($getChat === 'true' ? $senderId : $receiverId),
                 ($getChat === 'true' ? $receiverId : $senderId)
-            ]);
+            );
             echo json_encode([
                 'status' => true,
                 'payload' => [
@@ -36,10 +34,10 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
     }
 
     try {
-        $messages = $db->queryFetchAll("CALL sp_Messages(2, NULL, ?, ?, NULL)", [
+        $messages = $messageModel->getMessagesFromTo(
             $senderId,
             $receiverId
-        ]);
+        );
     } catch (PDOException $e) {
         $result = false;
         $exception = $e;
@@ -79,19 +77,10 @@ else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         return;
     }
 
-    require __DIR__.'/../config/db.php';
-    $config = require __DIR__.'/../config/config.php';
-
-    $db = new Database($config['database']);
-
     $result = true;
 
     try {
-        $db->queryInsert("CALL sp_Messages(1, NULL, ?, ?, ?)", [
-            $senderId,
-            $receiverId,
-            $message
-        ]);
+        $message = $messageModel->sendMessage($senderId, $receiverId, $message);
     } catch (PDOException $e) {
         $result = false;
         $exception = $e;

@@ -1,19 +1,17 @@
 <?php
 
+header('Content-Type: application/json');
+
+require __DIR__.'/../models/entities/contents.php';
+$contentsModel = new ContentsModel();
+
 if($_SERVER['REQUEST_METHOD'] === "GET")
 {
-            
-    require __DIR__.'/../config/db.php';
-    $config = require __DIR__.'/../config/config.php';
-
-    $db = new Database($config['database']);
 
     $levelId = $_GET['level_id'] ?? null;
 
     try{
-        $contents = $db->queryFetchAll("CALL sp_Contents(4, NULL,NULL,NULL, NULL, ?)", [
-            $levelId
-        ]);
+        $contents = $contentsModel->getContentsOfLevel($levelId);   
 
             foreach ($contents as &$content) {
                 if (isset($content['file'])) {
