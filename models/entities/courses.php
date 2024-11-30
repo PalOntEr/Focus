@@ -1,6 +1,6 @@
 <?php
 
-require __DIR__.'/../../config/db.php';
+require_once __DIR__.'/../../config/db.php';
 
 class CourseModel {
     private $db;
@@ -9,6 +9,13 @@ class CourseModel {
         $config = require __DIR__.'/../../config/config.php';
         $this->db = new Database($config['database']);
     }
+
+    public function getCourseById($CourseId) {
+        $course = $this->db->queryFetch("CALL sp_Course(5,?,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)",[
+            $CourseId
+        ]);
+        return $course;
+    }   
 
     public function getAllCourses() {
         $courses = $this->db->queryFetchAll("CALL sp_Course(4, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL)");

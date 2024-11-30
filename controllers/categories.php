@@ -1,5 +1,9 @@
 <?php
 
+require __DIR__.'/../models/entities/categories.php';
+
+$categoriesModel = new CategoriesModel();
+
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
 
     header('Content-Type: application/json');
@@ -23,19 +27,10 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
     $desc = $_POST['categoryDescription'];
     $creatorId = $_POST['userId'];
 
-    require __DIR__.'/../config/db.php';
-    $config = require __DIR__.'/../config/config.php';
-
-    $db = new Database($config['database']);
-
     $result = true;
 
     try {
-        $categories = $db->queryFetch("CALL sp_Categories (1,NULL, ?, ?,?)", [
-            $name,
-            $desc,
-            $creatorId
-        ]);
+        $categories = $categoriesModel->insertCategory($name, $desc, $creatorId);
     }
     catch (PDOException $e) {
         $result = false;
@@ -69,16 +64,10 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 }
 
 if($_SERVER['REQUEST_METHOD'] === 'GET'){
-    
-    require __DIR__.'/../config/db.php';
-    $config = require __DIR__.'/../config/config.php';
-
-    $db = new Database($config['database']);
-
     $result = true;
 
     try{
-        $categories = $db->queryFetchAll("CALL sp_Categories(6,NULL,NULL,NULL,NULL)");
+        $categories = $categoriesModel->getCategories();
     }
     catch(PDOException $e)
     {

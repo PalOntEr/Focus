@@ -1,4 +1,9 @@
 <?php
+
+require __DIR__.'/../models/entities/comments.php';
+
+$commentModel = new CommentsModel();
+
 if($_SERVER["REQUEST_METHOD"] === "POST")
 {
 
@@ -6,19 +11,9 @@ if($_SERVER["REQUEST_METHOD"] === "POST")
     $userId = $_POST['userId'] ?? null;
     $deletionReason = $_POST['deletionReason'] ?? null;
 
-
-    require __DIR__.'/../config/db.php';
-    $config = require __DIR__.'/../config/config.php';
-
-    $db = new Database($config['database']);
-
     $result = true;
     try{
-        $db->queryFetch("CALL sp_Comments(3,?,NULL,NULL,?,?,NULL,NULL)",[
-            $commentId,
-            $deletionReason,
-            $userId
-        ]);
+        $commentModel->removeComment($commentId, $deletionReason, $userId);
     }
     catch(PDOException $e)
     {

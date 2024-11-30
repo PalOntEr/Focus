@@ -20,6 +20,12 @@ class LevelModel {
         ]);
     }
 
+    public function getLevelByCourseId($CourseId) {
+        return $this->db->queryFetchAll("CALL sp_Levels(5,NULL,NULL,NULL,NULL,NULL,NULL,NULL,?)",[
+            $CourseId
+        ]);
+    }
+
     public function getLevelsWithFilters($levelId = NULL, $creationDate = NULL, $modificationDate = NULL, $levelName = NULL, $levelNumber = NULL, $levelDescription = NULL, $levelCost = NULL, $courseId = NULL, $active = NULL) {
         return $this->db->queryFetchAll("CALL sp_Levels(5, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [
             $levelId,
