@@ -33,6 +33,10 @@ require 'views/components/header.php';
     </div>
 </div>
 <script>
+
+    localStorage.clear();
+    sessionStorage.clear();
+
     const inputs = [
         document.querySelector('#user'),
         document.querySelector('#password'),
