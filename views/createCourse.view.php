@@ -48,7 +48,7 @@
                 <div>
                     Active
                 </div>
-                <input id="active" type="checkbox" class="rounded-md p-1 bg-comp-2 text-comp-1" <?= $isUpdating ? 'checked' : ''; ?>>
+                <input id="active" type="checkbox" class="rounded-md p-1 bg-comp-2 text-comp-1">
             </div>
         <?php endif; ?>
     </div>
@@ -114,6 +114,7 @@ fetch("/categories")
                 
                 document.getElementById("title").value = courseInfo.courseTitle;
                 document.getElementById("desc").value = courseInfo.courseDescription;
+                courseInfo.deactivationDate === null ? document.getElementById("active").checked = true : document.getElementById("active").checked = false;
                 const img = document.createElement('img');
                 img.src = "data:image/*;base64," + courseInfo.courseImage;
                 img.classList.add('w-full', 'h-full', 'object-cover', 'rounded-lg');
@@ -350,7 +351,8 @@ fetch("/categories")
         });
     });
 
-    document.querySelector('#createCourse').addEventListener('click', function(event) {
+    async function handleCourseCreationOrUpdate(isUpdating, courseId = null) {
+    try {
         let title = document.querySelector('#title').value;
         let description = document.querySelector('#desc').value;
         let category = document.querySelector('#category').value;
@@ -358,151 +360,133 @@ fetch("/categories")
         let oneTimeAmount = document.querySelector('input[name="one_time_amount"]').value;
         let levelId = document.querySelectorAll('.Level');
         let CoursePhoto = document.querySelector("#photo");
-
+        
+        // Validation
         if (!title || !description || !category || !paymentMethod) {
             swal({
                 icon: 'error',
                 title: '☠️',
                 text: 'Please fill out all required fields.',
             });
-            event.preventDefault();
             return;
         }
-
+        
         if (paymentMethod.value === 'one_time' && !oneTimeAmount) {
             swal({
                 icon: 'error',
                 title: '☠️',
                 text: 'Please enter the amount for one-time payment.',
             });
-            event.preventDefault();
             return;
-        }
-        else if (paymentMethod.value === 'level_based') {
+        } else if (paymentMethod.value === 'level_based') {
             let levelCosts = document.querySelectorAll('.individualCost');
-            levelCosts.forEach((cost) => {
+            for (let cost of levelCosts) {
                 if (!cost.value) {
                     swal({
                         icon: 'error',
                         title: '☠️',
                         text: 'Please fill out all level costs.',
                     });
-                    event.preventDefault();
                     return;
                 }
-            });
-        }
-
-
-        // for (let i = 0; i < levelNames.length; i++) {
-        //     if (!levelNames[i].value || !levelDescriptions[i].value) {
-        //         swal({
-        //             icon: 'error',
-        //             title: '☠️',
-        //             text: 'Please fill out all level names and descriptions.',
-        //         });
-        //         event.preventDefault();
-        //         return; 
-        //     }
-        // }
-
-
-        const formData = new FormData();
-
-        formData.append("title",title);
-        formData.append("description",description);
-        formData.append("category",category);
-        formData.append("courseImage", document.getElementById("photo").files[0])
-
-            if(paymentMethod.value === 'one_time')
-            {
-                formData.append("oneTimeAmount",oneTimeAmount);
             }
-            else{
-                formData.append("oneTimeAmount", null);
-            }
-
-        const levelData = [];
-
-        levelId.forEach((level, index) => {
-            formData.append(`levelData[${index}][levelVideo]`, level.querySelector('.video').files[0]);
-            formData.append(`levelData[${index}][levelFile]`, level.querySelector('.file').files[0]);
-        });
-
-    
-        if(!<?= json_encode($isUpdating) ?>)
-        {
-        fetch("/createCourse", {
-            method:"POST",
-            body: formData
-            }).then(response => response.json())
-            .then(data => {
-            const courseId = data.payload.courseId;
-            const levelData = [];
-            levelId.forEach((level) => {
-                let LevelInfo = {};
-                LevelInfo.levelNumber = level.id;
-                LevelInfo.levelName = level.querySelector('.levelName').value;
-                LevelInfo.levelDescription = level.querySelector('.levelDescription').value;
-                LevelInfo.levelVideo = level.querySelector('.video').files[0];
-                LevelInfo.levelFile = level.querySelector('.file').files[0];
-                LevelInfo.levelCost = level.querySelector('.individualCost').value;
-            let formData = new FormData();
-    
-        // Append text fields to FormData
-        formData.append("levelNumber", LevelInfo.levelNumber);
-        formData.append("levelName", LevelInfo.levelName);
-        formData.append("levelDescription", LevelInfo.levelDescription);
-        formData.append("levelCost", LevelInfo.levelCost ? LevelInfo.levelCost : null);
-        formData.append("CourseId", courseId);
-        // Append files to FormData
-        formData.append("levelVideo", LevelInfo.levelVideo);  // Assuming only one file
-        formData.append("levelFile", LevelInfo.levelFile);    // Assuming only one file
-    
-    
-        fetch("/level",{
-        method:"POST",
-        body: formData
-                }).then(response => response.json())
-                .then(data => {
-                    swal({
-                        icon: 'success',
-                        title: '🎉',
-                        text: 'Course <?= $isUpdating ? 'updated' : 'created'; ?> successfully!',
-                    });
-                });
-            });
-        });
-    }
-    else
-    {
-        const formData = new FormData();
-
-        formData.append("title",title);
-        formData.append("description",description);
-        formData.append("category",category);
-        formData.append("courseImage", document.getElementById("photo").files[0])
-
-        console.log(paymentMethod.value);
-        if(paymentMethod.value === 'one_time')
-        {
-            formData.append("oneTimeAmount",oneTimeAmount);
         }
-        else{
+        
+        let formData = new FormData();
+        formData.append("title", title);
+        formData.append("description", description);
+        formData.append("category", category);
+        if (CoursePhoto.files.length > 0) {
+            formData.append("courseImage", CoursePhoto.files[0]);
+        }
+        
+        if (paymentMethod.value === 'one_time') {
+            formData.append("oneTimeAmount", oneTimeAmount);
+        } else {
             formData.append("oneTimeAmount", null);
         }
         
-        let LevelsCreated = [];
-        formData.append("course_Id", <?=$courseId?>);
-        fetch("/courses/patch",{
-            method:"POST",
-            body:formData
-        }).then(response => response.json())
-        .then(data => {
-            console.log(data.status);
-            if (data.status === true)
-            {
-                let formData = new FormData();
+        const videoFiles = document.querySelectorAll('.video');
+        const files = document.querySelectorAll('.file');
+
+        levelId.forEach((level, index) => {
+        formData.append(`levelData[${index}][levelVideo]`, videoFiles[index].files[0]);
+        formData.append(`levelData[${index}][levelFile]`, files[index].files[0]);
+        });
+
+        if (!isUpdating) {
+            // Create a new course
+            const courseResponse = await fetch("/createCourse", {
+                method: "POST",
+                body: formData
+            });
+            const courseData = await courseResponse.json();
+            
+            if (!courseData.payload.courseId) {
+                throw new Error(courseData.payload.error);
+            }
+            
+            courseId = courseData.payload.courseId;
+            
+            for (let level of levelId) {
+            const levelFormData = new FormData();
+            
+            levelFormData.append("levelNumber", level.id);
+            levelFormData.append("levelName", level.querySelector('.levelName').value);
+            levelFormData.append("levelDescription", level.querySelector('.levelDescription').value);
+            levelFormData.append("levelCost", level.querySelector('.individualCost').value || null);
+            levelFormData.append("CourseId", courseId);
+            
+            const videoFile = level.querySelector('.video').files[0];
+            const file = level.querySelector('.file').files[0];
+            
+            if (videoFile) levelFormData.append("levelVideo", videoFile);
+            if (file) levelFormData.append("levelFile", file);
+            
+            if (isUpdating) {
+                const levelId = level.querySelector('.LevelId')?.id;
+                if (levelId) {
+                    levelFormData.append("levelId", levelId); // Include levelId for updates
+                }
+            }
+
+            // Send level data
+            await fetch("/level", {
+                method: "POST",
+                body: levelFormData
+            });
+        }
+        } else {
+            // Update an existing course
+            let Active = document.getElementById("active").checked;
+            let UpdateformData = new FormData();
+            UpdateformData.append("title", title);
+            UpdateformData.append("description", description);
+            UpdateformData.append("category", category);
+            UpdateformData.append("course_Id", courseId);
+            UpdateformData.append("active", Active);
+            console.log(Active);
+            if (CoursePhoto.files.length > 0) {
+                UpdateformData.append("courseImage", CoursePhoto.files[0]);
+            }
+
+            if (paymentMethod.value === 'one_time') {
+                UpdateformData.append("oneTimeAmount", oneTimeAmount);
+            } else {
+                UpdateformData.append("oneTimeAmount", null);
+            }
+            const updateResponse = await fetch("/courses/patch", {
+                method: "POST",
+                body: UpdateformData
+            });
+
+            const updateData = await updateResponse.json();
+
+            if (!updateData.status) {
+                throw new Error("Failed to update course.");
+            }
+             let LevelsCreated = [];
+            let formData = new FormData();
                 levelId.forEach((level) => {
                 let LevelInfo = {};
                 LevelInfo.levelNumber = level.id;
@@ -513,14 +497,13 @@ fetch("/categories")
                 LevelInfo.levelCourse = <?=json_encode($courseId)?>;
                 LevelsCreated.push(LevelInfo);
             });
-        formData.append("LevelsCreated", JSON.stringify(LevelsCreated));
-        formData.append("deletedLevels",JSON.stringify(deletedLevels));
-        fetch("/levels/patch",{
-        method:"POST",
-        body: formData
-                }).then(response => response.json())
-                .then(data => {
-                    levelId.forEach((level,index) => {
+            formData.append("LevelsCreated", JSON.stringify(LevelsCreated));
+            formData.append("deletedLevels",JSON.stringify(deletedLevels));
+            await fetch("/levels/patch",{
+            method:"POST",
+            body: formData});
+
+            levelId.forEach(async (level,index) => {
                         let formData = new FormData();
                         
                         let videoFile = level.querySelector('.video').files[0];
@@ -533,23 +516,35 @@ fetch("/categories")
                         formData.append("levelNumber", level.id);
                         formData.append("courseId", <?= $courseId ?>);
 
-                        fetch("/Content/patch",{
+                        await fetch("/Content/patch",{
                             method:"POST",
                             body: formData
-                        }).then(response => response.json())
-                        .then(data => {
-                            swal({
-                                icon: 'success',
-                                title: '🎉',
-                                text: 'Course <?= $isUpdating ? 'updated' : 'created'; ?> successfully!',
-                            });
-                        });
+                        })
                     });
-                });
-            }
+
+        }
+        swal({
+            icon: 'success',
+            title: '🎉',
+            text: `Course ${isUpdating ? 'updated' : 'created'} successfully!`,
+        });
+    } catch (error) {
+        console.error("Error during course creation or update:", error);
+        swal({
+            icon: 'error',
+            title: '❌',
+            text: `An error occurred while ${isUpdating ? 'updating' : 'creating'} the course.
+            ${error}`,
         });
     }
+}
 
+    document.querySelector('#createCourse').addEventListener('click',(event) => {
+        event.preventDefault();
+        if(!<?= json_encode($isUpdating) ?>)
+        handleCourseCreationOrUpdate(false);
+        else
+        handleCourseCreationOrUpdate(true, <?=$courseId?>);
     });
 
     document.querySelector('#photo').addEventListener('change', function(event) {
