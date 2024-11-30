@@ -17,12 +17,12 @@ if($_SERVER["REQUEST_METHOD"] === "POST")
     try{
     if (is_array($levelsCreated)) {
         foreach ($levelsCreated as $index => $level) {
-        $AlreadyCreated = $db->queryFetchAll("CALL sp_Levels(5,?,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)",[
-            $level['levelId'] === '' ? NULL : $level['levelId']
-        ]);
-
-        if(count($AlreadyCreated) == 1)
-        {
+            $AlreadyCreated = $db->queryFetchAll("CALL sp_Levels(5,?,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)",[
+                $level['levelId'] === '' ? NULL : $level['levelId']
+            ]);
+            
+            if($level['levelId'] !== '')
+            {
             $db->queryFetch("CALL sp_Levels(2,?,NULL, NULL,?,?,?,?,?,NULL)",[
                 $level['levelId'],
                 $level['levelName'],

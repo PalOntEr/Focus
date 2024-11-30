@@ -7,6 +7,7 @@
     <link rel="icon" href="https://static.wikia.nocookie.net/ultra-custom-night/images/f/f6/Purple_Freddy.png" type="image/png">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
     <style>
         <?php require 'views/css/global.css'; ?>
     </style>
