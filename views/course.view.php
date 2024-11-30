@@ -170,43 +170,60 @@ document.addEventListener("DOMContentLoaded", async ()=>{
     
     getCourseInformation();
     getLevelsOfCourse();
-    getReviewsOfCourse();   
+    getReviewsOfCourse(); 
 });
 
 function getReviewsOfCourse(){
-    fetch("/comments?course_id="+CourseId)
+    fetch("/deletedComments/Get")
     .then(response => response.json())
     .then(data => {
-        const Reviews = data.payload;
-        let HasReviewed = false;
-        let AvgRating = 0;
-        const levelPreviewContainer = document.getElementById("CommentsContainer");
-        levelPreviewContainer.innerHTML = "";
-        Reviews.forEach(review => {
-            const levelPreview = document.createElement('div');
-            let levelhtml = `<?php require 'views/components/commentCard.php'; ?>`;
-            levelPreview.innerHTML = levelhtml;
-            
-            console.log(users);
-            levelPreview.querySelector(".Rating").textContent = review.rating + "/5⭐";
-            levelPreview.querySelector(".User").textContent = users[review.userId].username;
-            levelPreview.querySelector(".Comment").textContent = review.comment;
-            levelPreview.querySelector(".CommentDate").textContent = review.creationDate;
+        let DeletedComments = data.payload.DeletedComments;
+        fetch("/comments?course_id="+CourseId)
+        .then(response => response.json())
+        .then(data => {
+            const Reviews = data.payload;
+            let HasReviewed = false;
+            let AvgRating = 0;
+            const levelPreviewContainer = document.getElementById("CommentsContainer");
+            levelPreviewContainer.innerHTML = "";
+            Reviews.forEach(review => {
+                    const levelPreview = document.createElement('div');
+                    let levelhtml = `<?php require 'views/components/commentCard.php'; ?>`;
+                    levelhtml = levelhtml.replace(/COMMENT_ID/g, review.commentId);
+                    levelPreview.innerHTML = levelhtml;
+                    
+                    console.log(users);
+                    levelPreview.querySelector(".Rating").textContent = review.rating + "/5⭐";
+                    levelPreview.querySelector(".User").textContent = users[review.userId].username;
+                    levelPreview.querySelector(".Comment").textContent = review.comment;
+                    levelPreview.querySelector(".CommentDate").textContent = review.creationDate;
 
-            levelPreviewContainer.append(levelPreview);
+                    const deleted = DeletedComments.some(DeletedComment => DeletedComment.commentId == review.commentId);   
+                    if(deleted)
+                    {
+                        const matchedComments = DeletedComments.filter(DeletedComment => DeletedComment.commentId === review.commentId); // Returns an array of matches
+                        levelPreview.querySelector(".Comment").textContent = "This comment was deleted. Reason: " + matchedComments[0].deletionReason; 
+                    }
 
-            if(review.userId === <?= json_encode($_SESSION['user']['userId']) ?>)
+                    levelPreviewContainer.append(levelPreview);
+                    if(review.userId === <?= json_encode($_SESSION['user']['userId']) ?>)
+                    {
+                        HasReviewed = true;
+                    }
+                    AvgRating += review.rating;
+            });
+    
+            if(Reviews.length !== 0)
             {
-                HasReviewed = true;
+                AvgRating /= Reviews.length;
             }
-            AvgRating += review.rating;
+            document.getElementById("Rating").textContent = AvgRating+"/5⭐";
+            if(!CompletedCourse)
+            document.getElementById("CommentButton").hidden = HasReviewed;
+    
+            
         });
-
-        AvgRating /= Reviews.length;
-        document.getElementById("Rating").textContent = AvgRating+"/5⭐";
-        if(!CompletedCourse)
-        document.getElementById("CommentButton").hidden = HasReviewed;
-    })
+    });
 }
 
 function confirmComment() {
@@ -267,6 +284,10 @@ function hideModal() {
 
 function confirmDelete() {
     const reason = document.querySelector('#deleteReason').value.trim();
+    const modal = document.querySelector("#deleteReason").closest(".modal");
+    const commentId = modal.querySelector(".DeleteButton").id;
+    console.log(commentId);
+
     if (reason === '') {
         swal({
             title: 'Error!',
@@ -277,6 +298,19 @@ function confirmDelete() {
         return;
     }
 
+    let formData = new FormData();
+
+    formData.append("commentId", commentId);
+    formData.append("userId",<?= json_encode($_SESSION['user']['userId']) ?>);
+    formData.append("deletionReason", reason);
+    fetch("/deletedComments/Post",{
+        method:"POST",
+        body:formData
+    })
+    .then(response => response.text())
+    .then(data => {
+        console.log(data);
+    });
     swal({
         title: 'Deleted!',
         text: 'Comment has been deleted.',

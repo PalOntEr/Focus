@@ -6,7 +6,7 @@
         </div>
         <div class="flex items-center justify-end w-1/2">
             <div class="Rating text-comp-2 mr-2"></div>
-            <?php if ($usertype === 'admin'): ?>
+            <?php if ($usertype === 'A'): ?>
                 <button class="delete-button" onclick="showModal()">
                     <img class="h-5 w-5 bg-color p-1 rounded-md" src="https://cdn-icons-png.flaticon.com/512/1017/1017530.png" alt="delete">
                 </button>
@@ -17,7 +17,7 @@
         <div class="Comment text-color"></div>
     </div>
     <div class="CommentDate flex w-full h-1/4 p-1 items-center justify-end text-color text-sm">
-    </div>
+    </div>  
 </div>
 
 <div id="deleteModal" class="modal hidden fixed inset-0 bg-gray-600 bg-opacity-50 items-center justify-center">
@@ -27,7 +27,7 @@
         <textarea id="deleteReason" class="w-full p-2 rounded border border-gray-300" rows="4"></textarea>
         <div class="flex justify-end">
             <button class="bg-gray-300 px-4 py-2 rounded mr-2" onclick="hideModal()">Cancel</button>
-            <button class="bg-red-500 text-white px-4 py-2 rounded" onclick="confirmDelete()">Delete</button>
+            <button id="COMMENT_ID" class="DeleteButton bg-red-500 text-white px-4 py-2 rounded" onclick="confirmDelete()">Delete</button>
         </div>
     </div>
 </div>

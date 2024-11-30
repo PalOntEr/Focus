@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__.'/func.php';
+require __DIR__.'/controllers/middleware/CheckMalware.php';
 
 session_start();
 
@@ -145,86 +146,10 @@ $routes = [
         'path' => '/createCourse',
         'callback' => function() {
             require __DIR__.'/controllers/createCourse.php';
+        },
+        'middleware' => function() {
+            CheckMalware();
         }
-    //     'middleware' => function() {
-    //         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    //                 // Check if the file was uploaded without errors
-    //                 if (isset($_FILES['levelData']) && is_array($_FILES['levelData']['name'])) {
-    //                     if (isset($_FILES['levelData']) && is_array($_FILES['levelData']['name'])) {
-    //                         foreach ($_FILES['levelData']['name'] as $index => $fileTypes) {
-    //                             foreach ($fileTypes as $type => $fileName) {
-    //                                 // Get file properties
-    //                                 $tmpFilePath = $_FILES['levelData']['tmp_name'][$index][$type];
-    //                                 $fileError = $_FILES['levelData']['error'][$index][$type];
-    //                                 $fileSize = $_FILES['levelData']['size'][$index][$type];
-                        
-    //                                 if ($fileError === UPLOAD_ERR_OK) {
-    //                                     // Define the destination path
-    //                                     $destinationPath = "unverifiedFiles/" . basename($fileName);
-                        
-    //                                     // File extension validation
-    //                                     $fileExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
-    //                                     $allowedExtensions = ($type === 'levelVideo')
-    //                                         ? ['mp4', 'avi', 'mov', 'flv', 'wmv', '3gp', 'mkv'] // Allowed video formats
-    //                                         : ['pdf', 'docx', 'txt', 'xlsx', 'zip', 'pptx'];             // Allowed file formats
-                        
-    //                                     // Validate file type
-    //                                     if (in_array($fileExtension, $allowedExtensions)) {
-    //                                         // Move the uploaded file to the target directory
-    //                                         if (move_uploaded_file($tmpFilePath, $destinationPath)) {                        
-    //                                             // Perform virus scanning for each file (assuming `scanFileWithVirusTotal` is defined)
-    //                                             $scanResult = scanFileWithVirusTotal($destinationPath);
-                                                
-    //                                             if($scanResult['malicious'] > 0){
-    //                                             echo json_encode([
-    //                                                 'status' => false,
-    //                                                 'payload' => [
-    //                                                     'error' => "File $fileName has been detected with virus"
-    //                                                 ]
-    //                                             ]);
-    //                                             exit();
-    //                                             }
-    //                                         } else {
-    //                                             echo json_encode([
-    //                                                 'status' => false,
-    //                                                 'payload' => [
-    //                                                     'error' => "Failed to move the uploaded $type: $fileName<br>"
-    //                                                 ]
-    //                                             ]);
-    //                                             exit();
-    //                                         }
-    //                                     } else {
-    //                                         echo json_encode([
-    //                                             'status' => false,
-    //                                             'payload' => [
-    //                                                 'error' => "Invalid file type for $type: $fileName<br>"
-    //                                             ]
-    //                                         ]);
-    //                                         exit();
-    //                                     }
-    //                                 } else {
-    //                                     echo json_encode([
-    //                                         'status' => false,
-    //                                         'payload' => [
-    //                                             'error' => "Error uploading the $type: $fileName<br>"
-    //                                         ]
-    //                                     ]);
-    //                                     exit();
-    //                                 }
-    //                             }
-    //                         }
-    //                     } else {
-    //                         echo json_encode([
-    //                             'status' => false,
-    //                             'payload' => [
-    //                                 'error' => "No files were uploaded."
-    //                             ]
-    //                         ]);
-    //                         exit();
-    //                     }        
-    //                 }
-    //             }
-    // }
     ],
     [
         'method' => 'POST',
@@ -380,6 +305,20 @@ $routes = [
         'callback' => function() {
             require __DIR__.'/controllers/updatePurchasedLevels.php';
         }
+    ],
+    [
+        'method' => 'POST',
+        'path' => '/deletedComments/Post',
+        'callback' => function() {
+            require __DIR__.'/controllers/deletedComments.php';
+        }
+    ],
+    [
+        'method' => 'GET',
+        'path' => '/deletedComments/Get',
+        'callback' => function() {
+            require __DIR__.'/controllers/deletedComments.php';
+        }
     ]
 ];
 
@@ -405,64 +344,4 @@ if (file_exists($filePath) && is_file($filePath)) {
             'error' => 'Not found'
         ]
     ]);
-}
-
-function scanFileWithVirusTotal($filePath) {
-    $apiKey = 'eb30ba05ec314abe78e312b676d2f928f88ef21f149ff2f7e957d9affeef02ed';
-    $file = new CURLFile($filePath);
-    
-$curl = curl_init();
-
-curl_setopt_array($curl, [
-  CURLOPT_URL => "https://www.virustotal.com/api/v3/files",
-  CURLOPT_RETURNTRANSFER => true,
-  CURLOPT_ENCODING => "",
-  CURLOPT_MAXREDIRS => 10,
-  CURLOPT_TIMEOUT => 30,
-  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-  CURLOPT_CUSTOMREQUEST => "POST",
-  CURLOPT_HTTPHEADER => [
-    "accept: application/json",
-    "content-type: multipart/form-data",
-    "x-apikey: $apiKey"
-  ],
-  CURLOPT_POSTFIELDS => [
-    'file' => $file
-  ]
-]);
-
-$response = curl_exec($curl);
-$err = curl_error($curl);
-
-curl_close($curl);
-
-$curl = curl_init();
-
-$responseData = json_decode($response,true);
-$id = $responseData['data']['id'];
-
-curl_setopt_array($curl, [
-  CURLOPT_URL => "https://www.virustotal.com/api/v3/analyses/$id",
-  CURLOPT_RETURNTRANSFER => true,
-  CURLOPT_ENCODING => "",
-  CURLOPT_MAXREDIRS => 10,
-  CURLOPT_TIMEOUT => 30,
-  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-  CURLOPT_CUSTOMREQUEST => "GET",
-  CURLOPT_HTTPHEADER => [
-    "accept: application/json",
-    "x-apikey: $apiKey"
-  ],
-]);
-
-$response = curl_exec($curl);
-$err = curl_error($curl);
-$responseData = json_decode($response,true);
-
-curl_close($curl);
-
-if ($err) {
-} else {
- return $responseData['data']['attributes']['stats'];
-}
 }
