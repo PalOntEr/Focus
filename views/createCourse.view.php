@@ -360,8 +360,7 @@ fetch("/categories")
         let oneTimeAmount = document.querySelector('input[name="one_time_amount"]').value;
         let levelId = document.querySelectorAll('.Level');
         let CoursePhoto = document.querySelector("#photo");
-        let Active = document.getElementById("active").checked;
-
+        
         // Validation
         if (!title || !description || !category || !paymentMethod) {
             swal({
@@ -371,7 +370,7 @@ fetch("/categories")
             });
             return;
         }
-
+        
         if (paymentMethod.value === 'one_time' && !oneTimeAmount) {
             swal({
                 icon: 'error',
@@ -392,7 +391,7 @@ fetch("/categories")
                 }
             }
         }
-
+        
         let formData = new FormData();
         formData.append("title", title);
         formData.append("description", description);
@@ -400,12 +399,20 @@ fetch("/categories")
         if (CoursePhoto.files.length > 0) {
             formData.append("courseImage", CoursePhoto.files[0]);
         }
-
+        
         if (paymentMethod.value === 'one_time') {
             formData.append("oneTimeAmount", oneTimeAmount);
         } else {
             formData.append("oneTimeAmount", null);
         }
+        
+        const videoFiles = document.querySelectorAll('.video');
+        const files = document.querySelectorAll('.file');
+
+        levelId.forEach((level, index) => {
+        formData.append(`levelData[${index}][levelVideo]`, videoFiles[index].files[0]);
+        formData.append(`levelData[${index}][levelFile]`, files[index].files[0]);
+        });
 
         if (!isUpdating) {
             // Create a new course
@@ -414,28 +421,28 @@ fetch("/categories")
                 body: formData
             });
             const courseData = await courseResponse.json();
-
-            if (!courseData || !courseData.payload || !courseData.payload.courseId) {
-                throw new Error("Failed to create course.");
+            
+            if (!courseData.payload.courseId) {
+                throw new Error(courseData.payload.error);
             }
-
+            
             courseId = courseData.payload.courseId;
-
+            
             for (let level of levelId) {
             const levelFormData = new FormData();
-
+            
             levelFormData.append("levelNumber", level.id);
             levelFormData.append("levelName", level.querySelector('.levelName').value);
             levelFormData.append("levelDescription", level.querySelector('.levelDescription').value);
             levelFormData.append("levelCost", level.querySelector('.individualCost').value || null);
             levelFormData.append("CourseId", courseId);
-
+            
             const videoFile = level.querySelector('.video').files[0];
             const file = level.querySelector('.file').files[0];
-
+            
             if (videoFile) levelFormData.append("levelVideo", videoFile);
             if (file) levelFormData.append("levelFile", file);
-
+            
             if (isUpdating) {
                 const levelId = level.querySelector('.LevelId')?.id;
                 if (levelId) {
@@ -451,6 +458,7 @@ fetch("/categories")
         }
         } else {
             // Update an existing course
+            let Active = document.getElementById("active").checked;
             let UpdateformData = new FormData();
             UpdateformData.append("title", title);
             UpdateformData.append("description", description);
@@ -525,7 +533,8 @@ fetch("/categories")
         swal({
             icon: 'error',
             title: '❌',
-            text: `An error occurred while ${isUpdating ? 'updating' : 'creating'} the course.`,
+            text: `An error occurred while ${isUpdating ? 'updating' : 'creating'} the course.
+            ${error}`,
         });
     }
 }
