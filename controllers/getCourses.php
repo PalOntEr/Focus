@@ -4,10 +4,8 @@ header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
-    require __DIR__.'/../config/db.php';
-    $config = require __DIR__.'/../config/config.php';
-
-    $db = new Database($config['database']);
+    require __DIR__.'/../models/entities/courses.php';
+    $courseModel = new CourseModel();
 
     $courseId = $_GET['course_id'] ?? null;
     $creationDate = isset($_GET['creation_date']) ? urldecode($_GET['creation_date']) : null;
@@ -24,46 +22,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $getUserRatedCourses = $_GET['user_rated_courses'] ?? null;
 
     try {
-        $option = ($courseId === null && $creationDate === null && $modificationDate === null && $categoryId === null && $coursePrice === null && $courseTitle === null && $courseDescription === null && $instructorId === null && $deactivationDate === null && $courseImage === null) ? 4 : 5;
-        if ($getTopSellers !== null) {
-            $option = 6;
+        if($getTopSellers) {
+            $courses = $courseModel->getTopSellerCourses();
         }
-        if ($getTopRating !== null) {
-            $option = 7;
+        if ($getTopRating) {
+            $courses = $courseModel->getTopRatedCourses();
         }
-        if ($getUserRatedCourses !== null) {
-            $option = 8;
+        if ($getUserRatedCourses) {
+            $courses = $courseModel->getTopRatedCoursesByUser($instructorId);
         }
-        $courses = $db->queryFetchAll("CALL sp_Course($option, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [
-            $courseId,
-            $creationDate,
-            $modificationDate,
-            $deactivationDate,
-            $courseDescription,
-            $courseTitle,
-            $courseImage,
-            $categoryId,
-            $instructorId,
-            $coursePrice
-        ]);
-
-
-        foreach ($courses as &$course) {
-            if (isset($course['courseImage'])) {
-                $course['courseImage'] = base64_encode($course['courseImage']);
-            }
+        else{
+            $courses = $courseModel->getCoursesWithFilters(
+                $courseId,
+                $creationDate,
+                $modificationDate,
+                $categoryId,
+                $coursePrice,
+                $courseTitle,
+                $courseDescription,
+                $instructorId,
+                $deactivationDate,
+                $courseImage,
+                $getTopSellers,
+                $getTopRating,
+                $getUserRatedCourses
+            );
         }
-        unset($course);
 
         if (empty($courses)) {
             echo json_encode([
-            'status' => false,
-            'payload' => [
-                'error' => 'No courses found'
-            ]
+                'status' => false,
+                'payload' => [
+                    'error' => 'No courses found'
+                ]
             ]);
             return;
-        }else{
+        } else {
             echo json_encode([
                 'status' => true,
                 'payload' => [

@@ -1,10 +1,10 @@
 <?php
+
+require __DIR__.'/../models/entities/levels.php';
+$levelModel = new LevelModel();
+
     if($_SERVER['REQUEST_METHOD'] === 'GET')
     {
-        require __DIR__.'/../config/db.php';
-        $config = require __DIR__.'/../config/config.php';
-    
-        $db = new Database($config['database']);
     
         $levelId = $_GET['level_id'] ?? null;
         $creationDate = isset($_GET['creation_date']) ? urldecode($_GET['creation_date']) : null;
@@ -17,17 +17,16 @@
         try {
             $option = ($levelId === null && $creationDate === null && $modificationDate === null && $levelName === null && $levelNumber === null && $levelDescription === null && $levelCost === null && $courseId === null) ? 4 : 5;
     
-            $levels = $db->queryFetchAll("CALL sp_Levels($option, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [
-                $levelId,
-                $creationDate,
-                $modificationDate,
-                $levelName,
-                $levelNumber,
-                $levelDescription,
-                $levelCost,
-                $courseId,
-                true
-            ]);
+            $levels = $levelModel->getLevelsWithFilters(
+                $levelId, 
+                $creationDate, 
+                $modificationDate, 
+                $levelName, 
+                $levelNumber, 
+                $levelDescription, 
+                $levelCost, 
+                $courseId, 
+                true);
 
             if (empty($levels)) {
                 echo json_encode([
@@ -78,12 +77,7 @@
                 ]
             ]);
             return;
-        }    
-
-        require __DIR__.'/../config/db.php';
-    $config = require __DIR__.'/../config/config.php';
-
-    $db = new Database($config['database']);
+        }
 
     $result = true;
 
@@ -98,18 +92,15 @@
             $levelCost = NULL;  // This will pass as a NULL value in the SQL query
         }
     try{
-        $db->queryInsert("CALL sp_Levels(1,NULL,NULL,NULL,?,?,?,?,?,NULL)",[
-            $levelName,
-            $levelNumber,
-            $levelDescription,
-            $levelCost,
-            $courseId
-        ]);
+        $levelModel->createLevel(
+            $levelName, 
+            $levelNumber, 
+            $levelDescription, 
+            $levelCost, 
+            $courseId);
 
-        $levelInfo = $db->queryFetch("CALL sp_Levels(5, NULL,NULL,NULL,?,?,NULL,NULL,NULL,NULL)",[
-            $levelName,
-            $levelNumber
-        ]);
+            
+        $levelInfo = $levelModel->getLevelInfo($levelName, $levelNumber);
     }
     catch(PDOException $e)
     {

@@ -7,6 +7,6 @@
     </div>
     <div class="flex justify-between w-full font-semibold">
         <div id="Instructor" class="text-secondary">Instructor</div>
-        <div id="Rating" class="text-secondary">4.3/5⭐</div>
+        <div id="Rating" class="text-secondary">0/5⭐</div>
     </div>
 </div>

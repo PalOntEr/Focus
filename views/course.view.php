@@ -140,11 +140,13 @@ document.addEventListener("DOMContentLoaded", async ()=>{
                 levelPreview.querySelector(".CourseImage").src = CourseImage;
                 levelPreview.querySelector(".Play").disabled = true;
 
-                const exists = PurchasedLevels.some(Purchasedlevel => Purchasedlevel.levelId === level.levelId);
-                if(exists)
-                {
-                    levelPreview.querySelector(".Play").disabled = false;
-                }
+                if (PurchasedLevels !== undefined) {
+ 
+                    const exists = PurchasedLevels.some(Purchasedlevel => Purchasedlevel.levelId === level.levelId);
+                    if(exists)
+                    {
+                        levelPreview.querySelector(".Play").disabled = false;
+                    }
                 
                     const matchedLevels = PurchasedLevels.filter(purchasedLevel => purchasedLevel.levelId === level.levelId);
                     levelPreviewContainer.append(levelPreview);
@@ -161,6 +163,7 @@ document.addEventListener("DOMContentLoaded", async ()=>{
                     {
                         CompletedCourse = true;
                     }
+                }  
                 });
                 document.getElementById("CommentButton").hidden = CompletedCourse;
         });
