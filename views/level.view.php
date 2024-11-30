@@ -102,18 +102,19 @@ document.addEventListener("DOMContentLoaded", async ()=>{
         });
     }
 
+    
+    
     function getLevelInformation(){
-            fetch("/Content/get?level_id="+<?= $_GET["level"];?>)
-            .then(response => response.json())
-            .then(data => {
-                const ContentFound = data.payload.content;
-
-                ContentFound.forEach(Content => {
+        fetch("/Content/get?level_id="+<?= $_GET["level"];?>)
+        .then(response => response.json())
+        .then(data => {
+            const ContentFound = data.payload.content;
+            
+            ContentFound.forEach(Content => {
                 if(Content.mimeType === ".mp4")
                 {
                     let Route = atob(Content.file);
                     const decodedRoute = atob(Route);
-                    console.log(decodedRoute);
                     const videoElement = document.getElementById("Levelvideo");
                     videoElement.src = decodedRoute;
                     videoElement.load();
@@ -125,11 +126,20 @@ document.addEventListener("DOMContentLoaded", async ()=>{
                     let levelhtml = `<?php require 'views/components/resource.php'; ?>`;
                     levelhtml = levelhtml.replace(/RESOURCE_ID/g,ContentFound.contentId);
                     levelPreview.innerHTML = levelhtml;
-
+                    
                     levelPreviewContainer.append(levelPreview);
                     document.getElementById("Resource").textContent = Content.name;
+                    document.getElementById("BinaryResource").value = Content.file;
+                    document.getElementById("mimeType").value = Content.mimeType;
+
+                    const Button = document.getElementById("DownloadFile");
+                    Button.addEventListener("click", function(e){
+                        e.preventDefault();
+                        console.log("ola");
+                        downloadFile();
+                    });   
                 }
-                });
+            });
         });
     }
     getCourseInformation();
@@ -137,9 +147,29 @@ document.addEventListener("DOMContentLoaded", async ()=>{
     getLevelsInformation();
 });
 
+    function downloadFile(){
+        const File = document.getElementById("BinaryResource").value;
+        const mimeType = document.getElementById("mimeType").value;
+
+        const binaryString = atob(File);
+        const binaryLength = binaryString.length;
+        const bytes = new Uint8Array(binaryLength);
+        for (let i = 0; i < binaryLength; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+        }
+
+        const blob = new Blob([bytes], { type: mimeType }); // Adjust MIME type as needed
+        const extension = mimeType.split("/")[1]; // Extract 'png' from 'image/png'
+
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = "Resource." + extension;
+        link.click();
+        URL.revokeObjectURL(link.href);
+    }
 document.getElementById("FinishLevel").addEventListener("click",function(){
     let formData = new FormData();
-
+    
     formData.append("user_Id",<?= json_encode($_SESSION['user']['userId']) ?>);
     formData.append("level_Id",<?= $_GET["level"];?>);
     formData.append("completed",1);

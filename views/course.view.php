@@ -164,8 +164,8 @@ document.addEventListener("DOMContentLoaded", async ()=>{
                         CompletedCourse = true;
                     }
                 }  
-                });
-                document.getElementById("CommentButton").hidden = CompletedCourse;
+            });
+            document.getElementById("CommentButton").hidden = CompletedCourse;
         });
 
     }

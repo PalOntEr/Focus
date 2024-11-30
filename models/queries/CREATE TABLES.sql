@@ -1,3 +1,4 @@
+DROP DATABASE db_pcwi;
 CREATE DATABASE IF NOT EXISTS db_pcwi;
 
 USE db_pcwi;
@@ -77,6 +78,7 @@ CREATE TABLE Levels (
     deactivationDate DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT 'Level deactivation date',
     `active` BOOLEAN NULL  DEFAULT TRUE COMMENT 'Level status',
     levelName VARCHAR(50) NOT NULL COMMENT 'Level name',
+    `link` VARCHAR(255) NOT NULL COMMENT 'Link name',
     levelNumber INT NOT NULL COMMENT 'Level number',
     levelDescription TEXT NOT NULL COMMENT 'Level description',
     levelCost DECIMAL(10, 2) NULL COMMENT 'Level cost',

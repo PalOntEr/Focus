@@ -10,6 +10,10 @@
         <div class="w-1/2">
             <input name="levelDescription" class="levelDescription w-full rounded-md p-1 bg-transparent outline-none text-color" placeholder="Level Description" type="text">
         </div>
+
+        <div class="w-1/4">
+            <input name="Link" class="levelLink w-full rounded-md p-1 bg-transparent outline-none text-color" placeholder="Level Link" type="text">
+        </div>
     </div>
     <div class="flex items-center justify-end space-x-2 w-1/2">
         <input type="file" name="video" class="video" hidden>
