@@ -5,7 +5,7 @@ require 'views/components/navbar.php';
 <div class="container mx-auto">
     <div id="Kardex-Title-Container" class="flex flex-row place-content-between">
         <div>
-            <h2 class="text-4xl text-center md:text-left text-comp-1 font-semibold">User</h2>
+            <h2 class="text-4xl text-center md:text-left text-comp-1 font-semibold"><?= $_SESSION['user']['username'] ?></h2>
             <h1 class="text-8xl text-primary font-extrabold">Kardex</h1>
         </div>
         <div class="self-end text-primary">
@@ -17,12 +17,9 @@ require 'views/components/navbar.php';
     <div id="Kardex-Container" class="my-2">
         <div id="Kardex-Query-Container" class="bg-primary rounded-lg flex flex-row place-content-between my-2 p-2">
             <div class="w-1/4 self-center flex space-x-2">
-                <input type="button" class="bg-comp-1 text-color p-1 rounded-lg" value="Clean" >
-                <select class="w-1/2 bg-comp-1 text-color py-1 outline-none rounded-md border-0">
-                    <option>Any</option>
-                    <option>Computer Science</option>
-                    <option>Languages</option>
-                    <option>Engineering</option>
+                <input type="button" onclick="clearFilters()" class="bg-comp-1 text-color p-1 rounded-lg" value="Clean" >
+                <select id="categorySelect" class="w-1/2 bg-comp-1 text-color py-1 outline-none rounded-md border-0">
+                    <option value="0">Any</option>
                 </select>
             </div>
 
@@ -34,12 +31,18 @@ require 'views/components/navbar.php';
 
             <div class="flex w-1/4 justify-end self-center font-semibold space-x-3">
                 <div>
-                    <input id="Active" type="checkbox" class="checked:bg-secondary">
-                    <label for="Active" class="">Active</label>
+                    <select id="Active" class="w-full bg-comp-1 text-color py-1 outline-none rounded-md border-0">
+                        <option value="any">Any</option>
+                        <option value="true">Active</option>
+                        <option value="false">Disabled</option>
+                    </select>
                 </div>
                 <div>
-                    <input id="Finished" type="checkbox" class="checked:bg-secondary">
-                    <label for="Finished" class="">Finished</label>
+                    <select id="Finished" class="w-full bg-comp-1 text-color py-1 outline-none rounded-md border-0">
+                        <option value="any">Any</option>
+                        <option value="true">Finished</option>
+                        <option value="false">Not Finished</option>
+                    </select>
                 </div>
             </div>
         </div>
@@ -56,45 +59,9 @@ require 'views/components/navbar.php';
                         <th class="rounded-tr-lg">Diploma</th>
                     </tr>
                 </thead>
-                <tbody class="text-center font-semibold">
+                <tbody id="kardexTable" class="text-center font-semibold">
                     <tr class="bg-comp-1 text-primary">
-                        <td class="py-2">Course 1</td>
-                        <td>97%</td>
-                        <td>24/05/2024</td>
-                        <td>24/05/2028</td>
-                        <td>26/07/2025</td>
-                        <td><input type="checkbox" checked disabled></td>
-                        <td>
-                            <a class="justify-center flex" onclick="downloadDiploma()" href="/diploma" download>
-                                <img class="h-5 bg-color p-1 rounded-md" src="https://cdn-icons-png.flaticon.com/512/3580/3580085.png" alt="">
-                            </a>
-                        </td>
-                    </tr>
-                    <tr class="bg-comp-2 text-primary">
-                        <td class="py-2">Course 2</td>
-                        <td>97%</td>
-                        <td>24/05/2024</td>
-                        <td>24/05/2028</td>
-                        <td>26/07/2025</td>
-                        <td><input type="checkbox" checked disabled></td>
-                        <td>
-                            <a class="justify-center flex" onclick="downloadDiploma()" href="/diploma" download>
-                                <img class="h-5 bg-color p-1 rounded-md" src="https://cdn-icons-png.flaticon.com/512/3580/3580085.png" alt="">
-                            </a>
-                        </td>
-                    </tr>
-                    <tr class="bg-comp-1 text-comp-2">
-                        <td class="py-2 rounded-bl-lg">Course 3</td>
-                        <td>97%</td>
-                        <td>24/05/2024</td>
-                        <td>24/05/2028</td>
-                        <td>26/07/2025</td>
-                        <td><input type="checkbox" checked disabled></td>
-                        <td class="rounded-br-lg">
-                            <a class="justify-center flex" onclick="downloadDiploma()" href="/diploma" download>
-                                <img class="h-5 bg-color p-1 rounded-md" src="https://cdn-icons-png.flaticon.com/512/3580/3580085.png" alt="">
-                            </a>
-                        </td>
+                        <td colspan="7" class="py-2 animate-bounce">Loading...</td>
                     </tr>
                 </tbody>
             </table>
@@ -102,6 +69,13 @@ require 'views/components/navbar.php';
     </div>
 </div>
 <script>
+    const categorySelect = document.getElementById('categorySelect');   
+    const DateStart = document.getElementById('DateStart'); 
+    const DateFinish = document.getElementById('DateFinish');
+    const Active = document.getElementById('Active');
+    const Finished = document.getElementById('Finished');
+    let kardexReport = {};
+
     function downloadDiploma() {
         swal({
             title: 'Diploma downloaded',
@@ -110,4 +84,131 @@ require 'views/components/navbar.php';
             timer: 1500
         })
     }
+    
+    fetch('/categories')
+        .then(response => response.json())
+        .then(data => {
+            if (data.status) {
+                const categories = data.payload.categories;
+                const categorySelect = document.getElementById('categorySelect');
+                categories.forEach(category => {
+                    const option = document.createElement('option');
+                    option.value = category.categoryId;
+                    option.textContent = category.categoryName;
+                    categorySelect.appendChild(option);
+                });
+            } else {
+                console.error(data.payload.error);
+            }
+        })
+        .catch(error => console.error('Error fetching categories:', error));
+
+    document.addEventListener('DOMContentLoaded', () => {
+        getKardexReport();
+    });
+
+    async function getKardexReport() {
+        try {
+            let queryParams = [];
+            if (categorySelect.value != 0) queryParams.push(`categoryId=${categorySelect.value}`);
+            if (DateStart.value) queryParams.push(`startDate=${encodeURIComponent(DateStart.value + ' 00:00:00')}`);
+            if (DateFinish.value) queryParams.push(`completionDate=${encodeURIComponent(DateFinish.value + ' 23:59:59')}`);
+            
+            const fetchParams = queryParams.length ? '?' + queryParams.join('&') : '';
+
+            const fetchUrl = '/reports/student/kardex' + fetchParams;
+            const response = await fetch(fetchUrl);
+            const data = await response.json();
+            
+            if (data.status) {
+                kardexReport = data.payload.kardexReport;
+                let reports = kardexReport.filter(course => {
+                    if (Active.value === 'any') return true;
+                    if (Active.value === 'true') return !course.deactivationDate;
+                    if (Active.value === 'false') return course.deactivationDate;
+                });
+                reports = reports.filter(course => {
+                    if (Finished.value === 'any') return true;
+                    if (Finished.value === 'true') return course.isCompleted;
+                    if (Finished.value === 'false') return !course.isCompleted;
+                });
+                updateKardexTable(reports); 
+            } else {
+                console.error(data.payload.error);
+            }
+        } catch (error) {
+            console.error('Error fetching kardex report:', error);
+        }
+    }
+
+    function updateKardexTable(reports) {
+        const kardexTable = document.getElementById('kardexTable');
+        kardexTable.innerHTML = '';
+
+        if (reports.length === 0) {
+            const row = document.createElement('tr');
+            row.classList.add('bg-comp-1', 'text-primary');
+            row.innerHTML = `
+                <td colspan="7" class="py-2">No courses found</td>
+            `;
+            kardexTable.appendChild(row);
+        } else {
+            reports.forEach((report, index) => {
+                const row = document.createElement('tr');
+                row.classList.add(index % 2 === 0 ? 'bg-comp-1' : 'bg-comp-2', 'text-primary');
+                row.innerHTML = `
+                    <td class="py-2">${report.courseTitle}</td>
+                    <td>${report.percentageCompleted}%</td>
+                    <td>${report.startDate.split(' ')[0]}</td>
+                    <td>${report.endDate}</td>
+                    <td>${report.accessDate}</td>
+                    <td><input type="checkbox" ${report.isCompleted ? 'checked' : ''} disabled></td>
+                    <td>
+                        <a class="justify-center flex ${report.isCompleted ? '' : 'pointer-events-none opacity-50'}" onclick="downloadDiploma()" href="${report.isCompleted ? '/diploma' : '#'}" ${report.isCompleted ? 'download' : ''}>
+                            <img class="h-5 bg-color p-1 rounded-md" src="https://cdn-icons-png.flaticon.com/512/3580/3580085.png" alt="">
+                        </a>
+                    </td>
+                `;
+                kardexTable.appendChild(row);
+            });
+        }
+    }
+
+    function clearFilters() {
+        document.getElementById('categorySelect').value = '0';
+        document.getElementById('DateStart').value = '';
+        document.getElementById('DateFinish').value = '';
+        document.getElementById('Active').value = 'any';
+        document.getElementById('Finished').value = 'any';
+        getKardexReport();
+    }
+
+    categorySelect.addEventListener('change', getKardexReport);
+    Active.addEventListener('change', getKardexReport); 
+    Finished.addEventListener('change', getKardexReport);
+
+    DateStart.addEventListener('change', () => {
+        if (DateStart.value > DateFinish.value && DateFinish.value !== '') {
+            swal('Start date must be before or equal to end date.', {
+                icon: 'warning',
+                title: '📅',
+            });
+            DateStart.value = '';
+            return;
+        }
+        getKardexReport();
+    });
+
+    DateFinish.addEventListener('change', () => {
+        if (DateFinish.value < DateStart.value && DateStart.value !== '') {
+            swal('End date must be after or equal to start date.', {
+                icon: 'warning',
+                title: '📅',
+            });
+            DateFinish.value = '';
+            return;
+        }
+        getKardexReport();
+    });
+
 </script>

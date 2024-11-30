@@ -294,6 +294,13 @@ $routes = [
     ],
     [
         'method' => 'GET',
+        'path' => '/reports/instructor/salesPerCourse',
+        'callback' => function() {
+            require __DIR__.'/controllers/perCourseSales.php';    
+        }
+    ],
+    [
+        'method' => 'GET',
         'path' => '/purchasedLevels/get',
         'callback' => function() {
             require __DIR__.'/controllers/getPurchasedLevels.php';
@@ -315,9 +322,23 @@ $routes = [
     ],
     [
         'method' => 'GET',
+        'path' => '/reports/instructor/salesPerStudent',
+        'callback' => function() {
+            require __DIR__.'/controllers/perStudentSales.php';    
+        }
+    ],
+    [
+        'method' => 'GET',
         'path' => '/deletedComments/Get',
         'callback' => function() {
             require __DIR__.'/controllers/deletedComments.php';
+        }      
+    ],
+    [
+        'method' => 'GET',
+        'path' => '/reports/student/kardex',
+        'callback' => function() {
+            require __DIR__.'/controllers/kardexReport.php';
         }
     ]
 ];

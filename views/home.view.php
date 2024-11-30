@@ -99,4 +99,37 @@ fetch("/courses/get")
     .catch(error => {
         console.error('Error fetching courses:', error);
     });
+
+fetch("/courses/get?top_sellers=true")
+    .then(response => response.json())
+    .then(data => {
+        if (data.status) {
+            const bestSellingContainer = document.getElementById("bestSelling");
+            let courses = data.payload.courses;
+
+            courses = courses.slice(0, 10);
+
+            bestSellingContainer.innerHTML = courses
+                .map(
+                    (course) => {
+                        let courseHtml = `<?php require 'views/components/courseCard.php'; ?>`;
+                        courseHtml = courseHtml
+                            .replace('course-number', `course-${course.courseId}`)
+                            .replace('PHP Course', course.courseTitle)
+                            .replace('Instructor', users[course.instructorId].username)
+                            .replace('4.3/5⭐', `${course.coursePrice}⭐`)
+                            .replace('https://pbs.twimg.com/media/GVq8fLsaoAEnzsl?format=jpg&name=large', `data:image/jpeg;base64,${course.courseImage}`)
+                            .replace('/course?course_id=0', `/course?course_id=${course.courseId}`)
+                            .replace('addToCart(0)', `addToCart(${course.courseId})`);
+                        return courseHtml;
+                    }
+                )
+                .join("");
+        } else {
+            console.error('No courses found');
+        }
+    })
+    .catch(error => {
+        console.error('Error fetching courses:', error);
+    });
 </script>

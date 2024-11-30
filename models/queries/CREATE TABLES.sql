@@ -109,7 +109,7 @@ CREATE TABLE Messages (
 
 CREATE TABLE Kardex (
     startDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Course start date in the kardex',
-    accessDate DATETIME DEFAULT NULL COMMENT 'Last access date to the course in the kardex',
+    accessDate DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Last access date to the course in the kardex',
     completionDate DATETIME DEFAULT NULL COMMENT 'Course completion date',
     userId INT NOT NULL COMMENT 'Foreign key of the user',
     courseId INT NOT NULL COMMENT 'Foreign key of the course',

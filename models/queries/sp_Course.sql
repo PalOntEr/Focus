@@ -51,6 +51,12 @@ WHERE courseId = p_courseId;
                 AND (p_creationDate IS NULL OR DATEDIFF(creationDate, p_creationDate) >= 0)
                 AND (p_modificationDate IS NULL OR DATEDIFF(creationDate, p_modificationDate) <= 0)
                 AND (p_deactivationDate IS NULL OR DATEDIFF(deactivationDate, p_deactivationDate) <= 0);
+        WHEN 6 THEN -- SELECT TOP 10 SELLERS
+            SELECT c.courseId, c.creationDate, c.modificationDate, c.deactivationDate, c.courseTitle, c.categoryId, c.instructorId, c.coursePrice, c.courseDescription, c.courseImage
+            FROM vw_salespercourse spc
+            JOIN courses c ON spc.courseId = c.courseId
+            ORDER BY totalIncome DESC
+            LIMIT 10;
     END CASE;
 END
 
