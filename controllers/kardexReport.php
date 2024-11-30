@@ -2,6 +2,9 @@
 
 header('Content-Type: application/json');
 
+require __DIR__.'/../models/entities/kardex.php';
+$kardexModel = new KardexModel();
+
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $startDate = isset($_GET['startDate']) ? urldecode($_GET['startDate']) : null;
     $accessDate = isset($_GET['accessDate']) ? urldecode($_GET['accessDate']) : null;
@@ -10,22 +13,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $courseId = $_GET['courseId'] ?? null;
     $category = $_GET['categoryId'] ?? null;
 
-    require __DIR__.'/../config/db.php';
-    $config = require __DIR__.'/../config/config.php';
-
-    $db = new Database($config['database']);
-
     $result = true;
 
     try {
-        $kardexReport = $db->queryFetchAll("CALL sp_Kardex(6, ?, ?, ?, ?, ?, ?)", [
+        $kardexReport = $kardexModel->getKardexWithFilters(
             $startDate,
             $accessDate,
             $completionDate,
             $userId,
             $courseId,
             $category
-        ]);
+        );
     } catch (PDOException $e) {
         $result = false;
         $exception = $e;
