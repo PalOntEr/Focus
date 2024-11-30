@@ -87,7 +87,8 @@ fetch("/courses/get")
                             .replace('4.3/5⭐', `${course.averageRating}⭐`)
                             .replace('https://pbs.twimg.com/media/GVq8fLsaoAEnzsl?format=jpg&name=large', `data:image/jpeg;base64,${course.courseImage}`)
                             .replace('/course?course_id=0', `/course?course_id=${course.courseId}`)
-                            .replace('addToCart(0)', `addToCart(${course.courseId})`);
+                            .replace('addToCart(0)', `addToCart(${course.courseId})`)
+                            .replace('?insId=0', `?insId=${course.instructorId}`);
                         return courseHtml;
                     }
                 )
@@ -120,7 +121,8 @@ fetch("/courses/get?top_sellers=true")
                             .replace('4.3/5⭐', `${course.averageRating}⭐`)
                             .replace('https://pbs.twimg.com/media/GVq8fLsaoAEnzsl?format=jpg&name=large', `data:image/jpeg;base64,${course.courseImage}`)
                             .replace('/course?course_id=0', `/course?course_id=${course.courseId}`)
-                            .replace('addToCart(0)', `addToCart(${course.courseId})`);
+                            .replace('addToCart(0)', `addToCart(${course.courseId})`)
+                            .replace('?insId=0', `?insId=${course.instructorId}`);
                         return courseHtml;
                     }
                 )
@@ -153,7 +155,8 @@ fetch("/courses/get?top_sellers=true")
                                 .replace('4.3/5⭐', `${course.averageRating}⭐`)
                                 .replace('https://pbs.twimg.com/media/GVq8fLsaoAEnzsl?format=jpg&name=large', `data:image/jpeg;base64,${course.courseImage}`)
                                 .replace('/course?course_id=0', `/course?course_id=${course.courseId}`)
-                                .replace('addToCart(0)', `addToCart(${course.courseId})`);
+                                .replace('addToCart(0)', `addToCart(${course.courseId})`)
+                                .replace('?insId=0', `?insId=${course.instructorId}`);
                             return courseHtml;
                         }
                     )

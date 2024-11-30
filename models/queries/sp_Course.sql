@@ -59,9 +59,14 @@ WHERE courseId = p_courseId;
             LIMIT 10;
         WHEN 7 THEN -- SELECT TOP 10 RATED
             SELECT c.courseId, c.creationDate, c.modificationDate, c.deactivationDate, c.courseTitle, c.categoryId, c.instructorId, c.coursePrice, c.courseDescription, c.courseImage, c.averageRating
-            FROM vw_salespercourse spc
-            JOIN vw_courserating c ON spc.courseId = c.courseId
+            FROM vw_courserating c
             ORDER BY averageRating DESC
+            LIMIT 10;
+        WHEN 8 THEN -- SELECT TOP 10 RATED BY SPECIFIC USER
+            SELECT cru.courseId, cru.creationDate, cru.modificationDate, cru.deactivationDate, cru.courseTitle, cru.categoryId, cru.instructorId, cru.coursePrice, cru.courseDescription, cru.courseImage, cru.rating, cru.userId
+            FROM vw_coursesrecommendedbyusers cru
+            WHERE cru.userId = p_instructorId
+            ORDER BY cru.rating DESC
             LIMIT 10;
     END CASE;
 END

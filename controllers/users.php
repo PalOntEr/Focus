@@ -41,6 +41,12 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
 
     if($result) {
         
+        foreach ($users as &$user) {
+            if (isset($user['profilePicture'])) {
+                $user['profilePicture'] = base64_encode($user['profilePicture']);
+            }
+        }
+
         echo json_encode([
             'status' => true,
             'payload' => [

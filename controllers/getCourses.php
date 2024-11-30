@@ -21,6 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $courseImage = $_GET['course_image'] ?? null;
     $getTopSellers = $_GET['top_sellers'] ?? null;
     $getTopRating = $_GET['top_rating'] ?? null;
+    $getUserRatedCourses = $_GET['user_rated_courses'] ?? null;
 
     try {
         $option = ($courseId === null && $creationDate === null && $modificationDate === null && $categoryId === null && $coursePrice === null && $courseTitle === null && $courseDescription === null && $instructorId === null && $deactivationDate === null && $courseImage === null) ? 4 : 5;
@@ -29,6 +30,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         }
         if ($getTopRating !== null) {
             $option = 7;
+        }
+        if ($getUserRatedCourses !== null) {
+            $option = 8;
         }
         $courses = $db->queryFetchAll("CALL sp_Course($option, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [
             $courseId,
