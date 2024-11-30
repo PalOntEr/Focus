@@ -340,6 +340,13 @@ $routes = [
         'callback' => function() {
             require __DIR__.'/controllers/kardexReport.php';
         }
+    ],
+    [
+        'method' => 'GET',
+        'path' => '/deleteCategory',
+        'callback' => function() {
+            require __DIR__.'/controllers/deleteCategory.php';
+        }
     ]
 ];
 

@@ -9,11 +9,7 @@ if($_SERVER["REQUEST_METHOD"] === "GET")
     $userId = $_GET['user_Id'] ?? null;
     $completed = $_GET['completed'] ?? null;
 
-    require __DIR__.'/../config/db.php';
-    $config = require __DIR__.'/../config/config.php';
-
-    $db = new Database($config['database']);
-
+    
     $result = true;
 
     try{

@@ -71,11 +71,18 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 if (coursesData.status && coursesData.payload.courses.length > 0) {
                     const course = coursesData.payload.courses[0];
+                    
+                    let categoryFound = {};
+                    categoriesData.forEach(category => {
+                        if(category.categoryId === course.categoryId)
+                            categoryFound = category;
+                    });
+
                     let courseCard = `<?php require 'views/components/buycourseCard.php'; ?>`;
                     courseCard = courseCard
                         .replace('https://pbs.twimg.com/media/GVq8fLsaoAEnzsl?format=jpg&name=large', course.courseImage ? 'data:image/jpeg;base64,' + course.courseImage : 'https://pbs.twimg.com/media/GVq8fLsaoAEnzsl?format=jpg&name=large')
                         .replace('PHP Course - 4.3/5⭐', `${course.courseTitle} - ${course.averageRating}/5⭐`)
-                        .replace('Computer Science', categoriesData[course.categoryId - 1].categoryName)
+                        .replace('Computer Science', categoryFound.categoryName)
                         .replace('Instructor', users[course.instructorId].username)
                         .replace('Descripcion', course.courseDescription)
                         .replace('removeFromCart(0)', `removeFromCart(${course.courseId})`)

@@ -6,7 +6,7 @@
 
     if ($isUpdating) {
         require 'views/components/navbar.php';
-        $birthdate = new DateTime($_SESSION["user"]["birthDate"]);
+        $birthdate = new DateTime($_SESSION["user"]["birthdate"]);
         $formattedDate = $birthdate->format('Y-m-d');
     }
 ?>

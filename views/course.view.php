@@ -146,8 +146,8 @@ document.addEventListener("DOMContentLoaded", async ()=>{
                     if(exists)
                     {
                         levelPreview.querySelector(".Play").disabled = false;
+                        levelPreview.querySelector(".Purchased").hidden = true;
                     }
-                
                     const matchedLevels = PurchasedLevels.filter(purchasedLevel => purchasedLevel.levelId === level.levelId);
                     levelPreviewContainer.append(levelPreview);
                     console.log(PurchasedLevels);

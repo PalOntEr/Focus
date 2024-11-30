@@ -75,6 +75,8 @@
 .then(data => {
 const categorySelector = document.getElementById("navBarCategorySelector");
 
+if(data.payload.categories)
+{
 data.payload.categories.forEach((category) => {
             const option = document.createElement("option");
             option.value = category.categoryId;
@@ -84,5 +86,6 @@ data.payload.categories.forEach((category) => {
             option.appendChild(a);
             categorySelector.appendChild(option);
         });
+}
 }); </script>
 </nav>

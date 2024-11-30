@@ -13,5 +13,10 @@
             <input type="text" hidden id="BinaryResource">
             <input type="text" hidden id="mimeType">
     </button>
-    </div>
+
+</div>
+</div>
+<div class="w-full">
+<h1 class="text-center">Link</h1>
+<a class="w-full flex justify-center text-md" id="LevelLink"> </a>
 </div>

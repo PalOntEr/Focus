@@ -78,68 +78,68 @@ require 'views/components/header.php';
         event.preventDefault();
         let allFilled = true;
 
-        // inputs.forEach(input => {
-        //     if (!input.value) {
-        //         allFilled = false;
-        //     }
-        // });
+        inputs.forEach(input => {
+            if (!input.value) {
+                allFilled = false;
+            }
+        });
 
-        // if (!allFilled) {
-        //     swal({
-        //         icon: 'error',
-        //         title: '☠️',
-        //         text: 'Please fill all the fields'
-        //     });
-        //     return;
-        // }
+        if (!allFilled) {
+            swal({
+                icon: 'error',
+                title: '☠️',
+                text: 'Please fill all the fields'
+            });
+            return;
+        }
 
-        // const email = document.querySelector('#Email').value;
-        // const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const email = document.querySelector('#Email').value;
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-        // if (!emailPattern.test(email)) {
-        //     swal({
-        //         icon: 'error',
-        //         title: '☠️',
-        //         text: 'Please enter a valid email address'
-        //     });
-        //     return;
-        // }
+        if (!emailPattern.test(email)) {
+            swal({
+                icon: 'error',
+                title: '☠️',
+                text: 'Please enter a valid email address'
+            });
+            return;
+        }
 
-        // const cardNumber = document.querySelector('#Card-Number').value;
-        // const cardNumberPattern = /^[0-9]{16}$/;
+        const cardNumber = document.querySelector('#Card-Number').value;
+        const cardNumberPattern = /^[0-9]{16}$/;
 
-        // if (!cardNumberPattern.test(cardNumber)) {
-        //     swal({
-        //         icon: 'error',
-        //         title: '☠️',
-        //         text: 'Please enter a valid 16-digit card number'
-        //     });
-        //     return;
-        // }
+        if (!cardNumberPattern.test(cardNumber)) {
+            swal({
+                icon: 'error',
+                title: '☠️',
+                text: 'Please enter a valid 16-digit card number'
+            });
+            return;
+        }
 
-        // const expirationDate = document.querySelector('#Expiration-Date').value;
-        // const expirationDatePattern = /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])$/;
+        const expirationDate = document.querySelector('#Expiration-Date').value;
+        const expirationDatePattern = /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])$/;
 
-        // if (!expirationDatePattern.test(expirationDate)) {
-        //     swal({
-        //         icon: 'error',
-        //         title: '☠️',
-        //         text: 'Please enter a valid expiration date'
-        //     });
-        //     return;
-        // }
+        if (!expirationDatePattern.test(expirationDate)) {
+            swal({
+                icon: 'error',
+                title: '☠️',
+                text: 'Please enter a valid expiration date'
+            });
+            return;
+        }
 
-        // const cvc = document.querySelector('#CVC').value;
-        // const cvcPattern = /^[0-9]{3,4}$/;
+        const cvc = document.querySelector('#CVC').value;
+        const cvcPattern = /^[0-9]{3,4}$/;
 
-        // if (!cvcPattern.test(cvc)) {
-        //     swal({
-        //     icon: 'error',
-        //     title: '☠️',
-        //     text: 'Please enter a valid CVC'
-        //     });
-        //     return;
-        // }
+        if (!cvcPattern.test(cvc)) {
+            swal({
+            icon: 'error',
+            title: '☠️',
+            text: 'Please enter a valid CVC'
+            });
+            return;
+        }
 
         swal({
             title: "🤑",
@@ -171,7 +171,7 @@ require 'views/components/header.php';
                         title: '🎉',
                         text: 'Purchase successful!'
                     }).then(() => {
-                        window.location.href = '/profile';
+                        window.location.href = '/home';
                     });
                 }
             }

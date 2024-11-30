@@ -175,7 +175,7 @@ require 'views/components/navbar.php';
                             <td>${category.User}</td>
                             <td>${category.Created}</td>
                             <td>
-                            <button class="flex items-center h-full w-full justify-center" onclick="deleteCategory()">
+                            <button class="flex items-center h-full w-full justify-center" onclick="deleteCategory(${category.categoryId})">
                             <img class="h-5 w-5 bg-color p-1 rounded-md" src="https://cdn-icons-png.flaticon.com/512/1017/1017530.png" alt="delete">
                         </button></td>
                         `;
@@ -362,14 +362,14 @@ GetCategories();
             new swal({
             title: '☠️',
             text: 'Error creating category',
-            icon: 'failure',
+            icon: 'error',
             confirmButtonText: 'OK'
             });
             hideCategoryModal();
         }})
         }
 
-    function deleteCategory(){
+    function deleteCategory(categoryId){
         new swal({
             title: '😐',
             text: 'Do you really want to delete this category? This process cannot be undone.',
@@ -379,11 +379,24 @@ GetCategories();
             cancelButtonText: 'No'
         }).then((result) => {
             if (result.isConfirmed) {
-                new swal({
-                    title: '🛸',
-                    text: 'Category has been deleted',
-                    icon: 'success',
-                    confirmButtonText: 'OK'
+
+                fetch("/deleteCategory?categoryId="+categoryId)
+                .then(response => response.json())
+                .then(data => {
+                    new swal({
+                        title: '🛸',
+                        text: 'Category has been deleted',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    });
+                    GetCategories();
+                }).catch(error => {
+                    new swal({
+                        title: '😐',
+                        text: 'Something went Wrong: ' + error,
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    });
                 });
             }
         });
