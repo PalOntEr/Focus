@@ -150,7 +150,6 @@ document.addEventListener("DOMContentLoaded", async ()=>{
     function downloadFile(){
         const File = document.getElementById("BinaryResource").value;
         const mimeType = document.getElementById("mimeType").value;
-        console.log(File);
 
         const binaryString = atob(File);
         const binaryLength = binaryString.length;
