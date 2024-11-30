@@ -38,6 +38,9 @@ BEGIN
     AND (p_userId IS NULL OR p_userId = userId)
     AND (p_courseId IS NULL OR p_courseId = courseId)
     AND (p_rating IS NULL OR p_rating = rating);
+        WHEN 6 THEN
+            SELECT commentId, deletionReason
+            FROM deletedcomments;
     END CASE;
 END;
 DELIMITER;

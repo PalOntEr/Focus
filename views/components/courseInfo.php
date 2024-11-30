@@ -6,7 +6,7 @@
         TITLE_COURSE
     </div>
     <div class="flex justify-between w-full font-semibold">
-        <div class="text-secondary">Instructor</div>
-        <div class="text-secondary">4.3/5⭐</div>
+        <div id="Instructor" class="text-secondary">Instructor</div>
+        <div id="Rating" class="text-secondary">4.3/5⭐</div>
     </div>
 </div>

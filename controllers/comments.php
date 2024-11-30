@@ -49,3 +49,49 @@ try {
     ]);
 }
 }
+
+if($_SERVER['REQUEST_METHOD'] === "POST")
+{
+    $comment = $_POST["comment"];
+    $rating = $_POST["rating"];
+    $userId = $_POST["userId"];
+    $courseId = $_POST["courseId"];
+
+    require __DIR__.'/../config/db.php';
+    $config = require __DIR__.'/../config/config.php';
+
+    $db = new Database($config['database']);
+    
+    $result = true;
+
+    try{
+        $db->queryInsert("CALL sp_Comments(1,NULL,NULL,NULL,?,?,?,?)",[
+            $comment,
+            $userId,
+            $courseId,
+            $rating
+        ]);
+    }catch(PDOException $e)
+    {
+        $result = false;
+        $exception = $e;
+    }
+
+    if($result)
+    {
+        echo json_encode([
+            "status" => true,
+            "payload" =>[
+                "message" => "Comment created succesfully"
+            ]
+        ]);
+    }
+    else{
+        echo json_encode([
+            "status" => false,
+            "payload" =>[
+                "message" => $exception
+            ]
+        ]);
+    }
+}

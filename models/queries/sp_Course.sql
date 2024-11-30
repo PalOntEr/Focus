@@ -29,6 +29,7 @@ SET
     courseImage = IF(p_courseImage IS NULL, courseImage, p_courseImage),
     categoryId = IF(p_categoryId IS NULL, categoryId, p_categoryId),
     instructorId = IF(p_instructorId IS NULL, instructorId, p_instructorId),
+    `deactivationDate` = p_deactivationDate,
     coursePrice = p_coursePrice
 WHERE courseId = p_courseId;
         WHEN 3 THEN -- DELETE

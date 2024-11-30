@@ -52,6 +52,19 @@ if($_SERVER["REQUEST_METHOD"] === "POST")
             $category,
             $coursePrice
         ]);
+
+        if($_POST['active'] === "false")
+        {
+            $db->queryInsert("CALL sp_Course(3,?,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)", [
+                $courseId
+            ]); 
+        }
+        else{
+            $db->queryInsert("CALL sp_Course(2,?,NULL,NULL,?,NULL,NULL,NULL,NULL,NULL,NULL)", [
+                $courseId,
+                NULL
+            ]);
+        }
     }
     catch(PDOException $e)
     {

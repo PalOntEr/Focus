@@ -28,6 +28,7 @@
                 $courseId,
                 true
             ]);
+
             if (empty($levels)) {
                 echo json_encode([
                     'status' => false,
