@@ -1,6 +1,6 @@
-<div id="course-number" class="flex flex-col w-5/6 md:w-1/3 max-h-96 bg-primary m-5 md:m-2 p-5 justify-center items-center rounded-2xl shadow-lg hover:scale-150">
+<div id="course-number" class="flex flex-col w-5/6 md:w-72 h-80 bg-primary m-5 md:m-2 p-5 justify-center items-center rounded-2xl shadow-lg hover:scale-150">
     <div class="flex justify-center w-full h-5/6 mb-5 bg-color rounded-2xl">
-        <img class="w-auto h-auto rounded-2xl" src="https://pbs.twimg.com/media/GVq8fLsaoAEnzsl?format=jpg&name=large" alt="Course">
+        <img class="w-full h-full md:h-40 rounded-2xl" src="https://pbs.twimg.com/media/GVq8fLsaoAEnzsl?format=jpg&name=large" alt="Course">
     </div>
     <div class="w-full text-secondary font-semibold">
         PHP Course
