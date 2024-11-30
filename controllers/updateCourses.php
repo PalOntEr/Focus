@@ -42,8 +42,7 @@ if($_SERVER["REQUEST_METHOD"] === "POST")
     if (empty($coursePrice) || $coursePrice === 'null') {
         $coursePrice = null;  // This will pass as a NULL value in the SQL query
     }
-
-    try{
+    try{    
         $db->queryInsert("CALL sp_Course(2,?,NULL,NULL,NULL, ?,?,?,?,NULL, ?)", [
             $courseId,
             $description,
@@ -52,7 +51,7 @@ if($_SERVER["REQUEST_METHOD"] === "POST")
             $category,
             $coursePrice
         ]);
-
+        
         if($_POST['active'] === "false")
         {
             $db->queryInsert("CALL sp_Course(3,?,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)", [
