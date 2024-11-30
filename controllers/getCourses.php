@@ -20,11 +20,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $deactivationDate = isset($_GET['deactivation_date']) ? urldecode($_GET['deactivation_date']) : null;
     $courseImage = $_GET['course_image'] ?? null;
     $getTopSellers = $_GET['top_sellers'] ?? null;
+    $getTopRating = $_GET['top_rating'] ?? null;
 
     try {
         $option = ($courseId === null && $creationDate === null && $modificationDate === null && $categoryId === null && $coursePrice === null && $courseTitle === null && $courseDescription === null && $instructorId === null && $deactivationDate === null && $courseImage === null) ? 4 : 5;
         if ($getTopSellers !== null) {
             $option = 6;
+        }
+        if ($getTopRating !== null) {
+            $option = 7;
         }
         $courses = $db->queryFetchAll("CALL sp_Course($option, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [
             $courseId,

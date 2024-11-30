@@ -36,11 +36,11 @@ WHERE courseId = p_courseId;
             SET deactivationDate = CURRENT_TIMESTAMP
             WHERE courseId = p_courseId;
         WHEN 4 THEN -- SELECT ALL
-            SELECT courseId, creationDate, modificationDate, deactivationDate, courseTitle, categoryId, instructorId, coursePrice, courseDescription, courseImage
-            FROM Courses;
+            SELECT courseId, creationDate, modificationDate, deactivationDate, courseTitle, categoryId, instructorId, coursePrice, courseDescription, courseImage, averageRating
+            FROM vw_courserating;
         WHEN 5 THEN -- SELECT WITH FILTER
-            SELECT courseId, creationDate, modificationDate, deactivationDate, courseTitle, categoryId, instructorId, coursePrice, courseDescription, courseImage
-            FROM Courses
+            SELECT courseId, creationDate, modificationDate, deactivationDate, courseTitle, categoryId, instructorId, coursePrice, courseDescription, courseImage, averageRating
+            FROM vw_courserating
             WHERE (p_courseId IS NULL OR courseId = p_courseId)
                 AND (p_categoryId IS NULL OR categoryId = p_categoryId)
                 AND (p_coursePrice IS NULL OR coursePrice = p_coursePrice)
@@ -51,10 +51,16 @@ WHERE courseId = p_courseId;
                 AND (p_modificationDate IS NULL OR DATEDIFF(creationDate, p_modificationDate) <= 0)
                 AND (p_deactivationDate IS NULL OR DATEDIFF(deactivationDate, p_deactivationDate) <= 0);
         WHEN 6 THEN -- SELECT TOP 10 SELLERS
-            SELECT c.courseId, c.creationDate, c.modificationDate, c.deactivationDate, c.courseTitle, c.categoryId, c.instructorId, c.coursePrice, c.courseDescription, c.courseImage
+            SELECT c.courseId, c.creationDate, c.modificationDate, c.deactivationDate, c.courseTitle, c.categoryId, c.instructorId, c.coursePrice, c.courseDescription, c.courseImage, c.averageRating
             FROM vw_salespercourse spc
-            JOIN courses c ON spc.courseId = c.courseId
+            JOIN vw_courserating c ON spc.courseId = c.courseId
             ORDER BY totalIncome DESC
+            LIMIT 10;
+        WHEN 7 THEN -- SELECT TOP 10 RATED
+            SELECT c.courseId, c.creationDate, c.modificationDate, c.deactivationDate, c.courseTitle, c.categoryId, c.instructorId, c.coursePrice, c.courseDescription, c.courseImage, c.averageRating
+            FROM vw_salespercourse spc
+            JOIN vw_courserating c ON spc.courseId = c.courseId
+            ORDER BY averageRating DESC
             LIMIT 10;
     END CASE;
 END

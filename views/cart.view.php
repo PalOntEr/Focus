@@ -37,6 +37,7 @@ let cart = JSON.parse(localStorage.getItem('cart')) || [];
 const cartItems = [];
 let categoriesData = {};
 const users = {};
+let levelsInCourses = [];
 
 document.addEventListener('DOMContentLoaded', async () => {
 
@@ -44,7 +45,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     categoriesData = await categoriesResponse.json();
     categoriesData = categoriesData.payload.categories;
 
-    let levelsInCourses = [];
 
     const usersResponse = await fetch('/users');
     const usersData = await usersResponse.json();
@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     let courseCard = `<?php require 'views/components/buycourseCard.php'; ?>`;
                     courseCard = courseCard
                         .replace('https://pbs.twimg.com/media/GVq8fLsaoAEnzsl?format=jpg&name=large', course.courseImage ? 'data:image/jpeg;base64,' + course.courseImage : 'https://pbs.twimg.com/media/GVq8fLsaoAEnzsl?format=jpg&name=large')
-                        .replace('PHP Course - 4.3/5⭐', `${course.courseTitle} - ${course.courseRating}/5⭐`)
+                        .replace('PHP Course - 4.3/5⭐', `${course.courseTitle} - ${course.averageRating}/5⭐`)
                         .replace('Computer Science', categoriesData[course.categoryId - 1].categoryName)
                         .replace('Instructor', users[course.instructorId].username)
                         .replace('Descripcion', course.courseDescription)
@@ -160,6 +160,7 @@ function removeFromCart(id){
 }
 
 
+
 async function loadcart2(){
     cart = JSON.parse(localStorage.getItem('cart')) || [];
     totalCourses.innerText = cart.length;
@@ -181,7 +182,7 @@ async function loadcart2(){
                 let courseCard = `<?php require 'views/components/buycourseCard.php'; ?>`;
                 courseCard = courseCard
                     .replace('https://pbs.twimg.com/media/GVq8fLsaoAEnzsl?format=jpg&name=large', course.courseImage ? 'data:image/jpeg;base64,' + course.courseImage : 'https://pbs.twimg.com/media/GVq8fLsaoAEnzsl?format=jpg&name=large')
-                    .replace('PHP Course - 4.3/5⭐', `${course.courseTitle} - ${course.courseRating}/5⭐`)
+                    .replace('PHP Course - 4.3/5⭐', `${course.courseTitle} - ${course.averageRating}/5⭐`)
                     .replace('Computer Science', categoriesData[course.categoryId - 1].categoryName)
                     .replace('Instructor', users[course.instructorId].username)
                     .replace('Descripcion', course.courseDescription)

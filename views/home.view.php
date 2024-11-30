@@ -84,7 +84,7 @@ fetch("/courses/get")
                             .replace('course-number', `course-${course.courseId}`)
                             .replace('PHP Course', course.courseTitle)
                             .replace('Instructor', users[course.instructorId].username)
-                            .replace('4.3/5⭐', `${course.coursePrice}⭐`)
+                            .replace('4.3/5⭐', `${course.averageRating}⭐`)
                             .replace('https://pbs.twimg.com/media/GVq8fLsaoAEnzsl?format=jpg&name=large', `data:image/jpeg;base64,${course.courseImage}`)
                             .replace('/course?course_id=0', `/course?course_id=${course.courseId}`)
                             .replace('addToCart(0)', `addToCart(${course.courseId})`);
@@ -117,7 +117,7 @@ fetch("/courses/get?top_sellers=true")
                             .replace('course-number', `course-${course.courseId}`)
                             .replace('PHP Course', course.courseTitle)
                             .replace('Instructor', users[course.instructorId].username)
-                            .replace('4.3/5⭐', `${course.coursePrice}⭐`)
+                            .replace('4.3/5⭐', `${course.averageRating}⭐`)
                             .replace('https://pbs.twimg.com/media/GVq8fLsaoAEnzsl?format=jpg&name=large', `data:image/jpeg;base64,${course.courseImage}`)
                             .replace('/course?course_id=0', `/course?course_id=${course.courseId}`)
                             .replace('addToCart(0)', `addToCart(${course.courseId})`);
@@ -132,4 +132,37 @@ fetch("/courses/get?top_sellers=true")
     .catch(error => {
         console.error('Error fetching courses:', error);
     });
+
+    fetch("/courses/get?top_rating=true")
+        .then(response => response.json())
+        .then(data => {
+            if (data.status) {
+                const mostRatedContainer = document.getElementById("mostRated");
+                let courses = data.payload.courses;
+
+                courses = courses.slice(0, 10);
+
+                mostRatedContainer.innerHTML = courses
+                    .map(
+                        (course) => {
+                            let courseHtml = `<?php require 'views/components/courseCard.php'; ?>`;
+                            courseHtml = courseHtml
+                                .replace('course-number', `course-${course.courseId}`)
+                                .replace('PHP Course', course.courseTitle)
+                                .replace('Instructor', users[course.instructorId].username)
+                                .replace('4.3/5⭐', `${course.averageRating}⭐`)
+                                .replace('https://pbs.twimg.com/media/GVq8fLsaoAEnzsl?format=jpg&name=large', `data:image/jpeg;base64,${course.courseImage}`)
+                                .replace('/course?course_id=0', `/course?course_id=${course.courseId}`)
+                                .replace('addToCart(0)', `addToCart(${course.courseId})`);
+                            return courseHtml;
+                        }
+                    )
+                    .join("");
+            } else {
+                console.error('No courses found');
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching courses:', error);
+        });
 </script>
