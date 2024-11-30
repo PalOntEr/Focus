@@ -79,5 +79,13 @@ class UserModel {
             $gender
         ]);
     }
+
+    public function getStudentReport() {
+        return $this->db->queryFetchAll("CALL sp_Users (6, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL)");
+    }   
+
+    public function getInstructorReport() {
+        return $this->db->queryFetchAll("CALL sp_Users (7, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL)");
+    }   
 }
 ?>

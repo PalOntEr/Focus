@@ -85,6 +85,12 @@ BEGIN
             AND email = IFNULL(sp_email, email)
             AND role = IFNULL(sp_role, role)
             AND birthdate = IFNULL(sp_birthdate, birthdate);
+        WHEN 6 THEN
+            SELECT userId, username, fullName, email, role, birthdate, password, gender, creationDate, completedCourses, enrolledCourses
+            FROM vw_studentreport;
+        WHEN 7 THEN
+            SELECT userId, username, fullName, email, role, birthdate, password, gender, creationDate, createdCourses, earnings
+            FROM vw_instructorreport;
     END CASE;
 END$$
 

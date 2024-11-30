@@ -347,6 +347,20 @@ $routes = [
         'callback' => function() {
             require __DIR__.'/controllers/deleteCategory.php';
         }
+    ],
+    [
+        'method' => 'GET',
+        'path' => '/users/student/report',
+        'callback' => function() {
+            require __DIR__.'/controllers/getStudentReport.php';
+        }
+    ],
+    [
+        'method' => 'GET',
+        'path' => '/users/instructor/report',
+        'callback' => function() {
+            require __DIR__.'/controllers/getInstructorReport.php';
+        }
     ]
 ];
 
