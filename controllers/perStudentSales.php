@@ -4,8 +4,8 @@ header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $purchaseId = $_GET['purchaseId'] ?? null;
-    $purchaseDate = $_GET['purchaseDate'] ?? null;
-    $modificationDate = $_GET['modificationDate'] ?? null;
+    $purchaseDate = isset($_GET['purchaseDate']) ? urldecode($_GET['purchaseDate']) : null;
+    $modificationDate = isset($_GET['modificationDate']) ? urldecode($_GET['modificationDate']) : null;
     $userId = $_GET['userId'] ?? null;
     $courseId = $_GET['courseId'] ?? null;
     $levelId = $_GET['levelId'] ?? null;

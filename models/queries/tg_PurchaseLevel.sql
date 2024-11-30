@@ -1,5 +1,4 @@
 DELIMITER //
-
 CREATE TRIGGER tg_PurchaseLevel
 AFTER INSERT ON Purchases
 FOR EACH ROW

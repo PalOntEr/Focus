@@ -67,7 +67,7 @@ require 'views/components/navbar.php';
             <div class="w-1/3 self-center flex space-x-3">
                 <input type="button" onclick="cleanStudentFilters()" class="bg-comp-1 text-color p-1 rounded-lg" value="Clean">
                 <select id="perStudentSelect" class="w-1/2 bg-comp-1 text-color py-1 outline-none rounded-md border-0">
-                    <option value=0>Any</option>
+                    <!-- <option value=0>Any</option> -->
                 </select>
             </div>
 
@@ -141,7 +141,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     await getSalesPerCourseReport();
     await getSalesPerStudentReport();
 
-    perStudentSelect.innerHTML = '<option value=0>Any</option>';
+    // perStudentSelect.innerHTML = '<option value=0>Any</option>';
     perCourseReport.forEach(course => {
         const option = document.createElement('option');
         option.value = course.courseId;
@@ -156,8 +156,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 async function getSalesPerCourseReport(){
     try {
         const categoryFilter = perCourseSelect.value == 0 ? "" : "&categoryId=" + perCourseSelect.value;
-        const dateStartFilter = dateStart.value == "" ? "" : "&creationDate=" + dateStart.value;
-        const dateFinishFilter = dateFinish.value == "" ? "" : "&modificationDate=" + dateFinish.value;
+        const dateStartFilter = dateStart.value == "" ? "" : `&creationDate=${encodeURIComponent(DateStart.value + ' 00:00:00')}`;
+        const dateFinishFilter = dateFinish.value == "" ? "" : `&modificationDate=${encodeURIComponent(dateFinish.value + ' 23:59:59')}`;
         const fetchUrl = '/reports/instructor/salesPerCourse?instructorId=<?= $_SESSION['user']['userId'] ?>' + categoryFilter + dateStartFilter + dateFinishFilter;
         const response = await fetch(fetchUrl);
         const data = await response.json();
@@ -187,8 +187,8 @@ async function getSalesPerCourseReport(){
 async function getSalesPerStudentReport(){
     try {
         const courseId = perStudentSelect.value == 0 ? "" : "&courseId=" + perStudentSelect.value;
-        const dateStartFilter = PerStudentDateStart.value == "" ? "" : "&purchaseDate=" + PerStudentDateStart.value;
-        const dateFinishFilter = PerStudentDateFinish.value == "" ? "" : "&modificationDate=" + PerStudentDateFinish.value; 
+        const dateStartFilter = PerStudentDateStart.value == "" ? "" : `&purchaseDate=${encodeURIComponent(PerStudentDateStart.value + ' 00:00:00')}`;
+        const dateFinishFilter = PerStudentDateFinish.value == "" ? "" : `&modificationDate=${encodeURIComponent(PerStudentDateFinish.value + ' 23:59:59')}`;
         const fetchUrl = '/reports/instructor/salesPerStudent?instructorId=<?= $_SESSION['user']['userId'] ?>' + courseId + dateStartFilter + dateFinishFilter;
         const response = await fetch(fetchUrl);
         const data = await response.json();

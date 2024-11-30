@@ -366,6 +366,13 @@ $routes = [
         'callback' => function() {
             require __DIR__.'/controllers/perStudentSales.php';    
         }
+    ],
+    [
+        'method' => 'GET',
+        'path' => '/reports/student/kardex',
+        'callback' => function() {
+            require __DIR__.'/controllers/kardexReport.php';    
+        }
     ]
 ];
 

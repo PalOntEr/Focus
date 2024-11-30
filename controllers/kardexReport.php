@@ -3,11 +3,12 @@
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    $instructorId = $_GET['instructorId'] ?? null;
-    $creationDate = isset($_GET['creationDate']) ? urldecode($_GET['creationDate']) : null;
-    $modificationDate = isset($_GET['modificationDate']) ? urldecode($_GET['modificationDate']) : null;
-    $categoryId = $_GET['categoryId'] ?? null;
+    $startDate = isset($_GET['startDate']) ? urldecode($_GET['startDate']) : null;
+    $accessDate = isset($_GET['accessDate']) ? urldecode($_GET['accessDate']) : null;
+    $completionDate = isset($_GET['completionDate']) ? urldecode($_GET['completionDate']) : null;
+    $userId = $_GET['userId'] ?? null;
     $courseId = $_GET['courseId'] ?? null;
+    $category = $_GET['categoryId'] ?? null;
 
     require __DIR__.'/../config/db.php';
     $config = require __DIR__.'/../config/config.php';
@@ -17,12 +18,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $result = true;
 
     try {
-        $salesReport = $db->queryFetchAll("CALL sp_InstructorReports(1, ?, ?, ?, ?, ?)", [
-            $instructorId,
-            $creationDate,
-            $modificationDate,
-            $categoryId,
-            $courseId
+        $kardexReport = $db->queryFetchAll("CALL sp_Kardex(6, ?, ?, ?, ?, ?, ?)", [
+            $startDate,
+            $accessDate,
+            $completionDate,
+            $userId,
+            $courseId,
+            $category
         ]);
     } catch (PDOException $e) {
         $result = false;
@@ -33,12 +35,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         echo json_encode([
             'status' => true,
             'payload' => [
-                'salesReport' => $salesReport,
+                'kardexReport' => $kardexReport,
                 'params' => [
-                    'instructorId' => $instructorId,
-                    'creationDate' => $creationDate,
-                    'modificationDate' => $modificationDate,
-                    'categoryId' => $categoryId,
+                    'startDate' => $startDate,
+                    'accessDate' => $accessDate,
+                    'completionDate' => $completionDate,
+                    'userId' => $userId,
                     'courseId' => $courseId
                 ]
             ]

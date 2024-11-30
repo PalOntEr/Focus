@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $result = true;
 
     try {
-        $db->queryInsert("CALL sp_Purchase (1, NULL, ?, ?, ?, ?, ?, ?, ?)", [
+        $db->queryInsert("CALL sp_Purchase (1, NULL, ?, NULL, ?, ?, ?, ?, ?, ?)", [
             $purchaseDate,
             $userId,
             $courseId,

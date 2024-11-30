@@ -30,8 +30,8 @@ BEGIN
                 WHERE
                     instructorId = IFNULL(sp_instructorId, instructorId)
                     AND courseId = IFNULL(sp_courseId, courseId)
-                    AND creationDate >= IFNULL(sp_creationDate, '1900-01-01')
-                    AND creationDate <= IFNULL(sp_modificationDate, '9999-12-31')
+                    AND (sp_creationDate IS NULL OR DATEDIFF(creationDate, sp_creationDate) >= 0)
+                    AND (sp_modificationDate IS NULL OR DATEDIFF(creationDate, sp_modificationDate) <= 0)
                     AND categoryId = IFNULL(sp_categoryId, categoryId);
     END CASE;
 END$$

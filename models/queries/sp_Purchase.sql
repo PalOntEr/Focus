@@ -54,8 +54,8 @@ BEGIN
                 AND (p_paymentMethod IS NULL OR paymentMethod LIKE CONCAT('%', p_paymentMethod, '%'))
                 AND (p_paymentType IS NULL OR paymentType = p_paymentType)
                 AND (p_paymentAmount IS NULL OR paymentAmount = p_paymentAmount)
-                AND (p_purchaseDate IS NULL OR purchaseDate >= IFNULL(p_purchaseDate, '1900-01-01'))
-                AND (p_modificationDate IS NULL OR purchaseDate <= IFNULL(p_modificationDate, '9999-12-31'));  
+                AND (p_purchaseDate IS NULL OR DATEDIFF(purchaseDate, p_purchaseDate) >= 0)
+                AND (p_modificationDate IS NULL OR DATEDIFF(purchaseDate, p_modificationDate) <= 0);
     END CASE;
 END
 

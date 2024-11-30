@@ -8,14 +8,13 @@ CREATE PROCEDURE sp_Kardex(
     IN p_completionDate DATETIME,
     IN p_userId INT,
     IN p_courseId INT,
-    IN p_paymentMethod VARCHAR(20),
-    IN p_paymentType CHAR
+    IN p_categoryId INT
 )
 BEGIN
     CASE p_Opc
         WHEN 1 THEN -- INSERT
-            INSERT INTO Kardex (accessDate, completionDate, userId, courseId, paymentMethod, paymentType)
-            VALUES (p_accessDate, p_completionDate, p_userId, p_courseId, p_paymentMethod, p_paymentType);
+            INSERT INTO Kardex (accessDate, completionDate, userId, courseId)
+            VALUES (p_accessDate, p_completionDate, p_userId, p_courseId);
         WHEN 2 THEN -- UPDATE
             UPDATE Kardex
             SET startDate = p_startDate,
@@ -29,18 +28,24 @@ BEGIN
             SET completionDate = CURRENT_TIMESTAMP
             WHERE userId = p_userId AND courseId = p_courseId;
         WHEN 4 THEN -- SELECT ALL
-            SELECT startDate, accessDate, completionDate, userId, courseId, paymentMethod, paymentType
+            SELECT startDate, accessDate, completionDate, userId, courseId
             FROM Kardex;
         WHEN 5 THEN -- SELECT WITH FILTER
-            SELECT startDate, accessDate, completionDate, userId, courseId, paymentMethod, paymentType
+            SELECT startDate, accessDate, completionDate, userId, courseId
             FROM Kardex
             WHERE (IFNULL(p_startDate, startDate) = startDate)
               AND (IFNULL(p_accessDate, accessDate) = accessDate)
               AND (IFNULL(p_completionDate, completionDate) = completionDate)
               AND (IFNULL(p_userId, userId) = userId)
-              AND (IFNULL(p_courseId, courseId) = courseId)
-              AND (IFNULL(p_paymentMethod, paymentMethod) = paymentMethod)
-              AND (IFNULL(p_paymentType, paymentType) = paymentType);
+              AND (IFNULL(p_courseId, courseId) = courseId);
+        WHEN 6 THEN -- SELECT KARDEX REPORT WITH FILTER
+            SELECT userId, courseId, categoryId, courseTitle, deactivationDate, percentageCompleted, startDate, endDate, accessDate, isCompleted 
+            FROM vw_kardexreport
+            WHERE (p_startDate IS NULL OR DATEDIFF(startDate, p_startDate) >= 0)
+                AND (p_completionDate IS NULL OR DATEDIFF(startDate, p_completionDate) <= 0)
+                AND (IFNULL(p_userId, userId) = userId)
+                AND (IFNULL(p_courseId, courseId) = courseId)
+                AND (IFNULL(p_categoryId, categoryId) = categoryId);
     END CASE;
 END;
 DELIMITER;
